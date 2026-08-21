@@ -57,6 +57,30 @@ body {
   border-radius: 8px;
   white-space: nowrap;
   letter-spacing: 0.5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar a.brand:hover {
+  background: linear-gradient(90deg, #0e6655, #1e8449);
+  color: #ffffff;
+}
+
+.navbar a.brand.active,
+.navbar a.brand.active:hover {
+  background: linear-gradient(90deg, #16a085, #27ae60);
+  color: #ffffff;
+}
+
+.brand img.brand-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+  border: 2px solid #ffffff;
 }
 
 .navbar a {
@@ -242,6 +266,144 @@ tr:nth-child(even) {
   color: #555555;
   font-size: 11pt;
   padding: 10px;
+}
+
+/* ---------- Summary / Roadmap page ---------- */
+.roadmap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0 24px;
+}
+
+.roadmap .rm-step {
+  background: #2c3e50;
+  color: #ecf0f1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 96px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 11.5pt;
+  flex: 1 1 96px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.roadmap .rm-step small {
+  display: block;
+  font-weight: 400;
+  font-size: 9.5pt;
+  color: #bdc3c7;
+  margin-top: 4px;
+}
+
+.roadmap .rm-arrow {
+  align-self: center;
+  color: #16a085;
+  font-size: 17pt;
+  font-weight: 700;
+  padding: 0 1px;
+}
+
+.lecture-card {
+  border: 2px solid #16a085;
+  border-radius: 12px;
+  padding: 14px 18px 14px;
+  margin: 12px 0;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lecture-card .lc-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.lecture-card .lc-num {
+  background: #16a085;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13pt;
+  min-width: 52px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.lecture-card h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 13.5pt;
+}
+
+.lecture-card .lc-obj {
+  margin: 4px 0 6px;
+  font-size: 13pt;
+}
+
+.lecture-card .lc-obj strong {
+  color: #e74c3c;
+}
+
+.lecture-card .lc-next {
+  background: #e8f8f5;
+  border-left: 5px solid #16a085;
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  margin-top: 10px;
+  font-size: 12pt;
+}
+
+.lecture-card .lc-next strong {
+  color: #0e6655;
+}
+
+.arrow-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 8px 0 4px;
+}
+
+.arrow-flow .af-step {
+  background: #16a085;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 11pt;
+}
+
+.arrow-flow .af-arrow {
+  color: #f1c40f;
+  font-weight: 700;
+  font-size: 14pt;
+}
+
+.bigpic {
+  background: #2c3e50;
+  color: #ecf0f1;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 12.5pt;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.bigpic .bp-title {
+  font-weight: 700;
+  color: #1abc9c;
+  margin-bottom: 8px;
+  font-family: 'Google Sans', sans-serif;
 }
 
 /* ---------- Print (A4) ---------- */
