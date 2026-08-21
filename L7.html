@@ -1,146 +1,396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture 7 - Password Cracking</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 7 - Password Cracking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="summary.html" class="brand"
+          ><img
+            src="icon.jpg"
+            alt="PenTest Logo"
+            class="brand-logo"
+          />Roadmap</a
+        >
+        <a href="L1.html">L1</a>
+        <a href="L2.html">L2</a>
+        <a href="L3.html">L3</a>
+        <a href="L4.html">L4</a>
+        <a href="L5.html">L5</a>
+        <a href="L6.html">L6</a>
+        <a href="L7.html" class="active">L7</a>
+      </div>
+    </nav>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="summary.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">PenTest สรุป</a>
-      <a href="L1.html">L1</a>
-      <a href="L2.html">L2</a>
-      <a href="L3.html">L3</a>
-      <a href="L4.html">L4</a>
-      <a href="L5.html">L5</a>
-      <a href="L6.html">L6</a>
-      <a href="L7.html" class="active">L7</a>
+    <main class="a4">
+      <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 7: Password Cracking</h1>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051)
+      </p>
+
+      <h2>1. หลักการจัดเก็บรหัสผ่าน (Password Hashing &amp; Salting)</h2>
+      <p>
+        รหัสผ่านจะถูกจัดเก็บในรูปของ One-way Hash ที่ไม่สามารถแปลงกลับได้โดยตรง
+        เมื่อถูกแฮชแล้วผู้ใช้จะเห็นเพียงสตริงที่มีความยาวคงที่ ระบบ Linux
+        จะมีการเพิ่ม Salt (ค่าสุ่ม)
+        เพื่อป้องกันไม่ให้รหัสผ่านเดียวกันมีค่าแฮชซ้ำกัน
+      </p>
+      <table>
+        <tr>
+          <th>กลไก</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>DES (crypt)</strong></td>
+          <td>
+            ใช้ Salt ขนาด 12-bit เพื่อปรับ DES encryption ให้เป็น One-way Hash
+            function
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Bcrypt (Blowfish)</strong></td>
+          <td>
+            ใช้โดย OpenBSD ใช้ Salt ขนาด 128-bit สร้าง Hash value ขนาด 192-bit
+          </td>
+        </tr>
+      </table>
+
+      <h2>2. การระบุประเภทแฮชในไฟล์ /etc/shadow</h2>
+      <table>
+        <tr>
+          <th>สัญลักษณ์นำหน้า</th>
+          <th>ประเภทแฮช</th>
+        </tr>
+        <tr>
+          <td><code>$1$</code></td>
+          <td>MD5 (md5crypt)</td>
+        </tr>
+        <tr>
+          <td><code>$2a$</code></td>
+          <td>Blowfish (Bcrypt)</td>
+        </tr>
+        <tr>
+          <td><code>$5$</code></td>
+          <td>SHA-256 (sha256crypt)</td>
+        </tr>
+        <tr>
+          <td><code>$6$</code></td>
+          <td>SHA-512 (sha512crypt)</td>
+        </tr>
+        <tr>
+          <td><code>$y$</code> หรือ <code>$7$</code></td>
+          <td>yescrypt</td>
+        </tr>
+        <tr>
+          <td><em>ไม่มีสัญลักษณ์นำหน้า</em></td>
+          <td>DES (crypt)</td>
+        </tr>
+      </table>
+
+      <h2>3. ประเภทของการโจมตีรหัสผ่าน (Types of Password Attacks)</h2>
+      <table>
+        <tr>
+          <th>ประเภท</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Passive Online</strong></td>
+          <td>
+            ดักจับทราฟฟิกข้อมูลบนเครือข่ายโดยไม่เข้าไปยุ่งกับการสื่อสาร เช่น
+            Wire Sniffing, Man-in-the-Middle (MitM) และ Replay Attacks
+            (ดักจับแล้วส่งซ้ำเพื่อเลี่ยง Authentication)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Active Online</strong></td>
+          <td>
+            พยายามเดารหัสผ่านกับระบบเป้าหมายโดยตรง เช่น Brute-force หรือ
+            Password Guessing — ใช้เวลานาน ใช้แบนด์วิดท์สูง และตรวจจับได้ง่าย
+            ปัญหาหลักคือรหัสผ่านที่ไม่แข็งแรง (Bad Passwords)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Offline</strong></td>
+          <td>
+            นำไฟล์แฮชออกมาแคร็กบนเครื่องตนเอง
+            ทำได้รวดเร็วและไม่ถูกตรวจจับโดยระบบเป้าหมาย เทคนิค: Brute Force,
+            Dictionary Attacks, Rainbow Tables
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Non-electronic</strong></td>
+          <td>การโจมตีที่ไม่ใช้ระบบอิเล็กทรอนิกส์ เช่น Social Engineering</td>
+        </tr>
+      </table>
+
+      <h2>4. Wordlist (พจนานุกรมรหัสผ่าน)</h2>
+      <ul>
+        <li>
+          Wordlist คือคอลเลกชันรหัสผ่านที่เก็บเป็นข้อความธรรมดา (Plaintext)
+          ซึ่งเป็นตัวหลักของการโจมตีแบบ Brute Force / Dictionary
+        </li>
+        <li>
+          Wordlist มักได้มาจากข้อมูลการรั่วไหล (Data Breaches)
+          หรือสร้างขึ้นเองตามความต้องการ
+        </li>
+        <li>
+          <strong>RockYou:</strong> ไฟล์ wordlist ยอดนิยมบน Kali อยู่ที่
+          <code>/usr/share/wordlists/rockyou.txt.gz</code> — ต้องแตกไฟล์ก่อน:
+          <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code>
+        </li>
+        <li>
+          <strong>Crunch:</strong> เครื่องมือสร้าง Wordlist ตามเงื่อนไข
+          <ul>
+            <li>
+              <code>crunch 4 4 abcdefghijklmnopqrstuvwxyz</code> — สร้างคำ 4
+              ตัวอักษรจากตัวอักษรพิมพ์เล็ก
+            </li>
+            <li>
+              <code
+                >crunch 8 8 abcdefghijklmnopqrstuvwxyz0123456789 -o
+                wordlist.txt</code
+              >
+              — สร้างคำ 8 ตัวอักษรและบันทึกลงไฟล์
+            </li>
+            <li>
+              <code
+                >crunch 8 8 abcdefghijklmnopqrstuvwxyz -t %%%%%%-%%%%%%</code
+              >
+              — ใช้ Template กำหนดรูปแบบคำ
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>5. เครื่องมือหลักสำหรับการถอดรหัสผ่าน (Tools)</h2>
+      <table>
+        <tr>
+          <th>เครื่องมือ</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Hydra</strong></td>
+          <td>
+            เครื่องมือ Brute-force บน Network Services (Active Online)
+            ที่เร็วมาก รองรับหลายบริการ เช่น FTP, SSH ตัวอย่าง:
+            <code
+              >hydra -L users.txt -P passwords.txt &lt;Target_IP&gt; ftp</code
+            >
+          </td>
+        </tr>
+        <tr>
+          <td><strong>John the Ripper</strong></td>
+          <td>
+            เครื่องมือโอเพนซอร์สยอดนิยมสำหรับ Offline Hash Cracking
+            รองรับหลายแพลตฟอร์ม (Unix, Windows, macOS) และหลายประเภทแฮช
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Hashcat</strong></td>
+          <td>
+            เครื่องมือ Command Line ที่ทรงพลังสำหรับแคร็กแฮช รองรับ MD5, SHA-1,
+            SHA-256, bcrypt และอื่นๆ มีโหมด Brute-force, Dictionary และ Hybrid
+            Attacks
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Aircrack-ng</strong></td>
+          <td>
+            ชุดเครื่องมือทดสอบความปลอดภัยเครือข่ายไร้สายและแคร็กรหัสผ่าน WEP /
+            WPA / WPA2-PSK
+          </td>
+        </tr>
+      </table>
+
+      <h3>รูปแบบคำสั่ง Hashcat</h3>
+      <ul>
+        <li>
+          <code
+            >hashcat -m &lt;hash_type&gt; -a &lt;attack_mode&gt; hashfile
+            wordlist</code
+          >
+        </li>
+        <li>
+          <code>-m</code> ระบุประเภทแฮช เช่น 500 = MD5-Crypt, 0 = MD5, 100 =
+          SHA-1, 3200 = bcrypt
+        </li>
+        <li>
+          <code>-a</code> ระบุโหมดการโจมตี: 0 = Straight (Dictionary), 1 =
+          Combination, 3 = Brute-force, 6 = Hybrid Wordlist + Mask, 7 = Hybrid
+          Mask + Wordlist, 9 = Association
+        </li>
+        <li>
+          ตัวอย่าง:
+          <code
+            >hashcat -m 500 -a 0 meta_shadow_cut
+            /usr/share/wordlists/rockyou.txt --potfile-disable</code
+          >
+        </li>
+      </ul>
+
+      <h2>6. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
+
+      <h3>ตอนที่ 1: การแคร็กรหัสผ่านแบบ Online ด้วย Hydra</h3>
+      <ul>
+        <li>
+          <strong>สร้างไฟล์พจนานุกรม:</strong> จัดเตรียมไฟล์
+          <code>users.txt</code> และ <code>passwords.txt</code> ผ่านคำสั่ง
+          <code>nano users.txt</code> (ใส่ root, admin, user, test, ubuntu,
+          postgres, oracle, ftpuser, shared ฯลฯ) และ
+          <code>cp users.txt passwords.txt</code>
+        </li>
+        <li>
+          <strong>สั่งรัน Hydra โจมตีบริการ FTP:</strong> รันคำสั่ง
+          <code>hydra -L users.txt -P passwords.txt &lt;Target_IP&gt; ftp</code>
+          เพื่อค้นหาคู่บัญชีและรหัสผ่าน
+        </li>
+        <li>
+          <strong>ยืนยันการเข้าถึง:</strong> ทดสอบล็อกอินเข้าใช้งานผ่านคำสั่ง
+          <code>ftp &lt;Target_IP&gt;</code> แล้วรันคำสั่ง FTP เช่น
+          <code>ls</code>, <code>pwd</code>
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 2: การจัดการและสร้าง Wordlist</h3>
+      <ul>
+        <li>
+          <strong>แตกไฟล์ RockYou:</strong> ใช้คำสั่ง
+          <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code>
+          และตรวจสอบจำนวนคำด้วย <code>wc -l rockyou.txt</code>
+        </li>
+        <li>
+          <strong>สร้าง Wordlist ด้วย Crunch:</strong> ใช้คำสั่ง
+          <code
+            >crunch 4 4 abcdefghijklmnopqrstuvwxyz -o wordlist_4char.txt</code
+          >
+          เพื่อสร้างชุดคำตามเงื่อนไขที่กำหนด
+        </li>
+      </ul>
+
+      <h3>
+        ตอนที่ 3: การแคร็กรหัสผ่านแบบ Offline ด้วย John the Ripper และ Hashcat
+      </h3>
+      <ul>
+        <li>
+          <strong>ดึงและเตรียมไฟล์แฮช:</strong> ใช้คำสั่ง
+          <code>sudo cat /etc/shadow</code> เพื่อดูแฮชรหัสผ่านบน Metasploitable2
+          แล้วบันทึกลงไฟล์ เช่น <code>nano meta_shadow</code> (หรือ
+          <code>sudo cat /etc/shadow &gt; pass_shadow</code>)
+        </li>
+        <li>
+          <strong>รวมไฟล์ passwd กับ shadow (ถ้าจำเป็น):</strong> คัดลอก
+          <code>/etc/passwd</code> และ
+          <code>/etc/shadow</code> จากเครื่องเป้าหมาย แล้วรวมด้วยคำสั่ง
+          <code
+            >unshadow passwordmeta2.txt shadowmeta2.txt &gt; hashes.txt</code
+          >
+          และล้างผลลัพธ์เดิมด้วย <code>rm ~/.john/john.pot</code>
+        </li>
+        <li>
+          <strong>แคร็กด้วย John the Ripper:</strong> รันคำสั่ง
+          <code>john --format=crypt meta_shadow</code> หรือระบุ Wordlist ด้วย
+          <code
+            >john --format=md5crypt --wordlist=/usr/share/wordlists/rockyou.txt
+            meta_shadow</code
+          >
+        </li>
+        <li>
+          <strong>แสดงผลลัพธ์:</strong> ใช้คำสั่ง
+          <code>john --show meta_shadow</code> เพื่อดูรหัสผ่านที่ถอดรหัสได้
+        </li>
+        <li>
+          <strong>แคร็กด้วย Hashcat:</strong> ตัดเฉพาะส่วนที่ต้องการด้วย
+          <code>cp meta_shadow meta_shadow_cut</code> แล้วรันคำสั่ง
+          <code
+            >hashcat -m 500 -a 0 meta_shadow_cut
+            /usr/share/wordlists/rockyou.txt --potfile-disable</code
+          >
+          สำหรับแฮชแบบ MD5-Crypt (อาจเพิ่ม Rule:
+          <code>-r /usr/share/hashcat/rules/best66.rule</code>)
+        </li>
+        <li>
+          <strong>ทดลองสร้างผู้ใช้เพื่อฝึก:</strong> สร้างผู้ใช้
+          <code>test1</code> (รหัส 12345) และ <code>test2</code> (รหัส qwerty)
+          ด้วย <code>adduser</code> แล้วลองแคร็ก
+          <code>pass_shadow</code> ที่คัดลอกจาก <code>/etc/shadow</code>
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 4: การแคร็กรหัสผ่านเครือข่ายไร้สายด้วย Aircrack-ng</h3>
+      <ul>
+        <li>
+          <strong>แคร็กคีย์ WEP:</strong> แตกไฟล์ Capture Packet
+          <code>tar -xf wepchallenge.tar.gz</code> แล้วรัน
+          <code>aircrack-ng -b e4:7d:eb:31:10:9a wepchallenge*.cap</code>
+          (ช่องโหว่ของ WEP เกิดจาก IV ที่สั้นเกินไปและ Password คงที่ ทำให้มี
+          Data Packet ที่ใช้ IV ซ้ำ)
+        </li>
+        <li>
+          <strong>แคร็กคีย์ WPA/WPA2:</strong> แตกไฟล์
+          <code>wpachallenge.tar.gz</code> รันคำสั่ง
+          <code
+            >aircrack-ng -w /usr/share/wordlists/rockyou.txt -b
+            e4:7d:eb:31:10:9a wpachallenge*.cap</code
+          >
+          ร่วมกับไฟล์ Dictionary
+        </li>
+      </ul>
+
+      <hr />
+
+      <h2>7. สรุปรายการภาระงานที่ต้องส่ง (Assignment Checklist หน้า 34)</h2>
+      <ul>
+        <li>
+          <strong>โจทย์:</strong> ทำการแคร็กรหัสผ่านจากรายการแฮชในไฟล์ shadow
+          ทั้ง 5 รายการ:
+          <ul>
+            <li><code>emiller:3e05v.ztZ8LNE:15652:0:99999:7:::</code> (DES)</li>
+            <li>
+              <code
+                >tanderson:$1$AqW8SRi1$Dd0m3hFyOl276/IHinecr0:15652:0:99999:7:::</code
+              >
+              (MD5)
+            </li>
+            <li>
+              <code>awilliams:mQK2Y4hWq0SvY:15652:0:99999:7:::</code> (DES)
+            </li>
+            <li>
+              <code
+                >mdavis:$5$i3uY6Gfp$ywzsyCNRs7kbKbN7Ad0SnGR7P6bVmMQ8iJ7008mrGHC:15652:0:99999:7:::</code
+              >
+              (SHA-256)
+            </li>
+            <li>
+              <code
+                >djameson:$6$iimf1wnL$T/0zG89BxF.qKzMyX7BZJCSye5x7wlQxox5dMMwWPdvpzFMOs2YkknqHdMbbdxyBN7NNNBnAh/d7YY2fRRV3k0:15652:0:99999:7:::</code
+              >
+              (SHA-512)
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>หลักฐานที่ต้องส่ง:</strong> นำแฮชทั้ง 5
+          รายการบันทึกลงไฟล์ข้อความ จากนั้นใช้คำสั่งของ <code>john</code> หรือ
+          <code>hashcat</code> ร่วมกับ Wordlist ในการถอดรหัส
+          พร้อมแคปเจอร์ภาพหน้าจอผลลัพธ์คำสั่ง
+          <code>john --show</code> ที่แสดงรหัสผ่านทั้งหมดสำเร็จ
+        </li>
+      </ul>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 7 &mdash; Penetration Testing and Protection &copy;
+      2026
     </div>
-  </nav>
-
-  <main class="a4">
-
-    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 7: Password Cracking</h1>
-    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
-
-    <h2>1. หลักการจัดเก็บรหัสผ่าน (Password Hashing &amp; Salting)</h2>
-    <p>
-      รหัสผ่านจะถูกจัดเก็บในรูปของ One-way Hash ที่ไม่สามารถแปลงกลับได้โดยตรง เมื่อถูกแฮชแล้วผู้ใช้จะเห็นเพียงสตริงที่มีความยาวคงที่
-      ระบบ Linux จะมีการเพิ่ม Salt (ค่าสุ่ม) เพื่อป้องกันไม่ให้รหัสผ่านเดียวกันมีค่าแฮชซ้ำกัน
-    </p>
-    <table>
-      <tr><th>กลไก</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>DES (crypt)</strong></td><td>ใช้ Salt ขนาด 12-bit เพื่อปรับ DES encryption ให้เป็น One-way Hash function</td></tr>
-      <tr><td><strong>Bcrypt (Blowfish)</strong></td><td>ใช้โดย OpenBSD ใช้ Salt ขนาด 128-bit สร้าง Hash value ขนาด 192-bit</td></tr>
-    </table>
-
-    <h2>2. การระบุประเภทแฮชในไฟล์ /etc/shadow</h2>
-    <table>
-      <tr><th>สัญลักษณ์นำหน้า</th><th>ประเภทแฮช</th></tr>
-      <tr><td><code>$1$</code></td><td>MD5 (md5crypt)</td></tr>
-      <tr><td><code>$2a$</code></td><td>Blowfish (Bcrypt)</td></tr>
-      <tr><td><code>$5$</code></td><td>SHA-256 (sha256crypt)</td></tr>
-      <tr><td><code>$6$</code></td><td>SHA-512 (sha512crypt)</td></tr>
-      <tr><td><code>$y$</code> หรือ <code>$7$</code></td><td>yescrypt</td></tr>
-      <tr><td><em>ไม่มีสัญลักษณ์นำหน้า</em></td><td>DES (crypt)</td></tr>
-    </table>
-
-    <h2>3. ประเภทของการโจมตีรหัสผ่าน (Types of Password Attacks)</h2>
-    <table>
-      <tr><th>ประเภท</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>Passive Online</strong></td><td>ดักจับทราฟฟิกข้อมูลบนเครือข่ายโดยไม่เข้าไปยุ่งกับการสื่อสาร เช่น Wire Sniffing, Man-in-the-Middle (MitM) และ Replay Attacks (ดักจับแล้วส่งซ้ำเพื่อเลี่ยง Authentication)</td></tr>
-      <tr><td><strong>Active Online</strong></td><td>พยายามเดารหัสผ่านกับระบบเป้าหมายโดยตรง เช่น Brute-force หรือ Password Guessing — ใช้เวลานาน ใช้แบนด์วิดท์สูง และตรวจจับได้ง่าย ปัญหาหลักคือรหัสผ่านที่ไม่แข็งแรง (Bad Passwords)</td></tr>
-      <tr><td><strong>Offline</strong></td><td>นำไฟล์แฮชออกมาแคร็กบนเครื่องตนเอง ทำได้รวดเร็วและไม่ถูกตรวจจับโดยระบบเป้าหมาย เทคนิค: Brute Force, Dictionary Attacks, Rainbow Tables</td></tr>
-      <tr><td><strong>Non-electronic</strong></td><td>การโจมตีที่ไม่ใช้ระบบอิเล็กทรอนิกส์ เช่น Social Engineering</td></tr>
-    </table>
-
-    <h2>4. Wordlist (พจนานุกรมรหัสผ่าน)</h2>
-    <ul>
-      <li>Wordlist คือคอลเลกชันรหัสผ่านที่เก็บเป็นข้อความธรรมดา (Plaintext) ซึ่งเป็นตัวหลักของการโจมตีแบบ Brute Force / Dictionary</li>
-      <li>Wordlist มักได้มาจากข้อมูลการรั่วไหล (Data Breaches) หรือสร้างขึ้นเองตามความต้องการ</li>
-      <li><strong>RockYou:</strong> ไฟล์ wordlist ยอดนิยมบน Kali อยู่ที่ <code>/usr/share/wordlists/rockyou.txt.gz</code> — ต้องแตกไฟล์ก่อน: <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code></li>
-      <li><strong>Crunch:</strong> เครื่องมือสร้าง Wordlist ตามเงื่อนไข
-        <ul>
-          <li><code>crunch 4 4 abcdefghijklmnopqrstuvwxyz</code> — สร้างคำ 4 ตัวอักษรจากตัวอักษรพิมพ์เล็ก</li>
-          <li><code>crunch 8 8 abcdefghijklmnopqrstuvwxyz0123456789 -o wordlist.txt</code> — สร้างคำ 8 ตัวอักษรและบันทึกลงไฟล์</li>
-          <li><code>crunch 8 8 abcdefghijklmnopqrstuvwxyz -t %%%%%%-%%%%%%</code> — ใช้ Template กำหนดรูปแบบคำ</li>
-        </ul>
-      </li>
-    </ul>
-
-    <h2>5. เครื่องมือหลักสำหรับการถอดรหัสผ่าน (Tools)</h2>
-    <table>
-      <tr><th>เครื่องมือ</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>Hydra</strong></td><td>เครื่องมือ Brute-force บน Network Services (Active Online) ที่เร็วมาก รองรับหลายบริการ เช่น FTP, SSH ตัวอย่าง: <code>hydra -L users.txt -P passwords.txt &lt;Target_IP&gt; ftp</code></td></tr>
-      <tr><td><strong>John the Ripper</strong></td><td>เครื่องมือโอเพนซอร์สยอดนิยมสำหรับ Offline Hash Cracking รองรับหลายแพลตฟอร์ม (Unix, Windows, macOS) และหลายประเภทแฮช</td></tr>
-      <tr><td><strong>Hashcat</strong></td><td>เครื่องมือ Command Line ที่ทรงพลังสำหรับแคร็กแฮช รองรับ MD5, SHA-1, SHA-256, bcrypt และอื่นๆ มีโหมด Brute-force, Dictionary และ Hybrid Attacks</td></tr>
-      <tr><td><strong>Aircrack-ng</strong></td><td>ชุดเครื่องมือทดสอบความปลอดภัยเครือข่ายไร้สายและแคร็กรหัสผ่าน WEP / WPA / WPA2-PSK</td></tr>
-    </table>
-
-    <h3>รูปแบบคำสั่ง Hashcat</h3>
-    <ul>
-      <li><code>hashcat -m &lt;hash_type&gt; -a &lt;attack_mode&gt; hashfile wordlist</code></li>
-      <li><code>-m</code> ระบุประเภทแฮช เช่น 500 = MD5-Crypt, 0 = MD5, 100 = SHA-1, 3200 = bcrypt</li>
-      <li><code>-a</code> ระบุโหมดการโจมตี: 0 = Straight (Dictionary), 1 = Combination, 3 = Brute-force, 6 = Hybrid Wordlist + Mask, 7 = Hybrid Mask + Wordlist, 9 = Association</li>
-      <li>ตัวอย่าง: <code>hashcat -m 500 -a 0 meta_shadow_cut /usr/share/wordlists/rockyou.txt --potfile-disable</code></li>
-    </ul>
-
-    <h2>6. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
-
-    <h3>ตอนที่ 1: การแคร็กรหัสผ่านแบบ Online ด้วย Hydra</h3>
-    <ul>
-      <li><strong>สร้างไฟล์พจนานุกรม:</strong> จัดเตรียมไฟล์ <code>users.txt</code> และ <code>passwords.txt</code> ผ่านคำสั่ง <code>nano users.txt</code> (ใส่ root, admin, user, test, ubuntu, postgres, oracle, ftpuser, shared ฯลฯ) และ <code>cp users.txt passwords.txt</code></li>
-      <li><strong>สั่งรัน Hydra โจมตีบริการ FTP:</strong> รันคำสั่ง <code>hydra -L users.txt -P passwords.txt &lt;Target_IP&gt; ftp</code> เพื่อค้นหาคู่บัญชีและรหัสผ่าน</li>
-      <li><strong>ยืนยันการเข้าถึง:</strong> ทดสอบล็อกอินเข้าใช้งานผ่านคำสั่ง <code>ftp &lt;Target_IP&gt;</code> แล้วรันคำสั่ง FTP เช่น <code>ls</code>, <code>pwd</code></li>
-    </ul>
-
-    <h3>ตอนที่ 2: การจัดการและสร้าง Wordlist</h3>
-    <ul>
-      <li><strong>แตกไฟล์ RockYou:</strong> ใช้คำสั่ง <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code> และตรวจสอบจำนวนคำด้วย <code>wc -l rockyou.txt</code></li>
-      <li><strong>สร้าง Wordlist ด้วย Crunch:</strong> ใช้คำสั่ง <code>crunch 4 4 abcdefghijklmnopqrstuvwxyz -o wordlist_4char.txt</code> เพื่อสร้างชุดคำตามเงื่อนไขที่กำหนด</li>
-    </ul>
-
-    <h3>ตอนที่ 3: การแคร็กรหัสผ่านแบบ Offline ด้วย John the Ripper และ Hashcat</h3>
-    <ul>
-      <li><strong>ดึงและเตรียมไฟล์แฮช:</strong> ใช้คำสั่ง <code>sudo cat /etc/shadow</code> เพื่อดูแฮชรหัสผ่านบน Metasploitable2 แล้วบันทึกลงไฟล์ เช่น <code>nano meta_shadow</code> (หรือ <code>sudo cat /etc/shadow &gt; pass_shadow</code>)</li>
-      <li><strong>รวมไฟล์ passwd กับ shadow (ถ้าจำเป็น):</strong> คัดลอก <code>/etc/passwd</code> และ <code>/etc/shadow</code> จากเครื่องเป้าหมาย แล้วรวมด้วยคำสั่ง <code>unshadow passwordmeta2.txt shadowmeta2.txt &gt; hashes.txt</code> และล้างผลลัพธ์เดิมด้วย <code>rm ~/.john/john.pot</code></li>
-      <li><strong>แคร็กด้วย John the Ripper:</strong> รันคำสั่ง <code>john --format=crypt meta_shadow</code> หรือระบุ Wordlist ด้วย <code>john --format=md5crypt --wordlist=/usr/share/wordlists/rockyou.txt meta_shadow</code></li>
-      <li><strong>แสดงผลลัพธ์:</strong> ใช้คำสั่ง <code>john --show meta_shadow</code> เพื่อดูรหัสผ่านที่ถอดรหัสได้</li>
-      <li><strong>แคร็กด้วย Hashcat:</strong> ตัดเฉพาะส่วนที่ต้องการด้วย <code>cp meta_shadow meta_shadow_cut</code> แล้วรันคำสั่ง <code>hashcat -m 500 -a 0 meta_shadow_cut /usr/share/wordlists/rockyou.txt --potfile-disable</code> สำหรับแฮชแบบ MD5-Crypt (อาจเพิ่ม Rule: <code>-r /usr/share/hashcat/rules/best66.rule</code>)</li>
-      <li><strong>ทดลองสร้างผู้ใช้เพื่อฝึก:</strong> สร้างผู้ใช้ <code>test1</code> (รหัส 12345) และ <code>test2</code> (รหัส qwerty) ด้วย <code>adduser</code> แล้วลองแคร็ก <code>pass_shadow</code> ที่คัดลอกจาก <code>/etc/shadow</code></li>
-    </ul>
-
-    <h3>ตอนที่ 4: การแคร็กรหัสผ่านเครือข่ายไร้สายด้วย Aircrack-ng</h3>
-    <ul>
-      <li><strong>แคร็กคีย์ WEP:</strong> แตกไฟล์ Capture Packet <code>tar -xf wepchallenge.tar.gz</code> แล้วรัน <code>aircrack-ng -b e4:7d:eb:31:10:9a wepchallenge*.cap</code> (ช่องโหว่ของ WEP เกิดจาก IV ที่สั้นเกินไปและ Password คงที่ ทำให้มี Data Packet ที่ใช้ IV ซ้ำ)</li>
-      <li><strong>แคร็กคีย์ WPA/WPA2:</strong> แตกไฟล์ <code>wpachallenge.tar.gz</code> รันคำสั่ง <code>aircrack-ng -w /usr/share/wordlists/rockyou.txt -b e4:7d:eb:31:10:9a wpachallenge*.cap</code> ร่วมกับไฟล์ Dictionary</li>
-    </ul>
-
-    <hr>
-
-    <h2>7. สรุปรายการภาระงานที่ต้องส่ง (Assignment Checklist หน้า 34)</h2>
-    <ul>
-      <li><strong>โจทย์:</strong> ทำการแคร็กรหัสผ่านจากรายการแฮชในไฟล์ shadow ทั้ง 5 รายการ:
-        <ul>
-          <li><code>emiller:3e05v.ztZ8LNE:15652:0:99999:7:::</code> (DES)</li>
-          <li><code>tanderson:$1$AqW8SRi1$Dd0m3hFyOl276/IHinecr0:15652:0:99999:7:::</code> (MD5)</li>
-          <li><code>awilliams:mQK2Y4hWq0SvY:15652:0:99999:7:::</code> (DES)</li>
-          <li><code>mdavis:$5$i3uY6Gfp$ywzsyCNRs7kbKbN7Ad0SnGR7P6bVmMQ8iJ7008mrGHC:15652:0:99999:7:::</code> (SHA-256)</li>
-          <li><code>djameson:$6$iimf1wnL$T/0zG89BxF.qKzMyX7BZJCSye5x7wlQxox5dMMwWPdvpzFMOs2YkknqHdMbbdxyBN7NNNBnAh/d7YY2fRRV3k0:15652:0:99999:7:::</code> (SHA-512)</li>
-        </ul>
-      </li>
-      <li><strong>หลักฐานที่ต้องส่ง:</strong> นำแฮชทั้ง 5 รายการบันทึกลงไฟล์ข้อความ จากนั้นใช้คำสั่งของ <code>john</code> หรือ <code>hashcat</code> ร่วมกับ Wordlist ในการถอดรหัส พร้อมแคปเจอร์ภาพหน้าจอผลลัพธ์คำสั่ง <code>john --show</code> ที่แสดงรหัสผ่านทั้งหมดสำเร็จ</li>
-    </ul>
-
-  </main>
-
-  <div class="footer">สรุปเนื้อหา Lecture 7 &mdash; Penetration Testing and Protection &copy; 2026</div>
-
-</body>
+  </body>
 </html>

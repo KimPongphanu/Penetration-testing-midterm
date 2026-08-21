@@ -1,219 +1,603 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture 2 - Reconnaissance, Information Gathering &amp; Linux Fundamentals</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Lecture 2 - Reconnaissance, Information Gathering &amp; Linux Fundamentals
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="summary.html" class="brand"
+          ><img
+            src="icon.jpg"
+            alt="PenTest Logo"
+            class="brand-logo"
+          />Roadmap</a
+        >
+        <a href="L1.html">L1</a>
+        <a href="L2.html" class="active">L2</a>
+        <a href="L3.html">L3</a>
+        <a href="L4.html">L4</a>
+        <a href="L5.html">L5</a>
+        <a href="L6.html">L6</a>
+        <a href="L7.html">L7</a>
+      </div>
+    </nav>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="summary.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">PenTest สรุป</a>
-      <a href="L1.html">L1</a>
-      <a href="L2.html" class="active">L2</a>
-      <a href="L3.html">L3</a>
-      <a href="L4.html">L4</a>
-      <a href="L5.html">L5</a>
-      <a href="L6.html">L6</a>
-      <a href="L7.html">L7</a>
+    <main class="a4">
+      <h1>
+        สรุปเนื้อหาและปฏิบัติการ Lecture 2: Reconnaissance, Information
+        Gathering &amp; Linux Fundamentals
+      </h1>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051)
+      </p>
+
+      <h2>
+        1. ประเภทของการทดสอบตามระดับความลึก (Types of Tests: Testing Depth)
+      </h2>
+      <table>
+        <tr>
+          <th>ประเภท</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Vulnerability Scans</strong></td>
+          <td>เพียงแค่รัน Vulnerability Scanner (ยังไม่ใช่ Pentest)</td>
+        </tr>
+        <tr>
+          <td><strong>Vulnerability Assessments</strong></td>
+          <td>
+            Vulnerability Scanning + การตรวจสอบยืนยันช่องโหว่ (Validation)
+            (ยังไม่ใช่ Pentest)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Pentest</strong></td>
+          <td>
+            Vulnerability Assessment + Exploitation (การเจาะระบบจริง
+            หรือที่เรียกว่า Hacking)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Red Team / Adversarial Tests</strong></td>
+          <td>ทดสอบ Blue Team จำลองการโจมตีจริง ขอบเขตที่ผ่อนปรนกว่า</td>
+        </tr>
+      </table>
+
+      <h2>2. ประเภทของ Penetration Testing (ตามเป้าหมาย)</h2>
+      <ul>
+        <li>
+          <strong>Network Penetration Testing:</strong>
+          ทดสอบในเครือข่ายขององค์กรเพื่อค้นหาจุดบกพร่องในการออกแบบ (Design)
+          การทำงาน (Operation) หรือการนำไปใช้ (Implementation) ของเครือข่าย
+        </li>
+        <li>
+          <strong>Physical Penetration Testing:</strong>
+          ผู้ทดสอบสวมบทบาทผู้โจมตีเพื่อพยายามฝ่าแนวป้องกันทางกายภาพ เช่น
+          กล้องวงจรปิด ล็อกเกอร์ สิ่งกีดขวาง และเซนเซอร์
+        </li>
+        <li>
+          <strong>Web Application Penetration Testing:</strong>
+          ตรวจหาช่องโหว่หรือจุดอ่อนภายในเว็บแอปพลิเคชัน
+        </li>
+        <li>
+          <strong>Wireless Network Penetration Testing:</strong>
+          ตรวจสอบการเชื่อมต่อระหว่างอุปกรณ์ทั้งหมดที่เชื่อมต่อกับ Wi-Fi
+          ขององค์กร
+        </li>
+      </ul>
+
+      <h2>3. มาตรฐานและระเบียบวิธีทดสอบ (Methodology Standards)</h2>
+      <p>
+        ระเบียบวิธีทดสอบเจาะระบบให้แนวทางที่มีโครงสร้างสำหรับการประเมินความปลอดภัย
+        แต่ละมาตรฐานมีจุดเน้น ขอบเขต และรายละเอียดที่แตกต่างกัน
+      </p>
+      <table>
+        <tr>
+          <th>มาตรฐาน</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>OSSTMM</strong></td>
+          <td>
+            Open Source Security Testing Methodology Manual —
+            เน้นการวัดผลความปลอดภัยเชิงปฏิบัติการ (OpSec) มีหัวข้อ Operational
+            Security Metrics, Trust Analysis, Work Flow, การทดสอบ
+            Human/Physical/Wireless/Telecom/Data Networks และรายงานแบบ STAR
+            (Security Test Audit Report)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>OWASP Testing Guide</strong></td>
+          <td>
+            พัฒนาโดย OWASP (องค์กรไม่แสวงหาผลกำไรด้าน Web Security)
+            เน้นช่องโหว่ในเว็บแอปพลิเคชันและ API มีเฟสแบบยืดหยุ่น เช่น
+            Reconnaissance, Enumeration, Exploitation, Reporting
+          </td>
+        </tr>
+        <tr>
+          <td><strong>NIST SP 800-115</strong></td>
+          <td>
+            คู่มือทางเทคนิคสำหรับการทดสอบความปลอดภัย แนะนำให้มีนโยบายประเมิน,
+            ระเบียบวิธีที่ทำซ้ำได้และมีเอกสาร, กำหนดวัตถุประสงค์
+            และวิเคราะห์ผลเพื่อพัฒนาแนวทางลดความเสี่ยง
+          </td>
+        </tr>
+        <tr>
+          <td><strong>PTES</strong></td>
+          <td>
+            Penetration Testing Execution Standard —
+            เน้นทั้งด้านเทคนิคและบริบทธุรกิจ มี 7 เฟส: Pre-engagement,
+            Intelligence Gathering, Threat Modeling, Vulnerability Analysis,
+            Exploitation, Post Exploitation, Reporting
+          </td>
+        </tr>
+        <tr>
+          <td><strong>ISSAF</strong></td>
+          <td>
+            Information System Security Assessment Framework — 9 ขั้นตอน:
+            Information Gathering, Network Mapping, Vulnerability
+            Identification, Penetration, Gaining Access &amp; Privilege
+            Escalation, Enumerating Further, Compromising Remote Users/Sites,
+            Maintaining Access, Covering Tracks
+          </td>
+        </tr>
+      </table>
+
+      <h2>4. ขั้นตอนร่วมของการทดสอบและ Pre-engagement</h2>
+      <ul>
+        <li>
+          <strong>Pre-Engagement and Planning:</strong> กำหนดขอบเขต วัตถุประสงค์
+          และ Rule of Engagement ของการทดสอบ
+        </li>
+        <li>
+          <strong>Intelligence Gathering:</strong> เก็บข้อมูลเป้าหมาย เช่น
+          โครงสร้างเครือข่าย ระบบปฏิบัติการ และแอปพลิเคชัน
+        </li>
+        <li>
+          <strong>Vulnerability Analysis &amp; Exploitation:</strong>
+          ระบุและใช้ประโยชน์จากช่องโหว่เพื่อประเมินผลกระทบ
+        </li>
+        <li>
+          <strong>Solution Development:</strong> แนะนำแนวทางแก้ไข (Remediation)
+        </li>
+        <li>
+          <strong>Report Drafting &amp; Certificate Issuance:</strong>
+          จัดทำรายงานและใบรับรอง
+        </li>
+      </ul>
+      <div class="note">
+        <strong>Pre-engagement:</strong> ก่อนเริ่มทดสอบ
+        ลูกค้าและผู้ทดสอบต้องหารือเกี่ยวกับข้อกำหนดทางกฎหมายและกฎของการมีส่วนร่วม
+        (Rules of Engagement) ซึ่งรวมถึงขอบเขต, วันที่เริ่ม/สิ้นสุด, เป้าหมาย,
+        ระเบียบวิธี, ความรับผิดชอบ (Liabilities)
+        และต้องได้รับความยินยอมร่วมกันก่อนเสมอ
+      </div>
+
+      <h2>5. Rules of Engagement (ROE)</h2>
+      <p>ข้อกำหนดที่สำคัญซึ่งแทบทุก ROE จะต้องมี:</p>
+      <ul>
+        <li>
+          เอกสาร <strong>"Permission to hack"</strong> และ
+          <strong>"Nondisclosure Agreement"</strong> ที่ลงนามโดยทั้งสองฝ่าย
+        </li>
+        <li>ขอบเขตของการทดสอบ (Scope) และส่วนใดขององค์กรที่ต้องทดสอบ</li>
+        <li>ระยะเวลาโครงการรวมถึงวันเริ่มและวันสิ้นสุด</li>
+        <li>ระเบียบวิธี (Methodology) ที่ใช้ดำเนินการทดสอบเจาะระบบ</li>
+        <li>เป้าหมายของการทดสอบเจาะระบบ</li>
+        <li>
+          เทคนิคที่อนุญาตและไม่อนุญาต เช่น ควรทดสอบ Denial-of-Service (DoS)
+          หรือไม่
+        </li>
+        <li>
+          ความรับผิดชอบ (Liabilities) ที่ตกลงกันล่วงหน้า เช่น
+          กรณีเข้าถึงข้อมูลอ่อนไหว (บัตรเครดิต) หรือทำให้ระบบหยุดทำงาน
+        </li>
+      </ul>
+
+      <h2>6. Categories of Penetration Test (ตามข้อมูลที่ได้รับ)</h2>
+      <ul>
+        <li>
+          <strong>Black Box:</strong>
+          ให้ข้อมูลเกี่ยวกับเป้าหมายน้อยมากหรือแทบไม่มี เช่น ไม่รู้ DMZ, OS,
+          Server Version มีเพียงช่วง IP ที่ให้ทดสอบ (เหมาะกับการทดสอบภายนอก
+          External Test)
+        </li>
+        <li>
+          <strong>White Box:</strong> ให้ข้อมูลเกือบทั้งหมด เช่น
+          เวอร์ชันแอปพลิเคชัน ระบบปฏิบัติการ และซอร์สโค้ด เพื่อทำ Static/Dynamic
+          Source Code Analysis (พบมากในการทดสอบภายใน Internal/Onsite)
+        </li>
+        <li>
+          <strong>Gray Box:</strong> ให้ข้อมูลบางส่วน เช่น
+          บัญชีผู้ใช้ระดับทั่วไป (ผสมระหว่าง Black และ White Box)
+        </li>
+      </ul>
+
+      <h2>7. แนวคิดการเก็บข้อมูล (Information Gathering / Reconnaissance)</h2>
+      <p>
+        ผู้ทดสอบเจาะระบบจะเก็บรวบรวมข้อมูลเกี่ยวกับระบบเป้าหมาย เครือข่าย
+        แอปพลิเคชัน หรือองค์กรอย่างเป็นระบบ
+        เพื่อสร้างโปรไฟล์ที่ครอบคลุมของเป้าหมาย เข้าใจสถาปัตยกรรม
+        และระบุช่องโหว่ที่อาจเกิดขึ้น
+        ซึ่งเป็นรากฐานของแผนการโจมตีที่มีประสิทธิภาพ
+      </p>
+      <table>
+        <tr>
+          <th>คำศัพท์</th>
+          <th>ความหมาย</th>
+        </tr>
+        <tr>
+          <td><strong>Information Gathering</strong></td>
+          <td>คำรวมสำหรับกิจกรรมการเก็บรวบรวมข้อมูลทั้งหมด (umbrella term)</td>
+        </tr>
+        <tr>
+          <td><strong>Reconnaissance</strong></td>
+          <td>
+            ภาพรวมเบื้องต้นขององค์กรเป้าหมาย เช่น ค้นหาเว็บไซต์,
+            สื่อสังคมออนไลน์, IP Range, Domain Names, อีเมล และข้อมูล WHOIS
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Footprinting</strong></td>
+          <td>
+            เน้นรายละเอียดทางเทคนิคของโครงสร้างพื้นฐาน IT เช่น การสแกนเครือข่าย,
+            Service Fingerprinting, DNS Enumeration
+          </td>
+        </tr>
+        <tr>
+          <td><strong>OSINT</strong></td>
+          <td>
+            เก็บข้อมูลจากแหล่งสาธารณะ (Publicly Available Sources)
+            โดยใช้เทคนิคการค้นหาขั้นสูง
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Enumeration</strong></td>
+          <td>
+            การโต้ตอบโดยตรงกับระบบเป้าหมายเพื่อดึงข้อมูลเชิงลึก เช่น บัญชีผู้ใช้
+            กลุ่ม Network Shares และซอฟต์แวร์
+          </td>
+        </tr>
+      </table>
+
+      <h2>8. ประเภทของ Reconnaissance</h2>
+      <ul>
+        <li>
+          <strong>Passive Reconnaissance (OSINT):</strong>
+          การสืบค้นข้อมูลโดยไม่ส่งแพ็กเก็ตทราฟฟิกตรงไปยังเครื่องเป้าหมายเพื่อเลี่ยงการตรวจจับ
+          เช่น WHOIS, DNS Queries สาธารณะ, Google Dorking, OSINT Framework
+          และการวิเคราะห์เนื้อหาเว็บไซต์
+        </li>
+        <li>
+          <strong>Active Reconnaissance:</strong>
+          การติดต่อสื่อสารโดยตรงกับเครื่องเป้าหมาย เช่น Host Enumeration,
+          Network Enumeration, User/Group Enumeration, Network Share
+          Enumeration, Web Page Enumeration, Service Enumeration และ Packet
+          Crafting
+        </li>
+      </ul>
+
+      <h2>9. เครื่องมือสำหรับ Passive Reconnaissance / OSINT</h2>
+      <table>
+        <tr>
+          <th>เครื่องมือ</th>
+          <th>การใช้งาน</th>
+        </tr>
+        <tr>
+          <td><strong>whois</strong></td>
+          <td>
+            ค้นหาข้อมูลเจ้าของโดเมน/IP Block เช่น Registrant, Admin/Tech
+            Contact, Registrar, วันที่จดทะเบียน/หมดอายุ, Name Servers ตัวอย่าง:
+            <code>whois target.com</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>nslookup / host / dig</strong></td>
+          <td>
+            สอบถามระเบียน DNS เช่น NS, MX, A และลองทำ Zone Transfer (AXFR) หาก
+            DNS ตั้งค่าผิดพลาดจะเปิดเผย subdomain ทั้งหมด ตัวอย่าง:
+            <code>nslookup -type=ns target.com</code>,
+            <code>dig @&lt;IP&gt; domain.com AXFR</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Google Dorking</strong></td>
+          <td>
+            ใช้ตัวดำเนินการค้นหา เช่น <code>site:target.com filetype:pdf</code>,
+            <code>site:target.com inurl:admin</code>,
+            <code>allintitle:index of</code>, <code>inurl:login</code> และดู
+            Google Hacking Database (GHDB) บน Exploit-DB
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Shodan</strong></td>
+          <td>
+            เสิร์ชเอนจินสำหรับอุปกรณ์ที่เชื่อมต่ออินเทอร์เน็ต (search engine for
+            hackers) ใช้ตัวกรอง เช่น <code>port:21</code>,
+            <code>os:Linux</code>, <code>country:TH</code>,
+            <code>product:Apache</code>, <code>net:192.0.2.0/24</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>theHarvester</strong></td>
+          <td>
+            รวบรวม Emails, Hosts, Subdomains และ URLs จากแหล่งสาธารณะ (มีทั้ง
+            Passive และ Active Modules) ตัวอย่าง:
+            <code>theHarvester -b yahoo -d target.com</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>recon-ng</strong></td>
+          <td>
+            OSINT Framework เขียนด้วย Python สำหรับ Footprinting อัตโนมัติ เช่น
+            <code>marketplace install hackertarget</code>,
+            <code>modules load hackertarget</code>,
+            <code>options set source target.com</code>, <code>run</code>,
+            <code>show hosts</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>OSINT Framework</strong></td>
+          <td>
+            <code>https://osintframework.com/</code> —
+            โครงสร้างต้นไม้รวมเครื่องมือและแหล่งข้อมูล OSINT ตามหมวดหมู่
+            (Username, Email, Social Media, Dark Web ฯลฯ)
+          </td>
+        </tr>
+      </table>
+
+      <h2>10. Linux Essentials สำหรับงาน Pentest</h2>
+      <h3>คำสั่งพื้นฐาน (Navigation &amp; File)</h3>
+      <ul>
+        <li>
+          <code>pwd</code> แสดงตำแหน่งไดเรกทอรีปัจจุบัน &nbsp;
+          <code>ls -la</code> แสดงรายการไฟล์รวมไฟล์ซ่อน
+        </li>
+        <li>
+          <code>cd [directory]</code> เปลี่ยนไดเรกทอรี &nbsp;
+          <code>mkdir</code> สร้างไดเรกทอรี &nbsp; <code>rm</code> ลบไฟล์ &nbsp;
+          <code>rmdir</code> ลบไดเรกทอรีว่าง
+        </li>
+        <li>
+          <code>cp [source] [destination]</code> คัดลอก &nbsp;
+          <code>mv [source] [destination]</code> ย้าย/เปลี่ยนชื่อ
+        </li>
+        <li>
+          <code>cat [file]</code> แสดงเนื้อหาไฟล์ &nbsp; <code>nano</code>/<code
+            >vim</code
+          >
+          เปิดแก้ไขไฟล์ &nbsp; <code>touch [file]</code> สร้างไฟล์ว่าง
+        </li>
+        <li>
+          <code>grep keyword filename</code> ค้นหาคำในไฟล์ &nbsp;
+          <code>man [cmd]</code> เปิดคู่มือคำสั่ง
+        </li>
+      </ul>
+      <h3>สิทธิ์การเข้าถึงไฟล์ (File Permission)</h3>
+      <ul>
+        <li>
+          <code>chmod [permissions] [file]</code> เปลี่ยนสิทธิ์ โดยค่า R=4, W=2,
+          X=1 เช่น <code>chmod 755</code> คือ rwxr-xr-x
+        </li>
+        <li>
+          <code>chown [user:group] [file]</code> เปลี่ยนเจ้าของไฟล์ &nbsp;
+          <code>chgrp [group] [file]</code> เปลี่ยนกลุ่ม
+        </li>
+      </ul>
+      <h3>กระบวนการและข้อมูลระบบ (Process &amp; System Info)</h3>
+      <ul>
+        <li>
+          <code>ps</code> แสดงกระบวนการปัจจุบัน &nbsp; <code>kill [PID]</code> /
+          <code>pkill [name]</code> จบกระบวนการ
+        </li>
+        <li>
+          <code>uname -a</code> ข้อมูลระบบ &nbsp;
+          <code>df -h</code> พื้นที่ดิสก์ &nbsp;
+          <code>free -h</code> หน่วยความจำ &nbsp; <code>uptime</code> เวลาทำงาน
+        </li>
+        <li><code>top</code>/<code>htop</code> ดูกระบวนการแบบเรียลไทม์</li>
+      </ul>
+      <h3>เครือข่าย (Networking)</h3>
+      <ul>
+        <li>
+          <code>ip a</code> / <code>ifconfig</code> แสดง Network Interface และ
+          IP
+        </li>
+        <li>
+          <code>ping [host]</code> ทดสอบการเชื่อมต่อ &nbsp; <code>ip r</code> /
+          <code>route -n</code> ตารางเส้นทาง
+        </li>
+        <li>
+          <code>netstat</code> /
+          <code>ss -tuln</code> แสดงพอร์ตที่เปิดและสถานะการเชื่อมต่อ
+          <ul>
+            <li>
+              <code>netstat -l</code> พอร์ตที่ Listening &nbsp;
+              <code>netstat -a</code> พอร์ตทั้งหมด &nbsp;
+              <code>netstat -t</code> TCP &nbsp; <code>netstat -u</code> UDP
+            </li>
+          </ul>
+        </li>
+        <li><code>cat /etc/resolv.conf</code> ตรวจสอบ DNS Settings</li>
+      </ul>
+      <h3>บัญชีผู้ใช้, แพ็กเกจ และอื่นๆ</h3>
+      <ul>
+        <li>
+          <code>whoami</code> ผู้ใช้ปัจจุบัน &nbsp;
+          <code>passwd</code> เปลี่ยนรหัสผ่าน &nbsp;
+          <code>useradd [username]</code> เพิ่มผู้ใช้
+        </li>
+        <li>
+          <code>sudo apt update</code> / <code>sudo apt upgrade</code> /
+          <code>sudo apt install [pkg]</code> /
+          <code>sudo apt remove [pkg]</code>
+        </li>
+        <li>
+          <code>wget [url]</code> ดาวน์โหลดไฟล์ &nbsp;
+          <code>echo [text]</code> แสดงข้อความ &nbsp;
+          <code>history</code> ประวัติคำสั่ง &nbsp;
+          <code>mount</code> ระบบไฟล์ที่เมานต์
+        </li>
+      </ul>
+      <h3>ตัวดำเนินการต่อคำสั่ง (Command Chaining Operators)</h3>
+      <ul>
+        <li><code>&amp;</code> รันโปรแกรมเบื้องหลัง (Background)</li>
+        <li>
+          <code>&amp;&amp;</code> รันคำสั่งถัดไปเฉพาะเมื่อคำสั่งก่อนหน้าสำเร็จ
+          (Logical AND)
+        </li>
+        <li>
+          <code>|</code> Pipe — ส่งผลลัพธ์ของคำสั่งก่อนหน้าเป็น input
+          ให้คำสั่งถัดไป
+        </li>
+        <li>
+          <code>&gt;</code> เขียนทับไฟล์ &nbsp;
+          <code>&gt;&gt;</code> ต่อท้ายไฟล์
+        </li>
+      </ul>
+      <h3>โครงสร้างไฟล์ Linux ที่สำคัญ</h3>
+      <table>
+        <tr>
+          <th>Directory</th>
+          <th>ความสำคัญต่อการทำ Pentest</th>
+        </tr>
+        <tr>
+          <td><code>/bin</code></td>
+          <td>
+            โปรแกรมที่ execute ได้ — เป็นที่นิยมเก็บสคริปต์เพื่อคงการเข้าถึง
+            (Persistence)
+          </td>
+        </tr>
+        <tr>
+          <td><code>/etc</code></td>
+          <td>
+            ไฟล์ตั้งค่าระบบ — แหล่งหาข้อมูล Credentials เช่น
+            <code>/etc/shadow</code>, <code>/etc/passwd</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/home</code></td>
+          <td>ไดเรกทอรีบ้านของผู้ใช้</td>
+        </tr>
+        <tr>
+          <td><code>/opt</code></td>
+          <td>ซอฟต์แวร์ของบริษัทบุคคลที่สาม (Third-party software)</td>
+        </tr>
+        <tr>
+          <td><code>/tmp</code></td>
+          <td>
+            พื้นที่ชั่วคราว (ถูกล้างเมื่อรีบูต) — เหมาะสำหรับวาง Enumeration
+            Scripts
+          </td>
+        </tr>
+        <tr>
+          <td><code>/var</code></td>
+          <td>ไฟล์ Log — ที่เก็บหลักฐานการโจมตี</td>
+        </tr>
+      </table>
+
+      <h2>
+        11. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)
+      </h2>
+
+      <h3>ตอนที่ 1: การสำรวจและทดสอบการเชื่อมต่อเครือข่าย</h3>
+      <ul>
+        <li>
+          <strong>ตรวจสอบ Interface และ IP Address:</strong> รันคำสั่ง
+          <code>ip a</code> เพื่อตรวจสอบว่า Kali ได้รับ IP
+          ของวงทดสอบถูกต้องหรือไม่
+        </li>
+        <li>
+          <strong>ทดสอบการเชื่อมต่อ:</strong> รันคำสั่ง
+          <code>ping -c 4 &lt;Target_IP&gt;</code>
+          เพื่อยืนยันว่าสามารถสื่อสารกับเป้าหมายได้โดยไม่มี Packet Loss
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 2: การสืบค้นข้อมูลเป้าหมายด้วยเทคนิค Passive Recon (OSINT)</h3>
+      <ul>
+        <li>
+          <strong>ตรวจสอบข้อมูลการจดทะเบียนโดเมน:</strong> รันคำสั่ง
+          <code>whois target.com</code> เพื่อค้นหารายละเอียดผู้ถือครองโดเมนและ
+          Name Servers
+        </li>
+        <li>
+          <strong>สืบค้นระเบียนข้อมูล DNS:</strong> ใช้คำสั่ง
+          <code>nslookup -type=ns target.com</code>,
+          <code>nslookup -type=mx target.com</code> หรือ
+          <code>host -a target.com</code> เพื่อแจกแจง Mail Server และ Subdomains
+        </li>
+        <li>
+          <strong>ค้นหาข้อมูลลับและโครงสร้างเว็บ (Google Dorking):</strong>
+          ทำการค้นหาผ่านเว็บเบราว์เซอร์ด้วยคำสั่งเฉพาะ เช่น
+          <code>site:target.com filetype:pdf</code>,
+          <code>site:target.com inurl:admin</code>,
+          <code>site:target.com ext:sql | ext:log</code>
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 3: การจัดการระบบไฟล์และการสร้าง Wordlist สำหรับบันทึกผล</h3>
+      <ul>
+        <li>
+          <strong>สร้างโฟลเดอร์สำหรับแล็บ:</strong> ใช้คำสั่ง
+          <code>mkdir -p ~/Pentest_Labs/Lab2</code> และย้ายตำแหน่งด้วย
+          <code>cd ~/Pentest_Labs/Lab2</code>
+        </li>
+        <li>
+          <strong>สร้างไฟล์พจนานุกรมชื่อบัญชี:</strong> ใช้ Text Editor
+          ผ่านคำสั่ง
+          <code>nano user_list.txt</code> เพื่อระบุรายชื่อผู้ใช้ที่น่าสงสัย
+          (เช่น admin, root, msfadmin) บรรทัดละ 1 รายการ
+        </li>
+        <li>
+          <strong>ตรวจสอบความถูกต้อง:</strong> ใช้คำสั่ง <code>ls -la</code> และ
+          <code>cat user_list.txt</code>
+          เพื่อตรวจสอบการสร้างไฟล์และสิทธิ์การเข้าถึง
+        </li>
+      </ul>
+
+      <div class="tip">
+        <strong>แบบฝึกหัด Linux เพิ่มเติม:</strong> ฝึก Navigation (pwd, ls, cd,
+        mkdir, rm), File Permissions (chmod, chown), Process Management (ps,
+        kill, top), Network (ip a, ip r, ping, traceroute, ss -tuln) และ Package
+        Management (apt update / upgrade / install / remove)
+        ตามแบบฝึกหัดในสไลด์เพื่อปูพื้นฐานก่อนการทดสอบเจาะระบบ
+      </div>
+
+      <hr />
+
+      <h2>12. สรุปรายการหลักฐานที่ต้องบันทึก (Assignment Checklist)</h2>
+      <ul>
+        <li>
+          ภาพแสดงผลลัพธ์คำสั่ง <code>ip a</code> และการ
+          <code>ping</code> เครื่องเป้าหมายสำเร็จ
+        </li>
+        <li>
+          ภาพผลการตรวจสอบข้อมูล Domain และ DNS Records (WHOIS / Nslookup / Host)
+        </li>
+        <li>ภาพตัวอย่างการใช้ Google Dorking บน Web Browser</li>
+        <li>
+          ภาพ Terminal แสดงโครงสร้างโฟลเดอร์และเนื้อหาไฟล์ Wordlist
+          ที่สร้างขึ้นบน Kali Linux
+        </li>
+      </ul>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 2 &mdash; Penetration Testing and Protection &copy;
+      2026
     </div>
-  </nav>
-
-  <main class="a4">
-
-    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 2: Reconnaissance, Information Gathering &amp; Linux Fundamentals</h1>
-    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
-
-    <h2>1. ประเภทของการทดสอบตามระดับความลึก (Types of Tests: Testing Depth)</h2>
-    <table>
-      <tr><th>ประเภท</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>Vulnerability Scans</strong></td><td>เพียงแค่รัน Vulnerability Scanner (ยังไม่ใช่ Pentest)</td></tr>
-      <tr><td><strong>Vulnerability Assessments</strong></td><td>Vulnerability Scanning + การตรวจสอบยืนยันช่องโหว่ (Validation) (ยังไม่ใช่ Pentest)</td></tr>
-      <tr><td><strong>Pentest</strong></td><td>Vulnerability Assessment + Exploitation (การเจาะระบบจริง หรือที่เรียกว่า Hacking)</td></tr>
-      <tr><td><strong>Red Team / Adversarial Tests</strong></td><td>ทดสอบ Blue Team จำลองการโจมตีจริง ขอบเขตที่ผ่อนปรนกว่า</td></tr>
-    </table>
-
-    <h2>2. ประเภทของ Penetration Testing (ตามเป้าหมาย)</h2>
-    <ul>
-      <li><strong>Network Penetration Testing:</strong> ทดสอบในเครือข่ายขององค์กรเพื่อค้นหาจุดบกพร่องในการออกแบบ (Design) การทำงาน (Operation) หรือการนำไปใช้ (Implementation) ของเครือข่าย</li>
-      <li><strong>Physical Penetration Testing:</strong> ผู้ทดสอบสวมบทบาทผู้โจมตีเพื่อพยายามฝ่าแนวป้องกันทางกายภาพ เช่น กล้องวงจรปิด ล็อกเกอร์ สิ่งกีดขวาง และเซนเซอร์</li>
-      <li><strong>Web Application Penetration Testing:</strong> ตรวจหาช่องโหว่หรือจุดอ่อนภายในเว็บแอปพลิเคชัน</li>
-      <li><strong>Wireless Network Penetration Testing:</strong> ตรวจสอบการเชื่อมต่อระหว่างอุปกรณ์ทั้งหมดที่เชื่อมต่อกับ Wi-Fi ขององค์กร</li>
-    </ul>
-
-    <h2>3. มาตรฐานและระเบียบวิธีทดสอบ (Methodology Standards)</h2>
-    <p>ระเบียบวิธีทดสอบเจาะระบบให้แนวทางที่มีโครงสร้างสำหรับการประเมินความปลอดภัย แต่ละมาตรฐานมีจุดเน้น ขอบเขต และรายละเอียดที่แตกต่างกัน</p>
-    <table>
-      <tr><th>มาตรฐาน</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>OSSTMM</strong></td><td>Open Source Security Testing Methodology Manual — เน้นการวัดผลความปลอดภัยเชิงปฏิบัติการ (OpSec) มีหัวข้อ Operational Security Metrics, Trust Analysis, Work Flow, การทดสอบ Human/Physical/Wireless/Telecom/Data Networks และรายงานแบบ STAR (Security Test Audit Report)</td></tr>
-      <tr><td><strong>OWASP Testing Guide</strong></td><td>พัฒนาโดย OWASP (องค์กรไม่แสวงหาผลกำไรด้าน Web Security) เน้นช่องโหว่ในเว็บแอปพลิเคชันและ API มีเฟสแบบยืดหยุ่น เช่น Reconnaissance, Enumeration, Exploitation, Reporting</td></tr>
-      <tr><td><strong>NIST SP 800-115</strong></td><td>คู่มือทางเทคนิคสำหรับการทดสอบความปลอดภัย แนะนำให้มีนโยบายประเมิน, ระเบียบวิธีที่ทำซ้ำได้และมีเอกสาร, กำหนดวัตถุประสงค์ และวิเคราะห์ผลเพื่อพัฒนาแนวทางลดความเสี่ยง</td></tr>
-      <tr><td><strong>PTES</strong></td><td>Penetration Testing Execution Standard — เน้นทั้งด้านเทคนิคและบริบทธุรกิจ มี 7 เฟส: Pre-engagement, Intelligence Gathering, Threat Modeling, Vulnerability Analysis, Exploitation, Post Exploitation, Reporting</td></tr>
-      <tr><td><strong>ISSAF</strong></td><td>Information System Security Assessment Framework — 9 ขั้นตอน: Information Gathering, Network Mapping, Vulnerability Identification, Penetration, Gaining Access &amp; Privilege Escalation, Enumerating Further, Compromising Remote Users/Sites, Maintaining Access, Covering Tracks</td></tr>
-    </table>
-
-    <h2>4. ขั้นตอนร่วมของการทดสอบและ Pre-engagement</h2>
-    <ul>
-      <li><strong>Pre-Engagement and Planning:</strong> กำหนดขอบเขต วัตถุประสงค์ และ Rule of Engagement ของการทดสอบ</li>
-      <li><strong>Intelligence Gathering:</strong> เก็บข้อมูลเป้าหมาย เช่น โครงสร้างเครือข่าย ระบบปฏิบัติการ และแอปพลิเคชัน</li>
-      <li><strong>Vulnerability Analysis &amp; Exploitation:</strong> ระบุและใช้ประโยชน์จากช่องโหว่เพื่อประเมินผลกระทบ</li>
-      <li><strong>Solution Development:</strong> แนะนำแนวทางแก้ไข (Remediation)</li>
-      <li><strong>Report Drafting &amp; Certificate Issuance:</strong> จัดทำรายงานและใบรับรอง</li>
-    </ul>
-    <div class="note">
-      <strong>Pre-engagement:</strong> ก่อนเริ่มทดสอบ ลูกค้าและผู้ทดสอบต้องหารือเกี่ยวกับข้อกำหนดทางกฎหมายและกฎของการมีส่วนร่วม (Rules of Engagement) ซึ่งรวมถึงขอบเขต, วันที่เริ่ม/สิ้นสุด, เป้าหมาย, ระเบียบวิธี, ความรับผิดชอบ (Liabilities) และต้องได้รับความยินยอมร่วมกันก่อนเสมอ
-    </div>
-
-    <h2>5. Rules of Engagement (ROE)</h2>
-    <p>ข้อกำหนดที่สำคัญซึ่งแทบทุก ROE จะต้องมี:</p>
-    <ul>
-      <li>เอกสาร <strong>"Permission to hack"</strong> และ <strong>"Nondisclosure Agreement"</strong> ที่ลงนามโดยทั้งสองฝ่าย</li>
-      <li>ขอบเขตของการทดสอบ (Scope) และส่วนใดขององค์กรที่ต้องทดสอบ</li>
-      <li>ระยะเวลาโครงการรวมถึงวันเริ่มและวันสิ้นสุด</li>
-      <li>ระเบียบวิธี (Methodology) ที่ใช้ดำเนินการทดสอบเจาะระบบ</li>
-      <li>เป้าหมายของการทดสอบเจาะระบบ</li>
-      <li>เทคนิคที่อนุญาตและไม่อนุญาต เช่น ควรทดสอบ Denial-of-Service (DoS) หรือไม่</li>
-      <li>ความรับผิดชอบ (Liabilities) ที่ตกลงกันล่วงหน้า เช่น กรณีเข้าถึงข้อมูลอ่อนไหว (บัตรเครดิต) หรือทำให้ระบบหยุดทำงาน</li>
-    </ul>
-
-    <h2>6. Categories of Penetration Test (ตามข้อมูลที่ได้รับ)</h2>
-    <ul>
-      <li><strong>Black Box:</strong> ให้ข้อมูลเกี่ยวกับเป้าหมายน้อยมากหรือแทบไม่มี เช่น ไม่รู้ DMZ, OS, Server Version มีเพียงช่วง IP ที่ให้ทดสอบ (เหมาะกับการทดสอบภายนอก External Test)</li>
-      <li><strong>White Box:</strong> ให้ข้อมูลเกือบทั้งหมด เช่น เวอร์ชันแอปพลิเคชัน ระบบปฏิบัติการ และซอร์สโค้ด เพื่อทำ Static/Dynamic Source Code Analysis (พบมากในการทดสอบภายใน Internal/Onsite)</li>
-      <li><strong>Gray Box:</strong> ให้ข้อมูลบางส่วน เช่น บัญชีผู้ใช้ระดับทั่วไป (ผสมระหว่าง Black และ White Box)</li>
-    </ul>
-
-    <h2>7. แนวคิดการเก็บข้อมูล (Information Gathering / Reconnaissance)</h2>
-    <p>
-      ผู้ทดสอบเจาะระบบจะเก็บรวบรวมข้อมูลเกี่ยวกับระบบเป้าหมาย เครือข่าย แอปพลิเคชัน หรือองค์กรอย่างเป็นระบบ
-      เพื่อสร้างโปรไฟล์ที่ครอบคลุมของเป้าหมาย เข้าใจสถาปัตยกรรม และระบุช่องโหว่ที่อาจเกิดขึ้น ซึ่งเป็นรากฐานของแผนการโจมตีที่มีประสิทธิภาพ
-    </p>
-    <table>
-      <tr><th>คำศัพท์</th><th>ความหมาย</th></tr>
-      <tr><td><strong>Information Gathering</strong></td><td>คำรวมสำหรับกิจกรรมการเก็บรวบรวมข้อมูลทั้งหมด (umbrella term)</td></tr>
-      <tr><td><strong>Reconnaissance</strong></td><td>ภาพรวมเบื้องต้นขององค์กรเป้าหมาย เช่น ค้นหาเว็บไซต์, สื่อสังคมออนไลน์, IP Range, Domain Names, อีเมล และข้อมูล WHOIS</td></tr>
-      <tr><td><strong>Footprinting</strong></td><td>เน้นรายละเอียดทางเทคนิคของโครงสร้างพื้นฐาน IT เช่น การสแกนเครือข่าย, Service Fingerprinting, DNS Enumeration</td></tr>
-      <tr><td><strong>OSINT</strong></td><td>เก็บข้อมูลจากแหล่งสาธารณะ (Publicly Available Sources) โดยใช้เทคนิคการค้นหาขั้นสูง</td></tr>
-      <tr><td><strong>Enumeration</strong></td><td>การโต้ตอบโดยตรงกับระบบเป้าหมายเพื่อดึงข้อมูลเชิงลึก เช่น บัญชีผู้ใช้ กลุ่ม Network Shares และซอฟต์แวร์</td></tr>
-    </table>
-
-    <h2>8. ประเภทของ Reconnaissance</h2>
-    <ul>
-      <li><strong>Passive Reconnaissance (OSINT):</strong> การสืบค้นข้อมูลโดยไม่ส่งแพ็กเก็ตทราฟฟิกตรงไปยังเครื่องเป้าหมายเพื่อเลี่ยงการตรวจจับ เช่น WHOIS, DNS Queries สาธารณะ, Google Dorking, OSINT Framework และการวิเคราะห์เนื้อหาเว็บไซต์</li>
-      <li><strong>Active Reconnaissance:</strong> การติดต่อสื่อสารโดยตรงกับเครื่องเป้าหมาย เช่น Host Enumeration, Network Enumeration, User/Group Enumeration, Network Share Enumeration, Web Page Enumeration, Service Enumeration และ Packet Crafting</li>
-    </ul>
-
-    <h2>9. เครื่องมือสำหรับ Passive Reconnaissance / OSINT</h2>
-    <table>
-      <tr><th>เครื่องมือ</th><th>การใช้งาน</th></tr>
-      <tr><td><strong>whois</strong></td><td>ค้นหาข้อมูลเจ้าของโดเมน/IP Block เช่น Registrant, Admin/Tech Contact, Registrar, วันที่จดทะเบียน/หมดอายุ, Name Servers ตัวอย่าง: <code>whois target.com</code></td></tr>
-      <tr><td><strong>nslookup / host / dig</strong></td><td>สอบถามระเบียน DNS เช่น NS, MX, A และลองทำ Zone Transfer (AXFR) หาก DNS ตั้งค่าผิดพลาดจะเปิดเผย subdomain ทั้งหมด ตัวอย่าง: <code>nslookup -type=ns target.com</code>, <code>dig @&lt;IP&gt; domain.com AXFR</code></td></tr>
-      <tr><td><strong>Google Dorking</strong></td><td>ใช้ตัวดำเนินการค้นหา เช่น <code>site:target.com filetype:pdf</code>, <code>site:target.com inurl:admin</code>, <code>allintitle:index of</code>, <code>inurl:login</code> และดู Google Hacking Database (GHDB) บน Exploit-DB</td></tr>
-      <tr><td><strong>Shodan</strong></td><td>เสิร์ชเอนจินสำหรับอุปกรณ์ที่เชื่อมต่ออินเทอร์เน็ต (search engine for hackers) ใช้ตัวกรอง เช่น <code>port:21</code>, <code>os:Linux</code>, <code>country:TH</code>, <code>product:Apache</code>, <code>net:192.0.2.0/24</code></td></tr>
-      <tr><td><strong>theHarvester</strong></td><td>รวบรวม Emails, Hosts, Subdomains และ URLs จากแหล่งสาธารณะ (มีทั้ง Passive และ Active Modules) ตัวอย่าง: <code>theHarvester -b yahoo -d target.com</code></td></tr>
-      <tr><td><strong>recon-ng</strong></td><td>OSINT Framework เขียนด้วย Python สำหรับ Footprinting อัตโนมัติ เช่น <code>marketplace install hackertarget</code>, <code>modules load hackertarget</code>, <code>options set source target.com</code>, <code>run</code>, <code>show hosts</code></td></tr>
-      <tr><td><strong>OSINT Framework</strong></td><td><code>https://osintframework.com/</code> — โครงสร้างต้นไม้รวมเครื่องมือและแหล่งข้อมูล OSINT ตามหมวดหมู่ (Username, Email, Social Media, Dark Web ฯลฯ)</td></tr>
-    </table>
-
-    <h2>10. Linux Essentials สำหรับงาน Pentest</h2>
-    <h3>คำสั่งพื้นฐาน (Navigation &amp; File)</h3>
-    <ul>
-      <li><code>pwd</code> แสดงตำแหน่งไดเรกทอรีปัจจุบัน &nbsp; <code>ls -la</code> แสดงรายการไฟล์รวมไฟล์ซ่อน</li>
-      <li><code>cd [directory]</code> เปลี่ยนไดเรกทอรี &nbsp; <code>mkdir</code> สร้างไดเรกทอรี &nbsp; <code>rm</code> ลบไฟล์ &nbsp; <code>rmdir</code> ลบไดเรกทอรีว่าง</li>
-      <li><code>cp [source] [destination]</code> คัดลอก &nbsp; <code>mv [source] [destination]</code> ย้าย/เปลี่ยนชื่อ</li>
-      <li><code>cat [file]</code> แสดงเนื้อหาไฟล์ &nbsp; <code>nano</code>/<code>vim</code> เปิดแก้ไขไฟล์ &nbsp; <code>touch [file]</code> สร้างไฟล์ว่าง</li>
-      <li><code>grep keyword filename</code> ค้นหาคำในไฟล์ &nbsp; <code>man [cmd]</code> เปิดคู่มือคำสั่ง</li>
-    </ul>
-    <h3>สิทธิ์การเข้าถึงไฟล์ (File Permission)</h3>
-    <ul>
-      <li><code>chmod [permissions] [file]</code> เปลี่ยนสิทธิ์ โดยค่า R=4, W=2, X=1 เช่น <code>chmod 755</code> คือ rwxr-xr-x</li>
-      <li><code>chown [user:group] [file]</code> เปลี่ยนเจ้าของไฟล์ &nbsp; <code>chgrp [group] [file]</code> เปลี่ยนกลุ่ม</li>
-    </ul>
-    <h3>กระบวนการและข้อมูลระบบ (Process &amp; System Info)</h3>
-    <ul>
-      <li><code>ps</code> แสดงกระบวนการปัจจุบัน &nbsp; <code>kill [PID]</code> / <code>pkill [name]</code> จบกระบวนการ</li>
-      <li><code>uname -a</code> ข้อมูลระบบ &nbsp; <code>df -h</code> พื้นที่ดิสก์ &nbsp; <code>free -h</code> หน่วยความจำ &nbsp; <code>uptime</code> เวลาทำงาน</li>
-      <li><code>top</code>/<code>htop</code> ดูกระบวนการแบบเรียลไทม์</li>
-    </ul>
-    <h3>เครือข่าย (Networking)</h3>
-    <ul>
-      <li><code>ip a</code> / <code>ifconfig</code> แสดง Network Interface และ IP</li>
-      <li><code>ping [host]</code> ทดสอบการเชื่อมต่อ &nbsp; <code>ip r</code> / <code>route -n</code> ตารางเส้นทาง</li>
-      <li><code>netstat</code> / <code>ss -tuln</code> แสดงพอร์ตที่เปิดและสถานะการเชื่อมต่อ
-        <ul>
-          <li><code>netstat -l</code> พอร์ตที่ Listening &nbsp; <code>netstat -a</code> พอร์ตทั้งหมด &nbsp; <code>netstat -t</code> TCP &nbsp; <code>netstat -u</code> UDP</li>
-        </ul>
-      </li>
-      <li><code>cat /etc/resolv.conf</code> ตรวจสอบ DNS Settings</li>
-    </ul>
-    <h3>บัญชีผู้ใช้, แพ็กเกจ และอื่นๆ</h3>
-    <ul>
-      <li><code>whoami</code> ผู้ใช้ปัจจุบัน &nbsp; <code>passwd</code> เปลี่ยนรหัสผ่าน &nbsp; <code>useradd [username]</code> เพิ่มผู้ใช้</li>
-      <li><code>sudo apt update</code> / <code>sudo apt upgrade</code> / <code>sudo apt install [pkg]</code> / <code>sudo apt remove [pkg]</code></li>
-      <li><code>wget [url]</code> ดาวน์โหลดไฟล์ &nbsp; <code>echo [text]</code> แสดงข้อความ &nbsp; <code>history</code> ประวัติคำสั่ง &nbsp; <code>mount</code> ระบบไฟล์ที่เมานต์</li>
-    </ul>
-    <h3>ตัวดำเนินการต่อคำสั่ง (Command Chaining Operators)</h3>
-    <ul>
-      <li><code>&amp;</code> รันโปรแกรมเบื้องหลัง (Background)</li>
-      <li><code>&amp;&amp;</code> รันคำสั่งถัดไปเฉพาะเมื่อคำสั่งก่อนหน้าสำเร็จ (Logical AND)</li>
-      <li><code>|</code> Pipe — ส่งผลลัพธ์ของคำสั่งก่อนหน้าเป็น input ให้คำสั่งถัดไป</li>
-      <li><code>&gt;</code> เขียนทับไฟล์ &nbsp; <code>&gt;&gt;</code> ต่อท้ายไฟล์</li>
-    </ul>
-    <h3>โครงสร้างไฟล์ Linux ที่สำคัญ</h3>
-    <table>
-      <tr><th>Directory</th><th>ความสำคัญต่อการทำ Pentest</th></tr>
-      <tr><td><code>/bin</code></td><td>โปรแกรมที่ execute ได้ — เป็นที่นิยมเก็บสคริปต์เพื่อคงการเข้าถึง (Persistence)</td></tr>
-      <tr><td><code>/etc</code></td><td>ไฟล์ตั้งค่าระบบ — แหล่งหาข้อมูล Credentials เช่น <code>/etc/shadow</code>, <code>/etc/passwd</code></td></tr>
-      <tr><td><code>/home</code></td><td>ไดเรกทอรีบ้านของผู้ใช้</td></tr>
-      <tr><td><code>/opt</code></td><td>ซอฟต์แวร์ของบริษัทบุคคลที่สาม (Third-party software)</td></tr>
-      <tr><td><code>/tmp</code></td><td>พื้นที่ชั่วคราว (ถูกล้างเมื่อรีบูต) — เหมาะสำหรับวาง Enumeration Scripts</td></tr>
-      <tr><td><code>/var</code></td><td>ไฟล์ Log — ที่เก็บหลักฐานการโจมตี</td></tr>
-    </table>
-
-    <h2>11. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
-
-    <h3>ตอนที่ 1: การสำรวจและทดสอบการเชื่อมต่อเครือข่าย</h3>
-    <ul>
-      <li><strong>ตรวจสอบ Interface และ IP Address:</strong> รันคำสั่ง <code>ip a</code> เพื่อตรวจสอบว่า Kali ได้รับ IP ของวงทดสอบถูกต้องหรือไม่</li>
-      <li><strong>ทดสอบการเชื่อมต่อ:</strong> รันคำสั่ง <code>ping -c 4 &lt;Target_IP&gt;</code> เพื่อยืนยันว่าสามารถสื่อสารกับเป้าหมายได้โดยไม่มี Packet Loss</li>
-    </ul>
-
-    <h3>ตอนที่ 2: การสืบค้นข้อมูลเป้าหมายด้วยเทคนิค Passive Recon (OSINT)</h3>
-    <ul>
-      <li><strong>ตรวจสอบข้อมูลการจดทะเบียนโดเมน:</strong> รันคำสั่ง <code>whois target.com</code> เพื่อค้นหารายละเอียดผู้ถือครองโดเมนและ Name Servers</li>
-      <li><strong>สืบค้นระเบียนข้อมูล DNS:</strong> ใช้คำสั่ง <code>nslookup -type=ns target.com</code>, <code>nslookup -type=mx target.com</code> หรือ <code>host -a target.com</code> เพื่อแจกแจง Mail Server และ Subdomains</li>
-      <li><strong>ค้นหาข้อมูลลับและโครงสร้างเว็บ (Google Dorking):</strong> ทำการค้นหาผ่านเว็บเบราว์เซอร์ด้วยคำสั่งเฉพาะ เช่น <code>site:target.com filetype:pdf</code>, <code>site:target.com inurl:admin</code>, <code>site:target.com ext:sql | ext:log</code></li>
-    </ul>
-
-    <h3>ตอนที่ 3: การจัดการระบบไฟล์และการสร้าง Wordlist สำหรับบันทึกผล</h3>
-    <ul>
-      <li><strong>สร้างโฟลเดอร์สำหรับแล็บ:</strong> ใช้คำสั่ง <code>mkdir -p ~/Pentest_Labs/Lab2</code> และย้ายตำแหน่งด้วย <code>cd ~/Pentest_Labs/Lab2</code></li>
-      <li><strong>สร้างไฟล์พจนานุกรมชื่อบัญชี:</strong> ใช้ Text Editor ผ่านคำสั่ง <code>nano user_list.txt</code> เพื่อระบุรายชื่อผู้ใช้ที่น่าสงสัย (เช่น admin, root, msfadmin) บรรทัดละ 1 รายการ</li>
-      <li><strong>ตรวจสอบความถูกต้อง:</strong> ใช้คำสั่ง <code>ls -la</code> และ <code>cat user_list.txt</code> เพื่อตรวจสอบการสร้างไฟล์และสิทธิ์การเข้าถึง</li>
-    </ul>
-
-    <div class="tip">
-      <strong>แบบฝึกหัด Linux เพิ่มเติม:</strong> ฝึก Navigation (pwd, ls, cd, mkdir, rm), File Permissions (chmod, chown), Process Management (ps, kill, top), Network (ip a, ip r, ping, traceroute, ss -tuln) และ Package Management (apt update / upgrade / install / remove) ตามแบบฝึกหัดในสไลด์เพื่อปูพื้นฐานก่อนการทดสอบเจาะระบบ
-    </div>
-
-    <hr>
-
-    <h2>12. สรุปรายการหลักฐานที่ต้องบันทึก (Assignment Checklist)</h2>
-    <ul>
-      <li>ภาพแสดงผลลัพธ์คำสั่ง <code>ip a</code> และการ <code>ping</code> เครื่องเป้าหมายสำเร็จ</li>
-      <li>ภาพผลการตรวจสอบข้อมูล Domain และ DNS Records (WHOIS / Nslookup / Host)</li>
-      <li>ภาพตัวอย่างการใช้ Google Dorking บน Web Browser</li>
-      <li>ภาพ Terminal แสดงโครงสร้างโฟลเดอร์และเนื้อหาไฟล์ Wordlist ที่สร้างขึ้นบน Kali Linux</li>
-    </ul>
-
-  </main>
-
-  <div class="footer">สรุปเนื้อหา Lecture 2 &mdash; Penetration Testing and Protection &copy; 2026</div>
-
-</body>
+  </body>
 </html>

@@ -1,161 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>สรุปเส้นทางการเรียนรู้ - Penetration Testing (PTES)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="summary.html" class="brand active"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">PenTest สรุป</a>
-      <a href="L1.html">L1</a>
-      <a href="L2.html">L2</a>
-      <a href="L3.html">L3</a>
-      <a href="L4.html">L4</a>
-      <a href="L5.html">L5</a>
-      <a href="L6.html">L6</a>
-      <a href="L7.html">L7</a>
-    </div>
-  </nav>
-
-  <main class="a4">
-
-    <h1>เส้นทางการเรียนรู้ Penetration Testing ตามวงจรชีวิตการทดสอบเจาะระบบ</h1>
-    <p class="subtitle">Penetration Testing Execution Standard (PTES) — จากผู้ไม่รู้เป้าหมาย ถึงการควบคุมระบบอย่างเบ็ดเสร็จ</p>
-
-    <h2>ภาพรวมของหลักสูตร (Overview)</h2>
-    <p>
-      เนื้อหาตั้งแต่ <strong>Lecture 1 ถึง Lecture 7</strong> ถูกร้อยเรียงตาม <strong>วงจรชีวิตของการทดสอบเจาะระบบจริง
-      (Penetration Testing Execution Standard - PTES)</strong> แบบ Step-by-Step
-    </p>
-    <p>
-      เป้าหมายหลักที่ซ่อนอยู่ (Hidden Objective) คือการฝึกทักษะให้คิดและลงมือทำอย่างเป็นระบบแบบ
-      <strong>Offensive Security Professional (Ethical Hacker)</strong> โดยเริ่มจากการไม่รู้อะไรเลยเกี่ยวกับเป้าหมาย
-      ไปจนถึงการเข้าควบคุมระบบและยึดข้อมูลสำคัญได้อย่างเบ็ดเสร็จ
-    </p>
-
-    <h2>แผนภาพรวมของหลักสูตร (The Big Picture)</h2>
-    <div class="roadmap">
-      <div class="rm-step">L1<small>Scope / Setup</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L2<small>Recon</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L3<small>Scan</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L4<small>Enumerate</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L5<small>Analyze</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L6<small>Exploit</small></div>
-      <div class="rm-arrow">&#10132;</div>
-      <div class="rm-step">L7<small>Post-Exploit / Crack</small></div>
-    </div>
-
-    <div class="bigpic">
-      <div class="bp-title">สรุปเส้นทางการเรียนรู้ (The Big Picture)</div>
-      <div class="arrow-flow">
-        <span class="af-step">Scope/Setup (L1)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Recon (L2)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Scan (L3)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Enumerate (L4)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Analyze (L5)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Exploit (L6)</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Post-Exploit/Crack (L7)</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>สรุปเส้นทางการเรียนรู้ - Penetration Testing (PTES)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="summary.html" class="brand active"
+          ><img
+            src="icon.jpg"
+            alt="PenTest Logo"
+            class="brand-logo"
+          />Roadmap</a
+        >
+        <a href="L1.html">L1</a>
+        <a href="L2.html">L2</a>
+        <a href="L3.html">L3</a>
+        <a href="L4.html">L4</a>
+        <a href="L5.html">L5</a>
+        <a href="L6.html">L6</a>
+        <a href="L7.html">L7</a>
       </div>
-    </div>
+    </nav>
 
-    <h2>แผนภาพความสัมพันธ์และ Objective ของแต่ละ Lecture</h2>
+    <main class="a4">
+      <h1>
+        เส้นทางการเรียนรู้ Penetration Testing ตามวงจรชีวิตการทดสอบเจาะระบบ
+      </h1>
+      <p class="subtitle">
+        Penetration Testing Execution Standard (PTES) — จากผู้ไม่รู้เป้าหมาย
+        ถึงการควบคุมระบบอย่างเบ็ดเสร็จ
+      </p>
 
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L1</span><h3>Foundation &amp; Methodology (ปูพื้นฐานและกฎกติกา)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> ทำความเข้าใจขอบเขต จริยธรรม และแยกความแตกต่างระหว่างการสแกนหาช่องโหว่ (VA) กับการเจาะระบบจริง (PT) พร้อมเตรียมสภาพแวดล้อมแล็บ (Kali &amp; Metasploitable2)</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L2:</strong> เมื่อมีแล็บพร้อมแล้ว สเต็ปแรกของการโจมตีคือการเริ่มหาข้อมูลเป้าหมาย</div>
-    </div>
+      <h2>ภาพรวมของหลักสูตร (Overview)</h2>
+      <p>
+        เนื้อหาตั้งแต่ <strong>Lecture 1 ถึง Lecture 7</strong> ถูกร้อยเรียงตาม
+        <strong
+          >วงจรชีวิตของการทดสอบเจาะระบบจริง (Penetration Testing Execution
+          Standard - PTES)</strong
+        >
+        แบบ Step-by-Step
+      </p>
+      <p>
+        เป้าหมายหลักที่ซ่อนอยู่ (Hidden Objective)
+        คือการฝึกทักษะให้คิดและลงมือทำอย่างเป็นระบบแบบ
+        <strong>Offensive Security Professional (Ethical Hacker)</strong>
+        โดยเริ่มจากการไม่รู้อะไรเลยเกี่ยวกับเป้าหมาย
+        ไปจนถึงการเข้าควบคุมระบบและยึดข้อมูลสำคัญได้อย่างเบ็ดเสร็จ
+      </p>
 
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L2</span><h3>Passive Reconnaissance &amp; Linux Fundamentals (สำรวจข้อมูลภายนอก)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> เก็บข้อมูลเป้าหมายจากแหล่งสาธารณะ (OSINT / Google Dorking / WHOIS) โดยยังไม่แตะต้องระบบตรงๆ เพื่อไม่ให้เป้าหมายรู้ตัว</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L3:</strong> เมื่อได้ขอบเขต IP และ Domain กว้างๆ แล้ว ต้องเริ่มส่งแพ็กเก็ตเข้าไปสำรวจโดยตรง</div>
-    </div>
-
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L3</span><h3>Active Scanning &amp; Host Discovery (สแกนหาพอร์ตและบริการ)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> ใช้ Nmap ยิงโพรบตรวจสอบว่ามีโฮสต์ไหนเปิดอยู่ (Host Discovery) และมีประตู/พอร์ตใดเปิดไว้บ้าง (<code>-sS</code>, <code>-sT</code>, <code>-sV</code>, <code>-O</code>)</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L4:</strong> เมื่อรู้ว่าพอร์ตใดเปิดอยู่ ต้องเจาะลึกเข้าไปดูรายละเอียดการตั้งค่าของแต่ละพอร์ต</div>
-    </div>
-
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L4</span><h3>Service Enumeration &amp; Deep Inspection (เจาะลึกรายละเอียดบริการ)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> ดึงข้อมูลเชิงลึก (Users, Shares, Configs, Hidden Paths) จากโปรโตคอลสำคัญ เช่น SMB (<code>enum4linux</code>, <code>smbclient</code>), RPC (<code>showmount</code>), และ Web (<code>http-enum</code>)</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L5:</strong> เมื่อได้รายการเวอร์ชันและโครงสร้างภายในครบแล้ว ต้องนำไปเทียบกับฐานข้อมูลเพื่อหาว่ามีช่องโหว่ใดบ้าง</div>
-    </div>
-
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L5</span><h3>Vulnerability Assessment &amp; Scoring (วิเคราะห์และประเมินช่องโหว่)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> สแกนเปรียบเทียบหาช่องโหว่ที่มีอยู่จริง (Known CVEs) ด้วย Nmap Vuln Scripts, Nessus, และ OWASP ZAP พร้อมประเมินความรุนแรงด้วยคะแนน CVSS</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L6:</strong> เมื่อได้รายชื่อช่องโหว่ระดับ Critical/High แล้ว ต้องพิสูจน์ (PoC) ด้วยการเจาะจริงว่าเข้าถึงระบบได้หรือไม่</div>
-    </div>
-
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L6</span><h3>System Exploitation (การเจาะระบบเพื่อยึดครอง)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> นำ CVE ที่ตรวจพบมาเลือกใช้ Exploit + Payload ใน Metasploit หรือสคริปต์เฉพาะทางเพื่อเจาะเอา Initial Access / Root Shell</p>
-      <div class="lc-next"><strong>&#10132; จุดเชื่อมต่อไปยัง L7:</strong> หลังจากเจาะเข้าไปในระบบได้แล้ว มักจะได้สิทธิ์เพียงระดับหนึ่ง หรือได้ไฟล์สำคัญอย่าง <code>/etc/shadow</code> ออกมา จึงต้องทำ Post-Exploitation ต่อ</div>
-    </div>
-
-    <div class="lecture-card">
-      <div class="lc-head"><span class="lc-num">L7</span><h3>Password Cracking &amp; Post-Exploitation (การถอดรหัสผ่านและการคงสิทธิ์)</h3></div>
-      <p class="lc-obj"><strong>Objective:</strong> นำข้อมูลรหัสผ่านที่ดึงมาจากขั้นตอน Exploitation (เช่น <code>/etc/shadow</code>) มาถอดรหัสด้วย John the Ripper / Hashcat หรือทำ Brute-force ซ้ำด้วย Hydra เพื่อยึดบัญชีอื่นๆ ในระบบ</p>
-    </div>
-
-    <hr>
-
-    <h2>สรุปบทเรียนสำคัญ (The Key Takeaway)</h2>
-    <div class="note">
-      <strong>หลักสูตรนี้วางโครงสร้างเพื่อให้เห็นว่า "การแฮกระบบไม่ใช่การสุ่มยิงมั่ว"</strong> แต่เป็นกระบวนการต่อเนื่องแบบลูกโซ่
-      (Kill Chain) ที่ข้อมูลจากขั้นตอนก่อนหน้าจะเป็นกุญแจสำคัญให้ขั้นตอนถัดไปประสบความสำเร็จเสมอ
-    </div>
-    <p>
-      กล่าวคือ ข้อมูล (Intelligence) ที่เก็บได้ในเฟส Reconnaissance จะกำหนดทิศทางของ Scanning
-      ผลการสแกนจะชี้เป้าไปยังบริการที่ต้อง Enumeration ผลการ Enumerate จะนำไปสู่การระบุช่องโหว่
-      ช่องโหว่ที่ถูกยืนยัน (Validate) จะถูกนำไป Exploit และผลลัพธ์จากการ Exploit (เช่น ไฟล์ <code>/etc/shadow</code>)
-      จะถูกใช้ต่อในขั้นตอน Password Cracking เพื่อยกระดับสิทธิ์และขยายผลการโจมตี — เป็นวงจรที่ต่อเนื่องกันครบถ้วน
-      ตามมาตรฐาน PTES ตั้งแต่ <strong>Pre-engagement</strong> ไปจนถึง <strong>Reporting</strong>
-    </p>
-
-    <div class="bigpic">
-      <div class="bp-title">PTES : 7 Phases มาตรฐาน</div>
-      <div class="arrow-flow">
-        <span class="af-step">Pre-engagement</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Intelligence Gathering</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Threat Modeling</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Vulnerability Analysis</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Exploitation</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Post Exploitation</span>
-        <span class="af-arrow">&#8594;</span>
-        <span class="af-step">Reporting</span>
+      <h2>แผนภาพรวมของหลักสูตร (The Big Picture)</h2>
+      <div class="roadmap">
+        <div class="rm-step">L1<small>Scope / Setup</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L2<small>Recon</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L3<small>Scan</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L4<small>Enumerate</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L5<small>Analyze</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L6<small>Exploit</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L7<small>Post-Exploit / Crack</small></div>
       </div>
+
+      <div class="bigpic">
+        <div class="bp-title">สรุปเส้นทางการเรียนรู้ (The Big Picture)</div>
+        <div class="arrow-flow">
+          <span class="af-step">Scope/Setup (L1)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Recon (L2)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Scan (L3)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Enumerate (L4)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Analyze (L5)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Exploit (L6)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Post-Exploit/Crack (L7)</span>
+        </div>
+      </div>
+
+      <h2>แผนภาพความสัมพันธ์และ Objective ของแต่ละ Lecture</h2>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L1</span>
+          <h3>Foundation &amp; Methodology (ปูพื้นฐานและกฎกติกา)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> ทำความเข้าใจขอบเขต จริยธรรม
+          และแยกความแตกต่างระหว่างการสแกนหาช่องโหว่ (VA) กับการเจาะระบบจริง (PT)
+          พร้อมเตรียมสภาพแวดล้อมแล็บ (Kali &amp; Metasploitable2)
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L2:</strong> เมื่อมีแล็บพร้อมแล้ว
+          สเต็ปแรกของการโจมตีคือการเริ่มหาข้อมูลเป้าหมาย
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L2</span>
+          <h3>
+            Passive Reconnaissance &amp; Linux Fundamentals (สำรวจข้อมูลภายนอก)
+          </h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> เก็บข้อมูลเป้าหมายจากแหล่งสาธารณะ (OSINT /
+          Google Dorking / WHOIS) โดยยังไม่แตะต้องระบบตรงๆ
+          เพื่อไม่ให้เป้าหมายรู้ตัว
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L3:</strong> เมื่อได้ขอบเขต IP และ
+          Domain กว้างๆ แล้ว ต้องเริ่มส่งแพ็กเก็ตเข้าไปสำรวจโดยตรง
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L3</span>
+          <h3>Active Scanning &amp; Host Discovery (สแกนหาพอร์ตและบริการ)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> ใช้ Nmap
+          ยิงโพรบตรวจสอบว่ามีโฮสต์ไหนเปิดอยู่ (Host Discovery)
+          และมีประตู/พอร์ตใดเปิดไว้บ้าง (<code>-sS</code>, <code>-sT</code>,
+          <code>-sV</code>, <code>-O</code>)
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L4:</strong>
+          เมื่อรู้ว่าพอร์ตใดเปิดอยู่
+          ต้องเจาะลึกเข้าไปดูรายละเอียดการตั้งค่าของแต่ละพอร์ต
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L4</span>
+          <h3>
+            Service Enumeration &amp; Deep Inspection (เจาะลึกรายละเอียดบริการ)
+          </h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> ดึงข้อมูลเชิงลึก (Users, Shares, Configs,
+          Hidden Paths) จากโปรโตคอลสำคัญ เช่น SMB (<code>enum4linux</code>,
+          <code>smbclient</code>), RPC (<code>showmount</code>), และ Web
+          (<code>http-enum</code>)
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L5:</strong>
+          เมื่อได้รายการเวอร์ชันและโครงสร้างภายในครบแล้ว
+          ต้องนำไปเทียบกับฐานข้อมูลเพื่อหาว่ามีช่องโหว่ใดบ้าง
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L5</span>
+          <h3>
+            Vulnerability Assessment &amp; Scoring (วิเคราะห์และประเมินช่องโหว่)
+          </h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> สแกนเปรียบเทียบหาช่องโหว่ที่มีอยู่จริง
+          (Known CVEs) ด้วย Nmap Vuln Scripts, Nessus, และ OWASP ZAP
+          พร้อมประเมินความรุนแรงด้วยคะแนน CVSS
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L6:</strong>
+          เมื่อได้รายชื่อช่องโหว่ระดับ Critical/High แล้ว ต้องพิสูจน์ (PoC)
+          ด้วยการเจาะจริงว่าเข้าถึงระบบได้หรือไม่
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L6</span>
+          <h3>System Exploitation (การเจาะระบบเพื่อยึดครอง)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> นำ CVE ที่ตรวจพบมาเลือกใช้ Exploit +
+          Payload ใน Metasploit หรือสคริปต์เฉพาะทางเพื่อเจาะเอา Initial Access /
+          Root Shell
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L7:</strong>
+          หลังจากเจาะเข้าไปในระบบได้แล้ว มักจะได้สิทธิ์เพียงระดับหนึ่ง
+          หรือได้ไฟล์สำคัญอย่าง <code>/etc/shadow</code> ออกมา จึงต้องทำ
+          Post-Exploitation ต่อ
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L7</span>
+          <h3>
+            Password Cracking &amp; Post-Exploitation
+            (การถอดรหัสผ่านและการคงสิทธิ์)
+          </h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> นำข้อมูลรหัสผ่านที่ดึงมาจากขั้นตอน
+          Exploitation (เช่น <code>/etc/shadow</code>) มาถอดรหัสด้วย John the
+          Ripper / Hashcat หรือทำ Brute-force ซ้ำด้วย Hydra เพื่อยึดบัญชีอื่นๆ
+          ในระบบ
+        </p>
+      </div>
+
+      <hr />
+
+      <h2>สรุปบทเรียนสำคัญ (The Key Takeaway)</h2>
+      <div class="note">
+        <strong
+          >หลักสูตรนี้วางโครงสร้างเพื่อให้เห็นว่า
+          "การแฮกระบบไม่ใช่การสุ่มยิงมั่ว"</strong
+        >
+        แต่เป็นกระบวนการต่อเนื่องแบบลูกโซ่ (Kill Chain)
+        ที่ข้อมูลจากขั้นตอนก่อนหน้าจะเป็นกุญแจสำคัญให้ขั้นตอนถัดไปประสบความสำเร็จเสมอ
+      </div>
+      <p>
+        กล่าวคือ ข้อมูล (Intelligence) ที่เก็บได้ในเฟส Reconnaissance
+        จะกำหนดทิศทางของ Scanning ผลการสแกนจะชี้เป้าไปยังบริการที่ต้อง
+        Enumeration ผลการ Enumerate จะนำไปสู่การระบุช่องโหว่
+        ช่องโหว่ที่ถูกยืนยัน (Validate) จะถูกนำไป Exploit และผลลัพธ์จากการ
+        Exploit (เช่น ไฟล์ <code>/etc/shadow</code>) จะถูกใช้ต่อในขั้นตอน
+        Password Cracking เพื่อยกระดับสิทธิ์และขยายผลการโจมตี —
+        เป็นวงจรที่ต่อเนื่องกันครบถ้วน ตามมาตรฐาน PTES ตั้งแต่
+        <strong>Pre-engagement</strong> ไปจนถึง <strong>Reporting</strong>
+      </p>
+
+      <div class="bigpic">
+        <div class="bp-title">PTES : 7 Phases มาตรฐาน</div>
+        <div class="arrow-flow">
+          <span class="af-step">Pre-engagement</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Intelligence Gathering</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Threat Modeling</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Vulnerability Analysis</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Exploitation</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Post Exploitation</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Reporting</span>
+        </div>
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเส้นทางการเรียนรู้ Penetration Testing (PTES) &mdash; Penetration
+      Testing and Protection &copy; 2026
     </div>
-
-  </main>
-
-  <div class="footer">สรุปเส้นทางการเรียนรู้ Penetration Testing (PTES) &mdash; Penetration Testing and Protection &copy; 2026</div>
-
-</body>
+  </body>
 </html>

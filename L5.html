@@ -1,169 +1,412 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture 5 - Vulnerability Assessment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 5 - Vulnerability Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="summary.html" class="brand"
+          ><img
+            src="icon.jpg"
+            alt="PenTest Logo"
+            class="brand-logo"
+          />Roadmap</a
+        >
+        <a href="L1.html">L1</a>
+        <a href="L2.html">L2</a>
+        <a href="L3.html">L3</a>
+        <a href="L4.html">L4</a>
+        <a href="L5.html" class="active">L5</a>
+        <a href="L6.html">L6</a>
+        <a href="L7.html">L7</a>
+      </div>
+    </nav>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="summary.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">PenTest สรุป</a>
-      <a href="L1.html">L1</a>
-      <a href="L2.html">L2</a>
-      <a href="L3.html">L3</a>
-      <a href="L4.html">L4</a>
-      <a href="L5.html" class="active">L5</a>
-      <a href="L6.html">L6</a>
-      <a href="L7.html">L7</a>
+    <main class="a4">
+      <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 5: Vulnerability Assessment</h1>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051)
+      </p>
+
+      <h2>1. สรุปเนื้อหาสำคัญ (Theoretical Overview)</h2>
+      <ul>
+        <li>
+          <strong>Vulnerability Assessment (VA):</strong> กระบวนการตรวจหา จำแนก
+          และจัดลำดับความสำคัญของช่องโหว่บนระบบ เครือข่าย และซอฟต์แวร์
+          โดยเน้นการตรวจสอบเปรียบเทียบกับฐานข้อมูลช่องโหว่ที่ทราบแล้ว (Known
+          Vulnerabilities)
+        </li>
+        <li>
+          <strong>ความแตกต่างกับ Pentest:</strong> VA
+          เน้นการค้นหาและประเมินระดับความเสี่ยงของจุดอ่อนทั้งหมด (Assessment)
+          ในขณะที่ Penetration Testing
+          มุ่งเน้นการเจาะผ่านระบบป้องกันเพื่อพิสูจน์ผลกระทบจริง
+        </li>
+        <li>
+          <strong>ความหมายของ Vulnerability:</strong>
+          จุดอ่อนที่อาจนำไปสู่การประนีประนอมความปลอดภัยของข้อมูล แบ่งเป็น 3
+          ประเภท
+          <ul>
+            <li>
+              <strong>Technological:</strong> จุดบกพร่องในเทคโนโลยีที่นำมาใช้
+              เช่น ความผิดพลาดในแอปพลิเคชัน X ที่ทำให้ควบคุมระบบ Y ได้
+            </li>
+            <li>
+              <strong>Configuration:</strong> เกิดจากการตั้งค่าระบบที่ผิดพลาด
+              เช่น ผู้ดูแลเปิดพอร์ต RDP บน Firewall ไว้โดยไม่จำเป็น
+            </li>
+            <li>
+              <strong>Policy:</strong> การขาดนโยบายความปลอดภัยหรือไม่ปฏิบัติตาม
+              เช่น ประตู Data Center ไม่ได้ล็อก
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>งานของ Vulnerability Assessment &amp; Management:</strong>
+          สแกนระบบเป้าหมาย, สร้างรายงานผลการสแกน, วิเคราะห์รายงาน,
+          จัดลำดับความเสี่ยงของแต่ละช่องโหว่, ตัด False Positives ออก
+          และรวบรวมรายงานช่องโหว่จริง
+        </li>
+        <li>
+          <strong>ระดับความเสี่ยง (Risk Levels):</strong>
+          <ul>
+            <li>
+              <strong>High Risk:</strong> มีช่องโหว่ร้ายแรงที่โจมตีได้ง่าย
+              นำไปสู่การควบคุมระบบทั้งหมด — ต้องแก้ไขทันที
+            </li>
+            <li>
+              <strong>Medium Risk:</strong>
+              ช่องโหว่รุนแรงแต่ต้องใช้ความซับซ้อนในการโจมตี — ควรแก้ไขในระยะสั้น
+            </li>
+            <li>
+              <strong>Low Risk:</strong>
+              ช่องโหว่ระดับปานกลางที่ให้ข้อมูลแก่ผู้โจมตี —
+              แก้ไขได้แต่ไม่เร่งด่วน
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>ข้อดี/ข้อเสียของ Vulnerability Scanner:</strong>
+          <ul>
+            <li>
+              <strong>ข้อดี:</strong> ทำให้งานอัตโนมัติ เช่น Reconnaissance,
+              Port Scanning, Service &amp; Version Detection
+            </li>
+            <li>
+              <strong>ข้อเสีย:</strong> ส่งทราฟฟิกจำนวนมากตรวจจับได้ง่าย (Loud),
+              เกิด False Positives และ False Negatives
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>2. ระบบมาตรฐานและการให้คะแนนช่องโหว่</h2>
+      <table>
+        <tr>
+          <th>ระบบ</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>CVE</strong> (Common Vulnerabilities and Exposures)</td>
+          <td>
+            ฐานข้อมูลช่องโหว่ที่รู้จัก จัดการโดย MITRE Corporation
+            แต่ละช่องโหว่มีรหัสประจำตัวเฉพาะ เช่น CVE-2011-2523, CVE-2014-3566
+          </td>
+        </tr>
+        <tr>
+          <td><strong>NVD</strong> (National Vulnerability Database)</td>
+          <td>
+            ฐานข้อมูลช่องโหว่ของรัฐบาลสหรัฐฯ (nvd.nist.gov)
+            ที่วิเคราะห์ข้อมูลต่อยอดจาก CVE และระบุระดับความรุนแรงด้วยคะแนน CVSS
+          </td>
+        </tr>
+        <tr>
+          <td><strong>CVSS</strong> (Common Vulnerability Scoring System)</td>
+          <td>
+            เฟรมเวิร์กประเมินความรุนแรงของช่องโหว่ จัดการโดย FIRST มีเวอร์ชัน
+            4.0 แบ่งเป็น 4 กลุ่มเมตริก: Base, Threat, Environmental,
+            Supplemental
+          </td>
+        </tr>
+        <tr>
+          <td><strong>CWE</strong> (Common Weakness Enumeration)</td>
+          <td>
+            รายการจุดอ่อนที่พัฒนาร่วมกันโดยชุมชน (Community-developed) ซึ่งเป็น
+            Root Cause ของ CVE Records
+          </td>
+        </tr>
+        <tr>
+          <td><strong>KEV</strong> (Known Exploited Vulnerabilities)</td>
+          <td>
+            ช่องโหว่ที่ถูกระบุว่ามีการโจมตีจริง (Actively Exploited) —
+            องค์กรควรจัดการเร่งด่วน
+          </td>
+        </tr>
+      </table>
+
+      <h3>ระดับคะแนน CVSS (เวอร์ชัน 4.0)</h3>
+      <table>
+        <tr>
+          <th>ระดับ</th>
+          <th>ช่วงคะแนน</th>
+        </tr>
+        <tr>
+          <td>None</td>
+          <td>0.0</td>
+        </tr>
+        <tr>
+          <td>Low</td>
+          <td>0.1 – 3.9</td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td>4.0 – 6.9</td>
+        </tr>
+        <tr>
+          <td>High</td>
+          <td>7.0 – 8.9</td>
+        </tr>
+        <tr>
+          <td>Critical</td>
+          <td>9.0 – 10.0</td>
+        </tr>
+      </table>
+
+      <h3>กลุ่มเมตริก CVSS 4.0</h3>
+      <ul>
+        <li>
+          <strong>Base Metrics:</strong>
+          ลักษณะภายในของช่องโหว่ที่คงที่ตามเวลาและสภาพแวดล้อม
+          <ul>
+            <li>
+              <strong>Attack Vector (AV):</strong> Network (N) / Adjacent (A) /
+              Local (L) / Physical (P)
+            </li>
+            <li><strong>Attack Complexity (AC):</strong> Low (L) / High (H)</li>
+            <li>
+              <strong>Attack Requirements (AT):</strong> None (N) / Present (P)
+            </li>
+            <li>
+              <strong>Privileges Required (PR), User Interaction (UI),</strong>
+              และเมตริกผลกระทบ (Confidentiality/Integrity/Availability)
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Threat Metrics:</strong> สะท้อนระดับภัยคุกคาม (เช่น มี Exploit
+          สาธารณะหรือไม่)
+        </li>
+        <li>
+          <strong>Environmental Metrics:</strong>
+          ปรับคะแนนตามสภาพแวดล้อมขององค์กร เช่น Security Requirements
+          (CR/IR/AR), Modified Impact Metrics
+        </li>
+        <li>
+          <strong>Supplemental Metrics:</strong>
+          ไม่กระทบคะแนนสุดท้ายแต่ให้บริบทเพิ่ม เช่น Safety (S), Automatable
+          (AU), Recovery (R), Value Density (V), Vulnerability Response Effort
+          (RE), Provider Urgency (U)
+        </li>
+      </ul>
+      <div class="tip">
+        <strong>Nomenclature CVSS 4.0:</strong> CVSS-B (Base), CVSS-BT (Base +
+        Threat), CVSS-BE (Base + Environmental), CVSS-BTE (Base + Threat +
+        Environmental) — ใช้เครื่องคิดเลขออนไลน์ได้ที่
+        <code>https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator</code>
+      </div>
+
+      <h3>ขั้นตอนของ Vulnerability Assessment</h3>
+      <ul>
+        <li>ตรวจสอบว่าเป้าหมายยังทำงานอยู่ด้วย ICMP (Ping)</li>
+        <li>สแกนพอร์ตที่เปิดอยู่ด้วยวิธี Stealth และทดสอบพอร์ต</li>
+        <li>
+          ระบุช่องโหว่ที่อาจเกิดขึ้นและสร้างรายงานด้วย Network Vulnerability
+          Scanner
+        </li>
+        <li>จำแนกช่องโหว่และวางแผนการตอบสนอง</li>
+        <li>จำแนกทรัพย์สินหลักและทำ Risk Management</li>
+        <li>จัดทำเอกสาร/รายงานติดตามผล (Follow-up Documentation)</li>
+        <li>
+          เริ่มต้นความพยายามด้านความปลอดภัยอย่างต่อเนื่อง (Ongoing Security
+          Effort)
+        </li>
+      </ul>
+
+      <h2>3. เครื่องมือวิเคราะห์ช่องโหว่ (Vulnerability Scanners)</h2>
+      <table>
+        <tr>
+          <th>เครื่องมือ</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Nmap Scripting Engine (NSE)</strong></td>
+          <td>
+            สคริปต์เขียนด้วยภาษา Lua อยู่ที่
+            <code>/usr/share/nmap/scripts</code> หมวด
+            <code>vuln</code> ใช้ตรวจสอบช่องโหว่เฉพาะบริการอย่างรวดเร็ว เช่น
+            <code>ftp-vsftpd-backdoor</code>, <code>ssl-poodle</code>,
+            <code>ftp-anon</code>, <code>ssh-auth-methods</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tenable Nessus</strong></td>
+          <td>
+            สแกนเนอร์ระดับโฮสต์และเครือข่ายที่มีฐานข้อมูลช่องโหว่ขนาดใหญ่ รองรับ
+            Credentialed Scans, Compliance Auditing
+            และรายงานผลละเอียดพร้อมแนวทางแก้ไข (Remediation) — เวอร์ชันฟรีคือ
+            Nessus Essentials (สแกนได้สูงสุด 16 IP)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>OWASP ZAP (Zed Attack Proxy)</strong></td>
+          <td>
+            สแกนเนอร์โอเพนซอร์สฟรีจาก OWASP
+            สำหรับตรวจสอบช่องโหว่ระดับเว็บแอปพลิเคชันโดยเฉพาะ รองรับทั้ง
+            Automated Scan และ Manual Testing
+          </td>
+        </tr>
+      </table>
+
+      <h3>องค์ประกอบของรายงาน Vulnerability Assessment</h3>
+      <ul>
+        <li>
+          <strong>Executive Summary:</strong> สรุปขอบเขต ระเบียบวิธี
+          ผลการค้นพบหลัก ระดับความรุนแรง และข้อเสนอแนะสำคัญ
+        </li>
+        <li>
+          <strong>Introduction:</strong> วัตถุประสงค์ ขอบเขต
+          (ระบบ/เครือข่าย/แอปพลิเคชัน) ระเบียบวิธี และกลุ่มผู้อ่าน
+        </li>
+        <li>
+          <strong>Findings:</strong> รายละเอียดช่องโหว่ที่พบ (แบ่งตาม
+          Critical/High/Medium/Low), Vulnerability ID, คำอธิบาย, ตำแหน่ง,
+          ผลกระทบ, หลักฐาน/PoC และการประเมินความเสี่ยง
+        </li>
+        <li>
+          <strong>Risk Assessment:</strong> ภาพรวมสถานะความปลอดภัยขององค์กร,
+          ลำดับความสำคัญ และทรัพย์สินวิกฤต
+        </li>
+        <li>
+          <strong>Recommendations:</strong> แนวทางแก้ไขที่ชัดเจน ปฏิบัติได้จริง,
+          แผน Remediation ที่จัดลำดับตามความเสี่ยง และการวิเคราะห์ Cost-Benefit
+        </li>
+        <li>
+          <strong>Appendix:</strong> ข้อมูลทางเทคนิคโดยละเอียด (ผลสแกน, Logs,
+          ภาพหน้าจอ, แผนภาพเครือข่าย)
+        </li>
+      </ul>
+
+      <h2>4. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
+
+      <h3>ตอนที่ 1: การสแกนช่องโหว่ด้วย Nmap NSE Scripts</h3>
+      <ul>
+        <li>
+          <strong>อัปเดตฐานข้อมูล NSE Script:</strong> รันคำสั่ง
+          <code>sudo nmap --script-updatedb</code>
+        </li>
+        <li>
+          <strong>สแกนช่องโหว่ทั้งระบบด้วยสคริปต์หมวด vuln:</strong> รันคำสั่ง
+          <code>nmap --script vuln &lt;Target_IP&gt;</code> เพื่อตรวจหาช่องโหว่
+          เช่น <code>ftp-vsftpd-backdoor</code> (CVE-2011-2523) หรือ
+          <code>ssl-poodle</code> (CVE-2014-3566)
+        </li>
+        <li>
+          <strong>ตรวจสอบการล็อกอินนิรนามบน FTP:</strong> รันคำสั่ง
+          <code>nmap --script ftp-anon &lt;Target_IP&gt;</code>
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 2: การสแกนระบบและเครือข่ายด้วย Tenable Nessus</h3>
+      <ul>
+        <li>
+          <strong>เริ่มต้นเซอร์วิส Nessus:</strong> รันคำสั่ง
+          <code>sudo systemctl start nessusd</code>
+        </li>
+        <li>
+          <strong>เข้าใช้งานและสร้างงานสแกนใหม่:</strong> เข้าเบราว์เซอร์ไปที่
+          <code>https://localhost:8834</code> ไปที่
+          <strong>New Scan</strong> &rarr; เลือกเทมเพลต
+          <strong>Basic Network Scan</strong> &rarr; ใส่ Target IP แล้วกด
+          <strong>Save</strong> &rarr; <strong>Launch</strong>
+        </li>
+        <li>
+          <strong>วิเคราะห์ผลการสแกน:</strong> เปิดแท็บ
+          <strong>Vulnerabilities</strong> กรองดูระดับ
+          <strong>CRITICAL</strong> และ
+          <strong>HIGH</strong> พร้อมอ่านรายละเอียดคำอธิบาย (Description)
+          และแนวทางแก้ไข (Solution)
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 3: การสแกนเว็บแอปพลิเคชันด้วย OWASP ZAP</h3>
+      <ul>
+        <li>
+          <strong>ติดตั้ง OWASP ZAP:</strong> ติดตั้งผ่าน Kali Package Manager:
+          <code>sudo apt update</code> แล้ว
+          <code>sudo apt install zaproxy</code>
+        </li>
+        <li>
+          <strong>เปิดใช้งาน OWASP ZAP:</strong> รันคำสั่ง
+          <code>zaproxy</code> ใน Terminal หรือเปิดผ่านไอคอนโปรแกรม
+          แล้วเลือกโหมด Standard UI พร้อม Persist Session (ไฟล์ .zap)
+        </li>
+        <li>
+          <strong>ทำการสแกนเป้าหมาย (Active Scan):</strong> ใส่ URL:
+          <code>http://&lt;Target_IP&gt;/</code> ในหน้าต่าง
+          <strong>Quick Start / Automated Scan</strong> แล้วกดสั่งสแกน
+          หรือตั้งค่า Proxy เบราว์เซอร์ชี้ไปที่
+          <code>127.0.0.1:8080</code> แล้วคลิกขวาที่ชื่อโฮสต์เพื่อเลือก
+          <strong>Attack</strong> &rarr; <strong>Active Scan</strong>
+        </li>
+        <li>
+          <strong>ติดตั้ง ZAP Root CA Certificate:</strong> เข้าเว็บ
+          <code>http://zap/</code> จากเบราว์เซอร์ที่ตั้ง Proxy แล้วดาวน์โหลดและ
+          Import Certificate เพื่อให้สามารถสแกน HTTPS ได้
+        </li>
+        <li>
+          <strong>ตรวจสอบรายงานผล (Alerts):</strong> ดูรายการแจ้งเตือน เช่น
+          Remote Code Execution (CVE-2012-1823), Path Traversal, Missing
+          Security Headers และสามารถส่งออกรายงานเป็นไฟล์ HTML ผ่านเมนู Report
+        </li>
+      </ul>
+
+      <hr />
+
+      <h2>5. สรุปรายการภาระงานที่ต้องส่ง (Assignment Checklist หน้า 84)</h2>
+      <ul>
+        <li>
+          <strong>รายงานผลจาก Nessus:</strong> สรุปรายการช่องโหว่ระดับ
+          <strong>CRITICAL</strong> ทั้งหมดที่พบบนเครื่อง Metasploitable2
+          โดยระบุว่าพบที่ <strong>Port ใด</strong> และรัน
+          <strong>Service อะไร</strong>
+        </li>
+        <li>
+          <strong>การเปรียบเทียบผลลัพธ์:</strong> เปรียบเทียบผลระหว่าง Nessus
+          (ครอบคลุมระดับ Host / OS / Network Services ทั่วทั้งระบบ) กับ OWASP
+          ZAP (เน้นเฉพาะจุดอ่อนบน Web Application Layer ที่รันบนพอร์ต 80)
+        </li>
+      </ul>
+
+      <div class="note">
+        <strong>การตั้งชื่อไฟล์ส่งงาน:</strong> ตั้งชื่อไฟล์โดยระบุ Section และ
+        Lab เช่น <code>S1L5 6604061234567.pdf</code> (S1 = Section 1, L5 = Lab
+        5, ตามด้วยรหัสนักศึกษา)
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 5 &mdash; Penetration Testing and Protection &copy;
+      2026
     </div>
-  </nav>
-
-  <main class="a4">
-
-    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 5: Vulnerability Assessment</h1>
-    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
-
-    <h2>1. สรุปเนื้อหาสำคัญ (Theoretical Overview)</h2>
-    <ul>
-      <li><strong>Vulnerability Assessment (VA):</strong> กระบวนการตรวจหา จำแนก และจัดลำดับความสำคัญของช่องโหว่บนระบบ เครือข่าย และซอฟต์แวร์ โดยเน้นการตรวจสอบเปรียบเทียบกับฐานข้อมูลช่องโหว่ที่ทราบแล้ว (Known Vulnerabilities)</li>
-      <li><strong>ความแตกต่างกับ Pentest:</strong> VA เน้นการค้นหาและประเมินระดับความเสี่ยงของจุดอ่อนทั้งหมด (Assessment) ในขณะที่ Penetration Testing มุ่งเน้นการเจาะผ่านระบบป้องกันเพื่อพิสูจน์ผลกระทบจริง</li>
-      <li><strong>ความหมายของ Vulnerability:</strong> จุดอ่อนที่อาจนำไปสู่การประนีประนอมความปลอดภัยของข้อมูล แบ่งเป็น 3 ประเภท
-        <ul>
-          <li><strong>Technological:</strong> จุดบกพร่องในเทคโนโลยีที่นำมาใช้ เช่น ความผิดพลาดในแอปพลิเคชัน X ที่ทำให้ควบคุมระบบ Y ได้</li>
-          <li><strong>Configuration:</strong> เกิดจากการตั้งค่าระบบที่ผิดพลาด เช่น ผู้ดูแลเปิดพอร์ต RDP บน Firewall ไว้โดยไม่จำเป็น</li>
-          <li><strong>Policy:</strong> การขาดนโยบายความปลอดภัยหรือไม่ปฏิบัติตาม เช่น ประตู Data Center ไม่ได้ล็อก</li>
-        </ul>
-      </li>
-      <li><strong>งานของ Vulnerability Assessment &amp; Management:</strong> สแกนระบบเป้าหมาย, สร้างรายงานผลการสแกน, วิเคราะห์รายงาน, จัดลำดับความเสี่ยงของแต่ละช่องโหว่, ตัด False Positives ออก และรวบรวมรายงานช่องโหว่จริง</li>
-      <li><strong>ระดับความเสี่ยง (Risk Levels):</strong>
-        <ul>
-          <li><strong>High Risk:</strong> มีช่องโหว่ร้ายแรงที่โจมตีได้ง่าย นำไปสู่การควบคุมระบบทั้งหมด — ต้องแก้ไขทันที</li>
-          <li><strong>Medium Risk:</strong> ช่องโหว่รุนแรงแต่ต้องใช้ความซับซ้อนในการโจมตี — ควรแก้ไขในระยะสั้น</li>
-          <li><strong>Low Risk:</strong> ช่องโหว่ระดับปานกลางที่ให้ข้อมูลแก่ผู้โจมตี — แก้ไขได้แต่ไม่เร่งด่วน</li>
-        </ul>
-      </li>
-      <li><strong>ข้อดี/ข้อเสียของ Vulnerability Scanner:</strong>
-        <ul>
-          <li><strong>ข้อดี:</strong> ทำให้งานอัตโนมัติ เช่น Reconnaissance, Port Scanning, Service &amp; Version Detection</li>
-          <li><strong>ข้อเสีย:</strong> ส่งทราฟฟิกจำนวนมากตรวจจับได้ง่าย (Loud), เกิด False Positives และ False Negatives</li>
-        </ul>
-      </li>
-    </ul>
-
-    <h2>2. ระบบมาตรฐานและการให้คะแนนช่องโหว่</h2>
-    <table>
-      <tr><th>ระบบ</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>CVE</strong> (Common Vulnerabilities and Exposures)</td><td>ฐานข้อมูลช่องโหว่ที่รู้จัก จัดการโดย MITRE Corporation แต่ละช่องโหว่มีรหัสประจำตัวเฉพาะ เช่น CVE-2011-2523, CVE-2014-3566</td></tr>
-      <tr><td><strong>NVD</strong> (National Vulnerability Database)</td><td>ฐานข้อมูลช่องโหว่ของรัฐบาลสหรัฐฯ (nvd.nist.gov) ที่วิเคราะห์ข้อมูลต่อยอดจาก CVE และระบุระดับความรุนแรงด้วยคะแนน CVSS</td></tr>
-      <tr><td><strong>CVSS</strong> (Common Vulnerability Scoring System)</td><td>เฟรมเวิร์กประเมินความรุนแรงของช่องโหว่ จัดการโดย FIRST มีเวอร์ชัน 4.0 แบ่งเป็น 4 กลุ่มเมตริก: Base, Threat, Environmental, Supplemental</td></tr>
-      <tr><td><strong>CWE</strong> (Common Weakness Enumeration)</td><td>รายการจุดอ่อนที่พัฒนาร่วมกันโดยชุมชน (Community-developed) ซึ่งเป็น Root Cause ของ CVE Records</td></tr>
-      <tr><td><strong>KEV</strong> (Known Exploited Vulnerabilities)</td><td>ช่องโหว่ที่ถูกระบุว่ามีการโจมตีจริง (Actively Exploited) — องค์กรควรจัดการเร่งด่วน</td></tr>
-    </table>
-
-    <h3>ระดับคะแนน CVSS (เวอร์ชัน 4.0)</h3>
-    <table>
-      <tr><th>ระดับ</th><th>ช่วงคะแนน</th></tr>
-      <tr><td>None</td><td>0.0</td></tr>
-      <tr><td>Low</td><td>0.1 – 3.9</td></tr>
-      <tr><td>Medium</td><td>4.0 – 6.9</td></tr>
-      <tr><td>High</td><td>7.0 – 8.9</td></tr>
-      <tr><td>Critical</td><td>9.0 – 10.0</td></tr>
-    </table>
-
-    <h3>กลุ่มเมตริก CVSS 4.0</h3>
-    <ul>
-      <li><strong>Base Metrics:</strong> ลักษณะภายในของช่องโหว่ที่คงที่ตามเวลาและสภาพแวดล้อม
-        <ul>
-          <li><strong>Attack Vector (AV):</strong> Network (N) / Adjacent (A) / Local (L) / Physical (P)</li>
-          <li><strong>Attack Complexity (AC):</strong> Low (L) / High (H)</li>
-          <li><strong>Attack Requirements (AT):</strong> None (N) / Present (P)</li>
-          <li><strong>Privileges Required (PR), User Interaction (UI),</strong> และเมตริกผลกระทบ (Confidentiality/Integrity/Availability)</li>
-        </ul>
-      </li>
-      <li><strong>Threat Metrics:</strong> สะท้อนระดับภัยคุกคาม (เช่น มี Exploit สาธารณะหรือไม่)</li>
-      <li><strong>Environmental Metrics:</strong> ปรับคะแนนตามสภาพแวดล้อมขององค์กร เช่น Security Requirements (CR/IR/AR), Modified Impact Metrics</li>
-      <li><strong>Supplemental Metrics:</strong> ไม่กระทบคะแนนสุดท้ายแต่ให้บริบทเพิ่ม เช่น Safety (S), Automatable (AU), Recovery (R), Value Density (V), Vulnerability Response Effort (RE), Provider Urgency (U)</li>
-    </ul>
-    <div class="tip">
-      <strong>Nomenclature CVSS 4.0:</strong> CVSS-B (Base), CVSS-BT (Base + Threat), CVSS-BE (Base + Environmental), CVSS-BTE (Base + Threat + Environmental)
-      — ใช้เครื่องคิดเลขออนไลน์ได้ที่ <code>https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator</code>
-    </div>
-
-    <h3>ขั้นตอนของ Vulnerability Assessment</h3>
-    <ul>
-      <li>ตรวจสอบว่าเป้าหมายยังทำงานอยู่ด้วย ICMP (Ping)</li>
-      <li>สแกนพอร์ตที่เปิดอยู่ด้วยวิธี Stealth และทดสอบพอร์ต</li>
-      <li>ระบุช่องโหว่ที่อาจเกิดขึ้นและสร้างรายงานด้วย Network Vulnerability Scanner</li>
-      <li>จำแนกช่องโหว่และวางแผนการตอบสนอง</li>
-      <li>จำแนกทรัพย์สินหลักและทำ Risk Management</li>
-      <li>จัดทำเอกสาร/รายงานติดตามผล (Follow-up Documentation)</li>
-      <li>เริ่มต้นความพยายามด้านความปลอดภัยอย่างต่อเนื่อง (Ongoing Security Effort)</li>
-    </ul>
-
-    <h2>3. เครื่องมือวิเคราะห์ช่องโหว่ (Vulnerability Scanners)</h2>
-    <table>
-      <tr><th>เครื่องมือ</th><th>รายละเอียด</th></tr>
-      <tr><td><strong>Nmap Scripting Engine (NSE)</strong></td><td>สคริปต์เขียนด้วยภาษา Lua อยู่ที่ <code>/usr/share/nmap/scripts</code> หมวด <code>vuln</code> ใช้ตรวจสอบช่องโหว่เฉพาะบริการอย่างรวดเร็ว เช่น <code>ftp-vsftpd-backdoor</code>, <code>ssl-poodle</code>, <code>ftp-anon</code>, <code>ssh-auth-methods</code></td></tr>
-      <tr><td><strong>Tenable Nessus</strong></td><td>สแกนเนอร์ระดับโฮสต์และเครือข่ายที่มีฐานข้อมูลช่องโหว่ขนาดใหญ่ รองรับ Credentialed Scans, Compliance Auditing และรายงานผลละเอียดพร้อมแนวทางแก้ไข (Remediation) — เวอร์ชันฟรีคือ Nessus Essentials (สแกนได้สูงสุด 16 IP)</td></tr>
-      <tr><td><strong>OWASP ZAP (Zed Attack Proxy)</strong></td><td>สแกนเนอร์โอเพนซอร์สฟรีจาก OWASP สำหรับตรวจสอบช่องโหว่ระดับเว็บแอปพลิเคชันโดยเฉพาะ รองรับทั้ง Automated Scan และ Manual Testing</td></tr>
-    </table>
-
-    <h3>องค์ประกอบของรายงาน Vulnerability Assessment</h3>
-    <ul>
-      <li><strong>Executive Summary:</strong> สรุปขอบเขต ระเบียบวิธี ผลการค้นพบหลัก ระดับความรุนแรง และข้อเสนอแนะสำคัญ</li>
-      <li><strong>Introduction:</strong> วัตถุประสงค์ ขอบเขต (ระบบ/เครือข่าย/แอปพลิเคชัน) ระเบียบวิธี และกลุ่มผู้อ่าน</li>
-      <li><strong>Findings:</strong> รายละเอียดช่องโหว่ที่พบ (แบ่งตาม Critical/High/Medium/Low), Vulnerability ID, คำอธิบาย, ตำแหน่ง, ผลกระทบ, หลักฐาน/PoC และการประเมินความเสี่ยง</li>
-      <li><strong>Risk Assessment:</strong> ภาพรวมสถานะความปลอดภัยขององค์กร, ลำดับความสำคัญ และทรัพย์สินวิกฤต</li>
-      <li><strong>Recommendations:</strong> แนวทางแก้ไขที่ชัดเจน ปฏิบัติได้จริง, แผน Remediation ที่จัดลำดับตามความเสี่ยง และการวิเคราะห์ Cost-Benefit</li>
-      <li><strong>Appendix:</strong> ข้อมูลทางเทคนิคโดยละเอียด (ผลสแกน, Logs, ภาพหน้าจอ, แผนภาพเครือข่าย)</li>
-    </ul>
-
-    <h2>4. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
-
-    <h3>ตอนที่ 1: การสแกนช่องโหว่ด้วย Nmap NSE Scripts</h3>
-    <ul>
-      <li><strong>อัปเดตฐานข้อมูล NSE Script:</strong> รันคำสั่ง <code>sudo nmap --script-updatedb</code></li>
-      <li><strong>สแกนช่องโหว่ทั้งระบบด้วยสคริปต์หมวด vuln:</strong> รันคำสั่ง <code>nmap --script vuln &lt;Target_IP&gt;</code> เพื่อตรวจหาช่องโหว่ เช่น <code>ftp-vsftpd-backdoor</code> (CVE-2011-2523) หรือ <code>ssl-poodle</code> (CVE-2014-3566)</li>
-      <li><strong>ตรวจสอบการล็อกอินนิรนามบน FTP:</strong> รันคำสั่ง <code>nmap --script ftp-anon &lt;Target_IP&gt;</code></li>
-    </ul>
-
-    <h3>ตอนที่ 2: การสแกนระบบและเครือข่ายด้วย Tenable Nessus</h3>
-    <ul>
-      <li><strong>เริ่มต้นเซอร์วิส Nessus:</strong> รันคำสั่ง <code>sudo systemctl start nessusd</code></li>
-      <li><strong>เข้าใช้งานและสร้างงานสแกนใหม่:</strong> เข้าเบราว์เซอร์ไปที่ <code>https://localhost:8834</code> ไปที่ <strong>New Scan</strong> &rarr; เลือกเทมเพลต <strong>Basic Network Scan</strong> &rarr; ใส่ Target IP แล้วกด <strong>Save</strong> &rarr; <strong>Launch</strong></li>
-      <li><strong>วิเคราะห์ผลการสแกน:</strong> เปิดแท็บ <strong>Vulnerabilities</strong> กรองดูระดับ <strong>CRITICAL</strong> และ <strong>HIGH</strong> พร้อมอ่านรายละเอียดคำอธิบาย (Description) และแนวทางแก้ไข (Solution)</li>
-    </ul>
-
-    <h3>ตอนที่ 3: การสแกนเว็บแอปพลิเคชันด้วย OWASP ZAP</h3>
-    <ul>
-      <li><strong>ติดตั้ง OWASP ZAP:</strong> ติดตั้งผ่าน Kali Package Manager: <code>sudo apt update</code> แล้ว <code>sudo apt install zaproxy</code></li>
-      <li><strong>เปิดใช้งาน OWASP ZAP:</strong> รันคำสั่ง <code>zaproxy</code> ใน Terminal หรือเปิดผ่านไอคอนโปรแกรม แล้วเลือกโหมด Standard UI พร้อม Persist Session (ไฟล์ .zap)</li>
-      <li><strong>ทำการสแกนเป้าหมาย (Active Scan):</strong> ใส่ URL: <code>http://&lt;Target_IP&gt;/</code> ในหน้าต่าง <strong>Quick Start / Automated Scan</strong> แล้วกดสั่งสแกน หรือตั้งค่า Proxy เบราว์เซอร์ชี้ไปที่ <code>127.0.0.1:8080</code> แล้วคลิกขวาที่ชื่อโฮสต์เพื่อเลือก <strong>Attack</strong> &rarr; <strong>Active Scan</strong></li>
-      <li><strong>ติดตั้ง ZAP Root CA Certificate:</strong> เข้าเว็บ <code>http://zap/</code> จากเบราว์เซอร์ที่ตั้ง Proxy แล้วดาวน์โหลดและ Import Certificate เพื่อให้สามารถสแกน HTTPS ได้</li>
-      <li><strong>ตรวจสอบรายงานผล (Alerts):</strong> ดูรายการแจ้งเตือน เช่น Remote Code Execution (CVE-2012-1823), Path Traversal, Missing Security Headers และสามารถส่งออกรายงานเป็นไฟล์ HTML ผ่านเมนู Report</li>
-    </ul>
-
-    <hr>
-
-    <h2>5. สรุปรายการภาระงานที่ต้องส่ง (Assignment Checklist หน้า 84)</h2>
-    <ul>
-      <li><strong>รายงานผลจาก Nessus:</strong> สรุปรายการช่องโหว่ระดับ <strong>CRITICAL</strong> ทั้งหมดที่พบบนเครื่อง Metasploitable2 โดยระบุว่าพบที่ <strong>Port ใด</strong> และรัน <strong>Service อะไร</strong></li>
-      <li><strong>การเปรียบเทียบผลลัพธ์:</strong> เปรียบเทียบผลระหว่าง Nessus (ครอบคลุมระดับ Host / OS / Network Services ทั่วทั้งระบบ) กับ OWASP ZAP (เน้นเฉพาะจุดอ่อนบน Web Application Layer ที่รันบนพอร์ต 80)</li>
-    </ul>
-
-    <div class="note">
-      <strong>การตั้งชื่อไฟล์ส่งงาน:</strong> ตั้งชื่อไฟล์โดยระบุ Section และ Lab เช่น <code>S1L5 6604061234567.pdf</code> (S1 = Section 1, L5 = Lab 5, ตามด้วยรหัสนักศึกษา)
-    </div>
-
-  </main>
-
-  <div class="footer">สรุปเนื้อหา Lecture 5 &mdash; Penetration Testing and Protection &copy; 2026</div>
-
-</body>
+  </body>
 </html>
