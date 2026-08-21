@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 3 - Scanning &amp; Port Scanning Techniques (Nmap)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <span class="brand">PenTest สรุป</span>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html" class="active">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="a4">
+
+    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 3: Scanning &amp; Port Scanning Techniques (Nmap)</h1>
+    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
+
+    <h2>1. สรุปเนื้อหาสำคัญ (Theoretical Overview)</h2>
+    <ul>
+      <li><strong>Scanning Phase:</strong> เฟสที่สองของการทำ Pentest มุ่งเน้นการส่งแพ็กเก็ตเข้าไปยังเป้าหมายโดยตรง เพื่อค้นหาเครื่องที่ออนไลน์ (Host Discovery), พอร์ตที่เปิดอยู่ (Open Ports) และบริการที่ทำงานอยู่ (Active Services)</li>
+      <li><strong>จุดประสงค์ของการสแกน (Objectives of Scanning):</strong>
+        <ul>
+          <li>ตรวจจับระบบที่ยังทำงานอยู่บนเครือข่าย (Live Systems)</li>
+          <li>ค้นหาพอร์ตที่เปิด/ทำงานอยู่</li>
+          <li>ค้นหาระบบปฏิบัติการของเป้าหมาย (Fingerprint)</li>
+          <li>ค้นหาบริการที่ทำงาน/กำลังฟังอยู่บนระบบเป้าหมาย</li>
+          <li>ค้นหา IP Address ของระบบเป้าหมาย (Metasploit มี Discovery Scanner ที่ใช้ Nmap ในตัว)</li>
+        </ul>
+      </li>
+      <li><strong>ประเภทของการสแกน (Types of Scanning):</strong>
+        <ul>
+          <li><strong>Port Scanning:</strong> ส่งชุดข้อความเพื่อเรียนรู้ Network Service บนเครื่อง โดยแต่ละบริการผูกกับหมายเลขพอร์ตที่รู้จักกัน (Well-known Port)</li>
+          <li><strong>Network Scanning:</strong> ขั้นตอนการระบุโฮสต์ที่ทำงานอยู่บนเครือข่าย เพื่อโจมตีหรือเพื่อการประเมินความปลอดภัย</li>
+          <li><strong>Vulnerability Scanning:</strong> กระบวนการอัตโนมัติในการค้นหาช่องโหว่ของระบบคอมพิวเตอร์บนเครือข่าย</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>2. สถานะของพอร์ต (Port States ใน Nmap)</h2>
+    <table>
+      <tr><th>สถานะ</th><th>ความหมาย</th></tr>
+      <tr><td><strong>Open</strong></td><td>พอร์ตเปิดอยู่และมีแอปพลิเคชันกำลังรับการเชื่อมต่อ (Listening) — ส่ง SYN ไปจะได้ SYN/ACK กลับมา</td></tr>
+      <tr><td><strong>Closed</strong></td><td>พอร์ตตอบรับแพ็กเก็ต (ส่ง RST กลับมา) แต่ไม่มีบริการใดรันอยู่</td></tr>
+      <tr><td><strong>Filtered</strong></td><td>แพ็กเก็ตถูกบล็อกหรือดักจับโดย Firewall / Packet Filtering (เช่น iptables) ทำให้อ่านสถานะไม่ได้ — มักไม่มีคำตอบกลับมา</td></tr>
+    </table>
+
+    <h2>3. เทคนิคการสแกนหลัก (Scanning Techniques)</h2>
+    <table>
+      <tr><th>เทคนิค</th><th>รายละเอียด</th></tr>
+      <tr><td><strong>TCP Connect Scan (<code>-sT</code>)</strong></td><td>ทำการจับมือครบ 3 ขั้นตอน (3-Way Handshake: SYN &rarr; SYN/ACK &rarr; ACK) มีความแม่นยำสูง ไม่จำเป็นต้องใช้สิทธิ์ Root แต่ถูกบันทึก Log ได้ง่าย</td></tr>
+      <tr><td><strong>SYN Stealth Scan (<code>-sS</code>)</strong></td><td>ส่งเฉพาะแพ็กเก็ต SYN เมื่อได้รับ SYN/ACK จะส่ง RST กลับไปตัดการเชื่อมต่อทันที (Half-open Scan) ลดการถูกบันทึก Log บนเซิร์ฟเวอร์ปลายทาง (ต้องใช้สิทธิ์ Root/Sudo)</td></tr>
+      <tr><td><strong>TCP FIN Scan (<code>-sF</code>)</strong></td><td>ส่ง Flag FIN ไปยังเป้าหมาย — ไม่มีการตอบสนอง = พอร์ตเปิด, ได้ RST กลับมา = พอร์ตปิด</td></tr>
+      <tr><td><strong>TCP XMAS Scan (<code>-sX</code>)</strong></td><td>ส่ง Flag FIN + URG + PUSH รวมกัน เหมือนต้นคริสต์มาส — ไม่มีการตอบสนอง = พอร์ตเปิด, ได้ RST = พอร์ตปิด</td></tr>
+      <tr><td><strong>TCP Null Scan (<code>-sN</code>)</strong></td><td>ส่งแพ็กเก็ตที่ไม่มี Flag ใดๆ ใน TCP Header — ไม่มีการตอบสนอง = พอร์ตเปิด, ได้ RST = พอร์ตปิด/ถูกกรอง</td></tr>
+      <tr><td><strong>TCP ACK Scan (<code>-sA</code>)</strong></td><td>ไม่ใช้เพื่อสแกนพอร์ต แต่ใช้ตรวจสอบกฎ Firewall/ACL ว่ามีการติดตามสถานะ (Stateful) หรือไม่ — ไม่มีคำตอบ = Stateful Filtering, ได้ RST = ผ่านถึงปลายทาง</td></tr>
+      <tr><td><strong>UDP Scan (<code>-sU</code>)</strong></td><td>สแกนหาบริการที่ใช้ UDP (เช่น DNS, DHCP, SNMP) — ถ้าได้รับ ICMP Port Unreachable แสดงว่าปิด, ไม่มีคำตอบ = เปิด ใช้เวลาสแกนนานกว่า TCP</td></tr>
+      <tr><td><strong>TCP FTP Bounce Scan (<code>-b</code>)</strong></td><td>ให้ FTP Server ส่งไฟล์ไปยังพอร์ตเป้าหมายแทนผู้โจมตี เพื่อปกปิดตัวตน (Attack ผ่าน FTP Server)</td></tr>
+    </table>
+
+    <h2>4. Host Discovery (การค้นหาโฮสต์)</h2>
+    <p>
+      ขั้นตอนแรกของการทำ Network Pentest คือการรู้ว่าเป้าหมายใดยังทำงานอยู่ วิธีทั่วไปคือการส่ง ICMP Request / Ping
+      และ Nmap ยังใช้สแกนช่วงเครือข่าย (Network Ranges) ได้ด้วย
+    </p>
+    <ul>
+      <li><code>nmap -sP &lt;Target_IP&gt;</code> หรือ <code>nmap -sn &lt;Target_IP&gt;</code> — Ping Scan หาโฮสต์ที่ออนไลน์ (โน้ต: ใน Nmap เวอร์ชันใหม่ option ping scan คือ <code>-sn</code>)</li>
+      <li><code>nmap -sP 192.168.37.1/24</code> — สแกนทั้งช่วงเครือข่าย</li>
+      <li><code>sudo masscan --ports 0-65535 192.168.37.129</code> — สแกนทุกพอร์ตด้วย Masscan (เร็วกว่า)</li>
+      <li><strong>การสแกนภายนอก (External):</strong> จำกัดการสแกนเฉพาะ IP ใน Scope เพื่อเลี่ยงการสแกนเครื่องที่ไม่ได้อนุญาต</li>
+      <li><strong>การสแกนภายใน (Internal):</strong> มักสแกนทั้ง Subnet ของ IP ที่เป้าหมายใช้</li>
+    </ul>
+
+    <h2>5. พอร์ตและบริการที่พบบ่อย (Common Ports &amp; Services)</h2>
+    <table>
+      <tr><th>พอร์ต</th><th>บริการ</th><th>พอร์ต</th><th>บริการ</th></tr>
+      <tr><td>21</td><td>FTP</td><td>110</td><td>POP3</td></tr>
+      <tr><td>22</td><td>SSH</td><td>143</td><td>IMAP</td></tr>
+      <tr><td>25</td><td>SMTP</td><td>161</td><td>SNMP</td></tr>
+      <tr><td>80</td><td>HTTP</td><td>445</td><td>SMB over IP</td></tr>
+      <tr><td>443</td><td>HTTPS</td><td>3389</td><td>RDP</td></tr>
+    </table>
+
+    <h2>6. การตรวจจับระบบปฏิบัติการและเวอร์ชันบริการ</h2>
+    <ul>
+      <li><strong>Service Version Detection (<code>-sV</code>):</strong> ส่งโพรบเข้าไปสอบถามเพื่อดึงหมายเลขเวอร์ชันของบริการที่รันอยู่บนพอร์ตนั้นๆ</li>
+      <li><strong>OS Fingerprinting (<code>-O</code>):</strong> วิเคราะห์รูปแบบการตอบสนองของ TCP/IP Stack เพื่อระบุประเภทและเวอร์ชันของระบบปฏิบัติการ</li>
+      <li><strong>Aggressive Scan (<code>-A</code>):</strong> รวม <code>-sV</code> (เวอร์ชันบริการ), <code>-O</code> (OS Detection), <code>-sC</code> (Default Scripts) และ Traceroute ไว้ในคำสั่งเดียว: <code>nmap -n -A -T5 &lt;Target_IP&gt;</code></li>
+      <li><strong>สแกนทุกพอร์ต:</strong> <code>nmap -p- &lt;Target_IP&gt;</code> — สแกนพอร์ตทั้งหมด 65,535 พอร์ต</li>
+      <li><strong>Timing Option:</strong> <code>-T0</code> (paranoid) ถึง <code>-T5</code> (insane) ใช้ปรับความเร็ว/ความเนียนในการสแกน</li>
+    </ul>
+
+    <h2>7. การบันทึกผลลัพธ์ลงไฟล์รายงาน (Output Management)</h2>
+    <ul>
+      <li><strong>Normal Format:</strong> <code>nmap -sS &lt;Target_IP&gt; -oN result.txt</code></li>
+      <li><strong>Greppable Format:</strong> <code>nmap -sS &lt;Target_IP&gt; -oG result_greppable.txt</code></li>
+      <li><strong>XML Format:</strong> <code>nmap -sS &lt;Target_IP&gt; -oX result_xml.txt</code></li>
+      <li><strong>ทุก Format พร้อมกัน (<code>-oA</code>):</strong> <code>nmap -sV &lt;Target_IP&gt; -oA lab3_scan_results</code> — สร้างไฟล์ .nmap, .xml และ .gnmap</li>
+    </ul>
+
+    <h2>8. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
+
+    <h3>ตอนที่ 1: การค้นหาโฮสต์และการสแกนพอร์ตพื้นฐาน (Host Discovery &amp; Port Scanning)</h3>
+    <ul>
+      <li><strong>ค้นหาโฮสต์ที่มีชีวิตในเครือข่าย (Ping Sweep):</strong> รันคำสั่ง <code>nmap -sn 192.168.56.0/24</code> เพื่อระบุหมายเลข IP ของเป้าหมายในวงเครือข่าย</li>
+      <li><strong>สแกนแบบ TCP SYN Scan (Stealth Scan):</strong> รันคำสั่ง <code>sudo nmap -sS &lt;Target_IP&gt;</code> เพื่อตรวจสอบพอร์ตมาตรฐาน 1,000 พอร์ตแรก</li>
+      <li><strong>สแกนแบบ TCP Connect Scan เจาะจงพอร์ต:</strong> รันคำสั่ง <code>nmap -sT -p 80,445,21 &lt;Target_IP&gt;</code> เพื่อระบุสถานะเฉพาะพอร์ตที่สนใจ</li>
+    </ul>
+
+    <h3>ตอนที่ 2: การตรวจสอบเวอร์ชันบริการและระบบปฏิบัติการ (Detection &amp; Fingerprinting)</h3>
+    <ul>
+      <li><strong>สแกนหาเวอร์ชันของบริการ:</strong> รันคำสั่ง <code>nmap -sV &lt;Target_IP&gt;</code> เพื่อตรวจสอบชื่อซอฟต์แวร์และเวอร์ชัน (เช่น Apache, vsFTPd, OpenSSH)</li>
+      <li><strong>สแกนระบุระบบปฏิบัติการ:</strong> รันคำสั่ง <code>sudo nmap -O -T4 &lt;Target_IP&gt;</code> เพื่อตรวจหา OS Fingerprint และเพิ่มความเร็วการสแกน</li>
+      <li><strong>สแกนแบบครอบคลุมรอบด้าน (Aggressive Scan):</strong> รันคำสั่ง <code>sudo nmap -A &lt;Target_IP&gt;</code> รวมการทำงานของ <code>-sV</code>, <code>-O</code>, <code>-sC</code> (Default Scripts) และ Traceroute ไว้ในคำสั่งเดียว</li>
+    </ul>
+
+    <h3>ตอนที่ 3: การบันทึกผลลัพธ์ลงไฟล์รายงาน (Output Management)</h3>
+    <ul>
+      <li><strong>บันทึกผลลัพธ์เป็นไฟล์ข้อความมาตรฐาน (<code>-oN</code>):</strong> รันคำสั่ง <code>nmap -sT -p 80 &lt;Target_IP&gt; -oN mscan.txt</code></li>
+      <li><strong>ตรวจสอบข้อมูลในไฟล์:</strong> รันคำสั่ง <code>cat mscan.txt</code> เพื่อแสดงผลการสแกนที่ถูกบันทึก</li>
+      <li><strong>บันทึกผลพร้อมกันทุกรูปแบบ (All Formats <code>-oA</code>):</strong> รันคำสั่ง <code>nmap -sV &lt;Target_IP&gt; -oA lab3_scan_results</code> เพื่อสร้างไฟล์รายงานทั้งแบบ .nmap, .xml และ .gnmap</li>
+    </ul>
+
+    <div class="tip">
+      <strong>แบบฝึกหัดสแกนขั้นสูง:</strong> <code>sudo nmap -sS -sV -sC -p- -T5 192.168.37.129 -o nmaplist.txt</code> (อย่าลืมเปลี่ยน IP เป็นของตัวเอง)
+      แล้วใช้ <code>ls</code> และ <code>cat nmaplist.txt</code> ดูผลลัพธ์ จากนั้นเปรียบเทียบกับผลที่สแกนโดยไม่ใช้ <code>-sC</code>
+    </div>
+
+    <hr>
+
+    <h2>9. สรุปรายการหลักฐานที่ต้องบันทึก (Assignment Checklist)</h2>
+    <ul>
+      <li>ภาพผลลัพธ์การสแกนแบบ <code>-sS</code> และ <code>-sT</code> แสดงสถานะพอร์ตที่เปิดอยู่ (Open/Closed/Filtered)</li>
+      <li>ภาพผลลัพธ์การรันคำสั่ง <code>-sV</code> และ <code>-O</code> ที่ระบุเวอร์ชันซอฟต์แวร์และ OS ของเป้าหมาย</li>
+      <li>ภาพการรันคำสั่งสแกนพร้อมออปชันบันทึกไฟล์ (เช่น <code>-oN mscan.txt</code>) และภาพคำสั่ง <code>cat</code> เปิดแสดงข้อมูลในไฟล์รายงาน</li>
+    </ul>
+
+  </main>
+
+  <div class="footer">สรุปเนื้อหา Lecture 3 &mdash; Penetration Testing and Protection &copy; 2026</div>
+
+</body>
+</html>

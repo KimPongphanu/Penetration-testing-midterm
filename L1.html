@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1 - Course Overview &amp; Introduction to Penetration Testing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <span class="brand">PenTest สรุป</span>
+      <a href="L1.html" class="active">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="a4">
+
+    <h1>สรุปเนื้อหา Lecture 1: Course Overview &amp; Introduction to Penetration Testing</h1>
+    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
+
+    <h2>1. ความหมายของ Penetration Testing (Pen Test)</h2>
+    <p>
+      Penetration testing (pen testing) หรือที่รู้จักในชื่อ Ethical Hacking คือการใช้เทคนิคการโจมตีเพื่อวัตถุประสงค์ที่ถูกต้องและมีจริยธรรม
+      เพื่อปรับปรุงความปลอดภัยของระบบ โดยเป็นกระบวนการจำลองการโจมตีระบบ เครือข่าย หรือแอปพลิเคชันอย่างได้รับอนุญาต เพื่อค้นหาและประเมิน
+      ช่องโหว่ความปลอดภัยก่อนที่ผู้ไม่ประสงค์ดีจะใช้ประโยชน์ได้
+    </p>
+    <p>
+      การทดสอบเจาะระบบเป็นการทดสอบที่ประเมินจุดแข็งของมาตรการรักษาความปลอดภัยทั้งหมดบนระบบคอมพิวเตอร์ ทั้งในเชิงเทคโนโลยี
+      (Technological Controls) เชิงขั้นตอน (Procedural Controls) และเชิงปฏิบัติการ (Operational Controls) โดยผู้เชี่ยวชาญจะจำลอง
+      เทคนิคและวิธีการของแฮกเกอร์ในการพยายามเข้าถึงเครือข่ายหรือระบบสารสนเทศ
+    </p>
+
+    <h2>2. Penetration Tester (Pentester) คือใคร</h2>
+    <ul>
+      <li>ผู้เชี่ยวชาญด้านความปลอดภัยทางไซเบอร์ที่จำลองการโจมตีทางไซเบอร์ต่อระบบขององค์กร เพื่อระบุช่องโหว่</li>
+      <li>เป้าหมายคือช่วยให้องค์กรเข้าใจจุดอ่อนด้านความปลอดภัยของตน และวิธีบรรเทาความเสี่ยง (Mitigation)</li>
+      <li>Pen Tester ใช้เครื่องมือ เทคนิค และกระบวนการเดียวกับผู้โจมตีจริง เพื่อค้นหาและแสดงผลกระทบทางธุรกิจของจุดอ่อนในระบบ</li>
+    </ul>
+
+    <h2>3. ทำไม Penetration Testing ถึงสำคัญ (Why it is essential)</h2>
+    <ul>
+      <li><strong>Uncover Hidden Weaknesses:</strong> ค้นพบจุดอ่อนที่ซ่อนอยู่ซึ่งการตั้งค่าที่ซับซ้อนอาจทำให้มองไม่เห็น</li>
+      <li><strong>Improve Security Posture:</strong> ปรับปรุงแนวรับความปลอดภัยโดยการอุดช่องโหว่ (Patch Weaknesses)</li>
+      <li><strong>Reduce Risk of Breaches:</strong> ลดความเสี่ยงของการถูกโจมตีที่ประสบความสำเร็จ</li>
+      <li><strong>Compliance Requirements:</strong> หลายกฎหมายและมาตรฐานอุตสาหกรรมกำหนดให้องค์กรต้องทดสอบเจาะระบบเป็นประจำ เช่น PCI DSS และ HIPAA</li>
+      <li><strong>Build Confidence:</strong> สร้างความเชื่อมั่นให้กับองค์กรและลูกค้า</li>
+      <li><strong>Stay Ahead of Attackers:</strong> ก้าวล้ำหน้าผู้โจมตีด้วยการค้นหาช่องโหว่ก่อน</li>
+    </ul>
+
+    <h2>4. ประโยชน์ของ Penetration Testing (Benefits)</h2>
+    <ul>
+      <li>ช่วยระบุช่องโหว่ที่อาจไม่มีใครค้นพบ</li>
+      <li>ช่วยค้นพบภัยคุกคามใหม่ที่อาจมาจากผู้โจมตีหรือผู้บุกรุก</li>
+      <li>ช่วยระบุช่องโหว่แบบเรียลไทม์ภายในระบบและเว็บแอปพลิเคชัน</li>
+      <li>ช่วยทดสอบประสิทธิภาพของ Web Application Firewall (WAF)</li>
+      <li>ช่วยทดสอบความสามารถในการป้องกันทางไซเบอร์ขององค์กร</li>
+      <li>ช่วยระบุ Misconfigurations ที่ไม่ตั้งใจซึ่งอาจทำให้ระบบเสี่ยงต่อการถูกโจมตี</li>
+      <li>ช่วยหลีกเลี่ยงเหตุการณ์ที่สร้างความเสียหายทางการเงินและลดค่าใช้จ่ายจากการถูกโจมตี</li>
+      <li>ช่วยเพิ่มความตระหนักด้านความปลอดภัยให้กับพนักงาน (Security Awareness)</li>
+      <li>ช่วยให้ผู้เชี่ยวชาญด้านความปลอดภัยอัปเดตความรู้เกี่ยวกับภัยคุกคามและเทคนิคล่าสุดอยู่เสมอ</li>
+    </ul>
+
+    <h2>5. Penetration Testing กับ White Hat Hacking</h2>
+    <ul>
+      <li><strong>Penetration Testing:</strong> มีโครงสร้างและกระบวนการที่ชัดเจน (Structured) ใช้เฟรมเวิร์กที่มีขั้นตอน เช่น Reconnaissance, Scanning, Exploitation และ Reporting เน้นระบบหรือเครือข่ายที่เฉพาะเจาะจง ให้ผลลัพธ์เป็นรายงานโดยละเอียด</li>
+      <li><strong>White Hat Hacking:</strong> เป็นคำกว้างกว่า ครอบคลุมการใช้ทักษะแฮกกิ้งอย่างมีจริยธรรม อาจมีความสร้างสรรค์และยืดหยุ่นกว่า เช่น การใช้ Social Engineering หรือ Zero-day Exploits รวมถึงกิจกรรมการฝึกอบรมความปลอดภัยและการพัฒนาเครื่องมือป้องกัน</li>
+    </ul>
+
+    <h2>6. คำศัพท์ที่เกี่ยวข้อง (Terms)</h2>
+    <ul>
+      <li><strong>Red Teaming:</strong> การทดสอบเจาะระบบรูปแบบพิเศษที่ผู้ทดสอบเป็นปฏิปักษ์กับองค์กร (Adversarial) พยายามเลียนแบบผู้โจมตีจริงและหลบเลี่ยงการตรวจจับ</li>
+      <li><strong>Ethical Hacking:</strong> การแฮกโดยได้รับอนุญาตเพื่อปรับปรุงความปลอดภัย</li>
+    </ul>
+
+    <h2>7. Penetration Testing vs. Vulnerability Assessment</h2>
+    <ul>
+      <li><strong>Vulnerability Assessment (VA):</strong> เน้นการสแกนค้นหาและระบุรายการช่องโหว่ทั้งหมดที่มีตามฐานข้อมูล (เน้นความกว้างของระบบ)</li>
+      <li><strong>Penetration Testing (PT):</strong> เน้นการทดสอบเจาะระบบจริงผ่านช่องโหว่เพื่อยืนยันผลกระทบและการเข้าถึงระบบ (เน้นความลึกและพิสูจน์ผลลัพธ์)</li>
+    </ul>
+
+    <h2>8. รูปแบบการทดสอบ (Testing Methodologies)</h2>
+    <ul>
+      <li><strong>Black Box:</strong> ผู้ทดสอบไม่มีข้อมูลภายในของระบบเป้าหมายมาก่อน (จำลองมุมมองแฮกเกอร์จากภายนอก) ในการทดสอบเครือข่ายจะไม่ทราบ DMZ, OS หรือ Server Version มีเพียงช่วง IP ที่ให้ทดสอบ</li>
+      <li><strong>White Box:</strong> ผู้ทดสอบได้รับข้อมูลโครงสร้าง ซอร์สโค้ด หรือสถาปัตยกรรมระบบอย่างละเอียด เช่น ซอร์สโค้ดของเว็บแอปพลิเคชันเพื่อทำ Source Code Analysis</li>
+      <li><strong>Gray Box:</strong> ผู้ทดสอบมีข้อมูลบางส่วน เช่น ได้รับบัญชีผู้ใช้ระดับทั่วไป</li>
+    </ul>
+
+    <h2>9. ขั้นตอนพื้นฐานของการทำ Pentest (Phases)</h2>
+    <ul>
+      <li><strong>Reconnaissance / Information Gathering:</strong> การเก็บรวบรวมข้อมูลของเป้าหมาย</li>
+      <li><strong>Scanning &amp; Enumeration:</strong> การสแกนพอร์ตและแจกแจงรายละเอียดของบริการ</li>
+      <li><strong>Vulnerability Assessment:</strong> การวิเคราะห์หาจุดอ่อนและช่องโหว่</li>
+      <li><strong>Exploitation:</strong> การเจาะระบบจริงเพื่อยืนยันช่องโหว่</li>
+      <li><strong>Post-Exploitation &amp; Reporting:</strong> การคงสิทธิ์ การสำรวจระบบภายใน และการสรุปรายงานผลการทดสอบ</li>
+    </ul>
+
+    <h2>10. Rule of Engagement (ROE)</h2>
+    <div class="note">
+      ก่อนเริ่มการทดสอบเจาะระบบ ต้องมีการจัดทำและอนุมัติ <strong>Rule of Engagement (ROE)</strong> อย่างเป็นทางการ ซึ่งประกอบด้วย
+      ขอบเขตการทดสอบ ระยะเวลา วิธีการที่ใช้ เป้าหมาย ข้อจำกัดทางกฎหมาย และความรับผิดชอบของทั้งสองฝ่าย การทดสอบเจาะระบบ
+      ต้องกระทำกับระบบที่ได้รับอนุญาตเท่านั้น
+    </div>
+
+    <h2>11. การเตรียม Lab Environment</h2>
+    <ul>
+      <li><strong>Kali Linux:</strong> ระบบปฏิบัติการฝั่ง Attacker ที่รวบรวมเครื่องมือด้าน Information Gathering, Vulnerability Assessment, Exploitation, Password Attacks และ Wireless Attacks ไว้มากมาย</li>
+      <li><strong>Metasploitable2:</strong> Virtual Machine ที่ตั้งใจให้มีช่องโหว่เพื่อฝึกฝนเทคนิคการเจาะระบบอย่างปลอดภัย
+        <ul>
+          <li>Metasploitable 1 (2010): เก่าและช่องโหว่หลายรายการใช้ไม่ได้แล้ว</li>
+          <li>Metasploitable 2 (2012): มีช่องโหว่เพิ่มมากขึ้น ใช้เป็นเป้าหมายหลักของรายวิชา</li>
+          <li>Metasploitable 3: เวอร์ชันล่าสุด เพิ่มสภาพแวดล้อม Windows เข้ามาฝึกด้วย</li>
+        </ul>
+      </li>
+      <li><strong>DVWA (Damn Vulnerable Web App):</strong> เว็บแอปพลิเคชันที่ตั้งใจให้มีช่องโหว่สำหรับฝึกฝน Web Security เช่น SQL Injection, XSS และการตั้งค่าที่ไม่ปลอดภัย</li>
+      <li><strong>VirtualBox / VMware:</strong> ใช้ติดตั้ง Virtual Environment ให้เครื่อง Kali และ Metasploitable2 เชื่อมต่อกันได้ผ่าน Host-Only / Internal Network</li>
+    </ul>
+
+    <h2>12. แหล่งฝึกฝนเพิ่มเติม (Resources)</h2>
+    <ul>
+      <li><strong>TryHackMe:</strong> <code>https://tryhackme.com/</code> — แพลตฟอร์มเรียนรู้แบบ Gamified เหมาะกับผู้เริ่มต้น มีทั้งแบบฟรีและเสียเงิน</li>
+      <li><strong>Hack The Box:</strong> <code>https://www.hackthebox.com/</code> — แพลตฟอร์มยอดนิยมที่มีเครื่อง VM ให้ฝึกหลายร้อยเครื่องจำลองสถานการณ์จริง</li>
+      <li><strong>PortSwigger / Burp Suite:</strong> <code>https://portswigger.net/web-security</code> — แหล่งเรียนรู้ Web Security</li>
+      <li><strong>OverTheWire:</strong> <code>https://overthewire.org/wargames/bandit/</code> — Wargaming challenges ฟรีสำหรับฝึกแนวคิด Penetration Testing</li>
+      <li><strong>CTFLearn:</strong> <code>https://ctflearn.com/lab/</code> — เรียนรู้ความปลอดภัยสารสนเทศผ่าน CTF challenges ฟรี</li>
+    </ul>
+
+    <div class="warn">
+      <strong>คำเตือนทางกฎหมาย:</strong> ให้แฮกเฉพาะระบบที่ได้รับอนุญาตเท่านั้น และควรมีหลักฐานเป็นลายลักษณ์อักษร
+      การแฮกโดยไม่ได้รับอนุญาตเป็นสิ่งผิดกฎหมาย
+    </div>
+
+    <hr>
+
+    <h2>13. สรุปภาระงาน / งานที่มอบหมาย (Assignment)</h2>
+    <ul>
+      <li><strong>งานในคลาส:</strong> การติดตั้งและตั้งค่าระบบปฏิบัติการทดสอบ (Kali Linux และ Metasploitable2) ให้สามารถเชื่อมต่อเครือข่ายแล็บ (Host-Only / Internal Network) เพื่อให้สื่อสารระหว่างกันได้</li>
+      <li><strong>การบ้าน/แบบฝึกหัด:</strong> ปูพื้นฐานแนวคิดและการเตรียมสภาพแวดล้อมแล็บเพื่อรองรับงานส่งจริงในบทเรียนถัดไป (Nmap / Vulnerability Assessment / Exploitation)</li>
+    </ul>
+
+  </main>
+
+  <div class="footer">สรุปเนื้อหา Lecture 1 &mdash; Penetration Testing and Protection &copy; 2026</div>
+
+</body>
+</html>

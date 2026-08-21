@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 4 - Enumeration &amp; Service Discovery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <span class="brand">PenTest สรุป</span>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html" class="active">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="a4">
+
+    <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 4: Enumeration &amp; Service Discovery</h1>
+    <p class="subtitle">วิชา Penetration Testing and Protection (0406136051)</p>
+
+    <h2>1. สรุปเนื้อหาสำคัญ (Theoretical Overview)</h2>
+    <ul>
+      <li><strong>Enumeration Phase:</strong> ขั้นตอนการดึงข้อมูลเชิงลึกจากบริการและพอร์ตที่เปิดอยู่ เพื่อระบุบัญชีผู้ใช้ โฟลเดอร์ที่แชร์ และข้อมูลการตั้งค่าระบบ</li>
+      <li><strong>ความสำคัญของ Enumeration:</strong> ช่วยให้เข้าใจว่ามีอุปกรณ์ใดบนเครือข่าย อยู่ที่ไหน และให้บริการอะไร เพื่อนำข้อมูลไปหาช่องโหว่และโจมตี ต้องใช้ทั้งเวลาและความอดทน เพราะเป็นขั้นตอนสำคัญของกระบวนการ Hacking</li>
+      <li><strong>เทคนิคการ Enumeration ที่พบบ่อย:</strong>
+        <ul>
+          <li>ใช้ Email IDs และ Usernames เพื่อ Brute-force รหัสผ่าน</li>
+          <li>ลองใช้ Default Passwords กับระบบที่ตั้งค่าไม่ปลอดภัย</li>
+          <li>DNS Zone Transfer เพื่อเปิดเผยข้อมูลโครงสร้าง (Topology)</li>
+        </ul>
+      </li>
+      <li><strong>กระบวนการ Enumeration:</strong>
+        <ul>
+          <li><strong>Active Scanning:</strong> ส่งคำขอและวิเคราะห์การตอบสนอง — พบโฮสต์ได้ครบกว่า แต่สร้างทราฟฟิกมากและเสี่ยงถูกตรวจจับ</li>
+          <li><strong>Passive Scanning:</strong> ฟังทราฟฟิกบนเครือข่ายแล้ววิเคราะห์ — เนียนกว่าแต่พบโฮสต์ได้น้อยกว่า</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>2. SMB / Samba Enumeration</h2>
+    <ul>
+      <li>ตรวจสอบรายชื่อไดรฟ์แชร์และสิทธิ์การเข้าถึงด้วย <code>smbclient</code> และ <code>SMBMap</code>
+        <ul>
+          <li><code>smbclient -L \\\\&lt;Target_IP&gt;</code> — ดูรายการแชร์</li>
+          <li><code>smbmap -H &lt;Target_IP&gt;</code> — แจกแจง Share Drives, ตรวจสิทธิ์, สำรวจเนื้อหา, Upload/Download</li>
+        </ul>
+      </li>
+      <li>ดึงรายชื่อผู้ใช้ (Users), กลุ่ม (Groups) และข้อมูลระบบปฏิบัติการด้วย <code>enum4linux</code>
+        <ul>
+          <li><code>-U</code>: แสดงรายชื่อ Usernames (ต้องให้เซิร์ฟเวอร์อนุญาต)</li>
+          <li><code>-u username -p password</code>: ระบุข้อมูลประจำตัวเพื่อดึงข้อมูล</li>
+          <li><code>-G</code>: แสดง Groups &nbsp; <code>-S</code>: แสดง Shares &nbsp; <code>-o</code>: ดึงข้อมูล OS</li>
+          <li><code>enum4linux -a &lt;Target_IP&gt;</code> — ดึงข้อมูลทั้งหมดแบบสมบูรณ์</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>3. User / Group / Share Enumeration ด้วย Nmap NSE</h2>
+    <ul>
+      <li><strong>User Enumeration:</strong> <code>nmap --script smb-enum-users.nse &lt;host&gt;</code> — การรู้รายชื่อผู้ใช้คือก้าวแรกของการ Brute-force Credentials โดยใช้โปรโตคอล SMB (TCP 445)</li>
+      <li><strong>Group Enumeration:</strong> <code>nmap --script smb-enum-groups.nse -p445 &lt;host&gt;</code> — ระบุบทบาทการอนุญาต (Authorization Roles) และสมาชิกของกลุ่ม</li>
+      <li><strong>Network Share Enumeration:</strong> <code>nmap --script smb-enum-shares.nse -p 445 &lt;host&gt;</code> — ค้นหาระบบที่แชร์ไฟล์/โฟลเดอร์/เครื่องพิมพ์เพื่อสร้าง Attack Surface</li>
+      <li><strong>NBTscan:</strong> <code>nbtscan -v -s : 192.168.37.0/24</code> — สแกน NetBIOS name information; ใช้ NSE script <code>nbstat.nse</code> ได้เช่นกัน: <code>nmap -sV &lt;targetIP&gt; --script nbstat.nse</code></li>
+    </ul>
+
+    <h2>4. RPC Enumeration (Port 111 / 2049)</h2>
+    <ul>
+      <li>บนระบบ UNIX พอร์ต TCP 111 ที่เปิดอยู่บ่งชี้ว่ามีบริการ RPC (Remote Procedure Call) ทำงานอยู่</li>
+      <li>ใช้คำสั่ง <code>rpcinfo -p &lt;Target_IP&gt;</code> เพื่อดูโปรแกรม RPC ที่เปิดทำงาน (เช่น portmapper, nfs, mountd)</li>
+      <li>ใช้คำสั่ง <code>showmount -e &lt;Target_IP&gt;</code> เพื่อตรวจสอบไดเรกทอรีที่แชร์ผ่าน NFS (เช่น ไดเรกทอรีราก <code>/*</code>)</li>
+    </ul>
+
+    <h2>5. Web Application Enumeration (Port 80 / 443)</h2>
+    <ul>
+      <li>ค้นหาพาธไฟล์และไดเรกทอรีที่ซ่อนอยู่ด้วย Nmap Script (<code>http-enum</code>): <code>nmap -p 80,443 --script http-enum &lt;Target_IP&gt;</code> เพื่อหาพาธสำคัญ เช่น <code>/phpMyAdmin/</code>, <code>/phpinfo.php</code></li>
+      <li>สแกนตรวจสอบช่องโหว่และโครงสร้างเว็บเซิร์ฟเวอร์ด้วย <code>nikto -h &lt;Target_IP&gt;</code> (Open-source Web Vulnerability Scanner)</li>
+    </ul>
+
+    <h2>6. Service &amp; Credential Enumeration</h2>
+    <ul>
+      <li>ตรวจสอบรายการโพรเซสและบริการบนระบบ Windows ผ่านพอร์ต 445 ด้วยสคริปต์ <code>smb-enum-processes.nse</code> โดยใช้ Credentials ของผู้ใช้ที่มีสิทธิ์อ่านสถานะบริการ: <code>nmap --script smb-enum-processes.nse --script-args smbusername=&lt;username&gt;,smbpass=&lt;password&gt; -p445 &lt;host&gt;</code></li>
+      <li>การสแกนเพิ่มเติมด้วย <code>nmap -sC</code> จะรัน NSE Scripts ทั่วไปตามพอร์ตที่พบ — เหมาะสำหรับ Fingerprinting แอปพลิเคชันและ OS ที่รันบนโฮสต์</li>
+    </ul>
+
+    <h2>7. รายละเอียดขั้นตอนปฏิบัติการ Lab (Step-by-Step Practical Guide)</h2>
+
+    <h3>ตอนที่ 1: การแจกแจงข้อมูล SMB และ Samba Shares</h3>
+    <ul>
+      <li><strong>สำรวจบริการและดูโฟลเดอร์แชร์:</strong> รันคำสั่ง <code>nmap -sV -p 139,445 &lt;Target_IP&gt;</code> และเชื่อมต่อดูรายการแชร์ด้วย <code>smbclient -L \\\\&lt;Target_IP&gt;</code></li>
+      <li><strong>ดึงข้อมูลระบบด้วย enum4linux:</strong> รันคำสั่ง <code>enum4linux -a &lt;Target_IP&gt;</code> เพื่อตรวจสอบ User accounts, Groups และ OS details แบบสมบูรณ์</li>
+    </ul>
+
+    <h3>ตอนที่ 2: การตรวจสอบบริการ RPC และแชร์ไดเรกทอรี NFS</h3>
+    <ul>
+      <li><strong>ตรวจสอบโปรแกรม RPC ที่เปิดใช้งาน:</strong> รันคำสั่ง <code>rpcinfo -p &lt;Target_IP&gt;</code> เพื่อดูเวอร์ชัน พอร์ต และโปรโตคอลที่ผูกอยู่กับ RPC</li>
+      <li><strong>ตรวจสอบไดเรกทอรีที่เปิดแชร์ (Exported Shares):</strong> รันคำสั่ง <code>showmount -e &lt;Target_IP&gt;</code> เพื่อระบุโฟลเดอร์ที่เปิดให้เชื่อมต่อไปยังระบบภายนอก</li>
+    </ul>
+
+    <h3>ตอนที่ 3: การแจกแจงโครงสร้าง Web Application (Web Enumeration)</h3>
+    <ul>
+      <li><strong>รัน Nmap Script ค้นหาไดเรกทอรีเว็บ:</strong> รันคำสั่ง <code>nmap -p 80,443 --script http-enum &lt;Target_IP&gt;</code> เพื่อหาพาธสำคัญ เช่น <code>/phpMyAdmin/</code>, <code>/phpinfo.php</code></li>
+      <li><strong>สแกนช่องโหว่เว็บเซิร์ฟเวอร์ด้วย Nikto:</strong> รันคำสั่ง <code>nikto -h &lt;Target_IP&gt;</code> เพื่อระบุปัญหาการตั้งค่าและไฟล์ที่อาจมีช่องโหว่</li>
+    </ul>
+
+    <div class="tip">
+      <strong>ข้อควรจำ:</strong> การ Enumeration ที่ดีต้องละเอียดและรอบคอบ — สแกนเฉพาะเป้าหมายใน Scope ที่ได้รับอนุญาต และบันทึกผลลัพธ์ทุกขั้นตอนเพื่อใช้เป็นหลักฐานในรายงาน
+    </div>
+
+    <hr>
+
+    <h2>8. สรุปรายการหลักฐานที่ต้องบันทึก (Assignment Checklist)</h2>
+    <ul>
+      <li>ภาพผลลัพธ์การรันคำสั่งสแกนเวอร์ชันเฉพาะพอร์ต เช่น <code>nmap -sV -p 8888 &lt;Target_IP&gt;</code></li>
+      <li>ภาพผลการทำ TCP Connect Scan บันทึกลงไฟล์ <code>mscan.txt</code> (<code>nmap -sT -p 80 &lt;Target_IP&gt; -oN mscan.txt</code>) พร้อมภาพคำสั่ง <code>cat mscan.txt</code></li>
+      <li>ภาพผลการแจกแจงข้อมูลระบบจากเครื่องมือ <code>enum4linux</code>, <code>showmount -e</code> หรือ <code>nmap --script http-enum</code></li>
+    </ul>
+
+  </main>
+
+  <div class="footer">สรุปเนื้อหา Lecture 4 &mdash; Penetration Testing and Protection &copy; 2026</div>
+
+</body>
+</html>
