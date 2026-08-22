@@ -1,0 +1,214 @@
+/* ============================================================
+   A4 Landscape Cheat Sheets — summary1.html / summary2.html
+   แผ่นสรุป 2 หน้า A4 แนวนอน · ฟอนต์จิ๋ว · เนื้อหาแน่น 3 คอลัมน์
+   ============================================================ */
+
+.sheet {
+  background-color: #ffffff;
+  width: 297mm; /* A4 landscape */
+  max-width: 100%;
+  min-height: 210mm;
+  margin: 0 auto;
+  padding: 9mm;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  font-size: 7.4pt; /* ฟอนต์เล็กมาก */
+  line-height: 1.28;
+  color: #1a1a1a;
+}
+
+/* ---------- หัวแผ่น ---------- */
+.sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid #16a085;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.sheet-head .cs-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #16a085;
+  flex-shrink: 0;
+}
+
+.sheet-head h1 {
+  font-size: 11.5pt;
+  color: #2c3e50;
+  text-align: left;
+  margin: 0;
+  flex: 1;
+  line-height: 1.25;
+}
+
+.pager {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.pager a {
+  background-color: #16a085;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 7.5pt;
+  padding: 3px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.pager a:hover { background-color: #0e6655; }
+.pager a.home { background-color: #2c3e50; }
+.pager a.home:hover { background-color: #1a252f; }
+
+/* ---------- 3 คอลัมน์แน่น ---------- */
+.cols {
+  column-count: 3;
+  column-gap: 9px;
+  column-rule: 1px solid #e3eaea;
+}
+
+/* ---------- บล็อกแต่ละ Lecture ---------- */
+.sec { margin: 0 0 8px; }
+
+.sec-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px;
+  background-color: #16a085;
+  color: #ffffff;
+  font-size: 8.6pt;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  margin: 0 0 4px;
+  break-inside: avoid;
+  break-after: avoid;
+}
+
+.sec-h small {
+  font-weight: 400;
+  opacity: 0.85;
+  font-size: 6.6pt;
+  white-space: nowrap;
+}
+
+.sub {
+  font-size: 7.7pt;
+  font-weight: 700;
+  color: #0e6655;
+  border-left: 3px solid #16a085;
+  padding-left: 5px;
+  margin: 6px 0 2px;
+  break-after: avoid;
+}
+
+/* ---------- typography จิ๋ว ---------- */
+.sheet p { margin: 0 0 4px; text-align: left; }
+.sheet ul { margin: 0 0 4px; padding-left: 13px; }
+.sheet ol { margin: 0 0 4px; padding-left: 15px; }
+.sheet li { margin-bottom: 1px; break-inside: avoid; }
+.sheet strong { color: #2c3e50; }
+
+.sheet code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 6.7pt;
+  color: #c0392b;
+  background-color: #eef4f4;
+  border: 1px solid #d9e2e2;
+  border-radius: 3px;
+  padding: 0 3px;
+  word-break: break-word;
+}
+
+/* ---------- ตารางจิ๋ว ---------- */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 6.6pt;
+  line-height: 1.22;
+  margin: 0 0 5px;
+  break-inside: avoid;
+}
+
+.tbl th,
+.tbl td {
+  border: 1px solid #cfdada;
+  padding: 1.5px 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tbl th { background-color: #2c3e50; color: #ffffff; }
+.tbl tr:nth-child(even) td { background-color: #f3f8f8; }
+
+/* ---------- กล่องย่อ ---------- */
+.step,
+.note-s,
+.warn-s {
+  border-radius: 0 4px 4px 0;
+  padding: 3px 6px;
+  margin: 0 0 5px;
+  font-size: 7pt;
+  break-inside: avoid;
+}
+
+.step { background-color: #fef9e7; border-left: 3px solid #f39c12; }
+.note-s { background-color: #e8f8f5; border-left: 3px solid #16a085; }
+.warn-s { background-color: #fdedec; border-left: 3px solid #e74c3c; }
+
+/* ---------- ท้ายแผ่น ---------- */
+.sheet-foot {
+  margin-top: 6px;
+  border-top: 1px dashed #b9c6c6;
+  padding-top: 3px;
+  color: #555555;
+  font-size: 6.6pt;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+/* ---------- responsive บนจอเล็ก ---------- */
+@media (max-width: 1100px) {
+  .cols { column-count: 2; }
+}
+
+@media (max-width: 700px) {
+  .cols { column-count: 1; }
+  .sheet { width: 100%; padding: 12px; }
+  .sheet-head { flex-wrap: wrap; }
+}
+
+/* ---------- พิมพ์: 1 ไฟล์ = 1 หน้า A4 แนวนอนพอดี ---------- */
+@page {
+  size: A4 landscape;
+  margin: 6mm;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    padding: 0;
+  }
+  .navbar,
+  .footer {
+    display: none !important;
+  }
+  .sheet {
+    width: auto;
+    max-width: none;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .pager { display: none; }
+}

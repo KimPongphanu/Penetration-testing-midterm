@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 สรุป 1/2 — L1 Foundation · L2 Recon &amp; Linux · L3 Scanning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">Roadmap</a>
+      <a href="summary1.html" class="active" title="สรุป A4 แนวนอน หน้า 1/2 (L1-L3)">A4-1</a>
+      <a href="summary2.html" title="สรุป A4 แนวนอน หน้า 2/2 (L4-L6)">A4-2</a>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>PenTest สรุปละเอียดทุก Step — A4 แนวนอน 1/2 : L1 Foundation &amp; Methodology · L2 Reconnaissance &amp; Linux · L3 Scanning (Nmap)</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary2.html">หน้า 2→</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= L1 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L1 · Foundation &amp; Methodology</span><small>PTES: Pre-engagement / Setup</small></div>
+      <p><strong>Penetration Testing</strong> = Ethical Hacking: จำลองโจมตีอย่างได้รับอนุญาต เพื่อค้นช่องโหว่ก่อนผู้ไม่หวังดี — ประเมิน controls ครบ Technological / Procedural / Operational ต้องมี ROE อนุมัติก่อนเริ่ม</p>
+      <p><strong>Pentester:</strong> จำลอง cyber attack กับระบบองค์กร ให้องค์กรเข้าใจ weakness + แนวทาง mitigate ใช้ TTP เดียวกับ attacker เพื่อชี้ business impact ของจุดอ่อน</p>
+      <div class="sub">Why essential / Benefits</div>
+      <ul>
+        <li>Uncover hidden weaknesses · Improve security posture · Reduce breach risk</li>
+        <li>Compliance: PCI DSS, HIPAA · Build confidence · Stay ahead of attackers</li>
+        <li>หา hidden vulns / real-time web vulns · ทดสอบ WAF + cyber-defense capability</li>
+        <li>เจอ Misconfiguration · ลดค่าใช้จ่าย incident · เพิ่ม Security Awareness · ทักษะทันภัยคุกคาม</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Terms / เปรียบเทียบ</th><th>รายละเอียด</th></tr>
+        <tr><td>Red Teaming</td><td>adversarial กับองค์กร เลียนแบบ attacker จริง พยายาม stealth ไม่ให้ถูกตรวจจับ</td></tr>
+        <tr><td>Pentest vs White Hat</td><td>PT: structured framework/phases + รายงานชัด | White Hat: กว้าง/creative เช่น social engineering, zero-day, defensive tooling</td></tr>
+        <tr><td>VA vs PT</td><td>VA เช็คระบบเทียบ known vulnerabilities (กว้าง) | PT เจาะผ่าน defenses พิสูจน์ impact (ลึก) — objective ต่างกัน ใช้คู่กันไม่แทนกัน</td></tr>
+        <tr><td>Testing depth</td><td>Vuln Scan ⊂ Vuln Assessment (+validation) ⊂ Pentest (+exploitation) ⊂ Red Team (ทดสอบ blue team)</td></tr>
+      </table>
+      <div class="sub">Categories of test</div>
+      <ul>
+        <li><strong>Black box:</strong> ไม่ให้ข้อมูล (มีแค่ IP ranges) — external test ทั่วไป</li>
+        <li><strong>White box:</strong> ให้เกือบหมด incl. source code → static/dynamic analysis — internal/onsite</li>
+        <li><strong>Gray box:</strong> ข้อมูลบางส่วน เช่น user account ระดับทั่วไป</li>
+        <li><strong>By target:</strong> Network / Physical (กล้อง ล็อก sensors) / Web app / Wireless</li>
+      </ul>
+      <div class="sub">Methodology standards</div>
+      <table class="tbl">
+        <tr><th>มาตรฐาน</th><th>สาระสำคัญ</th></tr>
+        <tr><td>OSSTMM</td><td>OpSec metrics, trust analysis, human/physical/wireless/telecom/data-net testing, รายงาน STAR</td></tr>
+        <tr><td>OWASP OTG</td><td>web/API focus; recon→enum→exploit→report; adapt ตาม phase ได้</td></tr>
+        <tr><td>NIST SP800-115</td><td>assessment policy, repeatable+documented methodology, findings → risk mitigation</td></tr>
+        <tr><td>PTES (7 phases)</td><td>Pre-engagement → Intelligence Gathering → Threat Modeling → Vulnerability Analysis → Exploitation → Post-Exploitation → Reporting</td></tr>
+        <tr><td>ISSAF (9 steps)</td><td>Info gathering → Net mapping → Vuln ID → Penetration → Access+Privesc → Further enum → Remote users/sites → Maintain access → Cover tracks</td></tr>
+      </table>
+      <div class="sub">ROE (Rules of Engagement)</div>
+      <ul>
+        <li>"Permission to hack" + NDA ลงนามทั้งสองฝ่าย · Scope · duration start/end · methodology · goals</li>
+        <li>Allowed/disallowed techniques (DoS ได้ไหม) · liabilities/responsibilities กำหนดล่วงหน้า</li>
+      </ul>
+      <div class="sub">Lab setup</div>
+      <ul>
+        <li><strong>Kali Linux:</strong> tools ครบ info gathering / vuln assessment / webapp / DB / password / wireless / exploitation / sniffing-spoofing</li>
+        <li><strong>Metasploitable:</strong> v1 (2010 เก่า), v2 (2012 — เป้าหมายหลัก Linux vulnerable by design), v3 (เพิ่ม Windows)</li>
+        <li><strong>DVWA:</strong> เว็บฝังช่องโหว่ฝึก SQLi / XSS / insecure config</li>
+        <li><strong>VirtualBox/VMware:</strong> Host-Only / Internal network ให้ Kali ↔ Metasploitable2 คุยกันได้</li>
+      </ul>
+      <div class="sub">Resources</div>
+      <p>TryHackMe (gamified) · HackTheBox (VMs หลายร้อยเครื่อง) · PortSwigger Burp · OverTheWire Bandit: <code>ssh bandit0@bandit.labs.overthewire.org -p2220</code> · CTFLearn</p>
+      <div class="warn-s"><strong>กฎเหล็ก:</strong> แฮกเฉพาะระบบที่ได้ Permission (ควรเป็นลายลักษณ์อักษร) — แฮกโดยไม่ได้อนุญาต = ผิดกฎหมาย</div>
+    </section>
+
+    <!-- ================= L2 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L2 · Passive Recon / Info Gathering</span><small>PTES: Intelligence Gathering</small></div>
+      <table class="tbl">
+        <tr><th>Term</th><th>ความหมาย</th></tr>
+        <tr><td>Info Gathering</td><td>umbrella term รวมกิจกรรมเก็บ intel ทั้งหมด</td></tr>
+        <tr><td>Reconnaissance</td><td>ภาพรวมแรก: website/social/IP range/domain/email/WHOIS → attack surface + scope</td></tr>
+        <tr><td>Footprinting</td><td>technical: net scanning, service fingerprinting, DNS enum subdomains</td></tr>
+        <tr><td>OSINT</td><td>ข้อมูลจากแหล่ง public + advanced search operators/filters</td></tr>
+        <tr><td>Enumeration</td><td>โต้ตอบตรงกับระบบ → users/groups/shares/apps/configs เชิงลึก</td></tr>
+      </table>
+      <ul>
+        <li><strong>Passive:</strong> ไม่ยิง packet หา target — domain enum, packet inspection, OSINT, recon-ng, eavesdropping (target ไม่รู้ตัว)</li>
+        <li><strong>Active:</strong> ติดต่อตรง — host/network/user/group/share/web/app/service enumeration + packet crafting</li>
+        <li>Why สำคัญ: foundation ของทั้ง test · realistic simulation · หา attack vectors · minimize detection · optimize effort · อยู่ใน scope/กฎหมาย</li>
+      </ul>
+      <div class="sub">Tools &amp; commands</div>
+      <table class="tbl">
+        <tr><th>Tool</th><th>Usage</th></tr>
+        <tr><td>whois</td><td><code>whois google.com</code> → registrant, admin/tech contacts (social engineering), registrar, dates (reg ใหม่=suspicious/squatting), NS records, IP block CIDR + abuse contact (scope definition)</td></tr>
+        <tr><td>nslookup/host/dig</td><td><code>nslookup -type=ns target.com</code>, <code>-type=mx</code>, <code>host -a target.com</code>; Zone transfer: <code>dig @&lt;IP&gt; vulnerablelab.com AXFR</code> — DNS misconfig เผย subdomain/internal hosts ทั้งหมด</td></tr>
+        <tr><td>DNS lab setup</td><td><code>sudo nano /etc/hosts</code> → <code>192.168.229.130 vulnerablelab.com www mail</code> → ทดสอบ <code>ping vulnerablelab.com</code>, <code>dig vulnerablelab.com</code></td></tr>
+        <tr><td>Ping/Traceroute</td><td><code>ping -c 4 &lt;Target&gt;</code> reachability+RTT · traceroute hop-by-hop delay</td></tr>
+        <tr><td>Google Dorking</td><td><code>site:</code>, <code>intitle:/allintitle:index of</code>, <code>inurl:admin/login</code>, <code>cache:</code>, <code>filetype:pdf</code>, <code>ext:sql|log</code> · GHDB บน exploit-db.com · dork ถูกฝังใน exploits เพื่อหาเวอร์ชันช่องโหว่</td></tr>
+        <tr><td>Shodan</td><td>search engine อุปกรณ์ต่อเน็ต ("search engine for hackers"); banner = SW ver/OS/port metadata · filters: <code>ip:</code> <code>asn:</code> <code>hostname:</code> <code>port:21</code> <code>net:CIDR</code> <code>isp:</code> <code>city:</code> <code>country:TH</code> <code>os:Linux</code> <code>product:"Apache"</code> <code>version:</code> <code>geo:</code> <code>before/after:</code> · OR = comma (<code>port:22,23</code>) · NOT = minus (<code>apache -country:US</code>)</td></tr>
+        <tr><td>theHarvester</td><td><code>theHarvester -b yahoo -d zonetransfer.me</code> / lab <code>-d kmutnb.ac.th -b yahoo</code> นับ emails/hosts found · passive modules (google/bing/yahoo/crtsh/hunter/shodan/censys/securityTrails/intelx/virustotal… หลายตัวต้อง API key) · active: DNS brute force + screenshots</td></tr>
+        <tr><td>recon-ng</td><td><code>python -c 'import pty;pty.spawn("/bin/bash")'</code> → <code>recon-ng</code> → <code>marketplace install hackertarget</code> → <code>modules load hackertarget</code> → <code>options set source vulnweb.com</code> → <code>run</code> → <code>show hosts</code> (IP ของ virus.vulnweb.com?)</td></tr>
+        <tr><td>OSINT Framework</td><td>osintframework.com tree → Username → WhatsMyName (<code>whatsmyname.app</code>) · osintcombine.com: Instagram Explorer, Social Geo Lens, TikTok Quick Search, Reddit Post Analyzer, bookmark stacks (OSINT/Darkweb)</td></tr>
+      </table>
+      <div class="sub">Lab steps (Recon)</div>
+      <ol>
+        <li>ตรวจ interface/IP: <code>ip a</code> (Kali ได้ IP วง lab ถูกต้อง)</li>
+        <li>ทดสอบเชื่อมต่อ: <code>ping -c 4 &lt;Target_IP&gt;</code> — ไม่มี packet loss</li>
+        <li><code>whois target.com</code> — domain + name servers</li>
+        <li>DNS records: <code>nslookup -type=ns|mx</code>, <code>host -a target.com</code></li>
+        <li>Dorking บน browser: site:/inurl:/filetype:</li>
+        <li><code>mkdir -p ~/Pentest_Labs/Lab2</code> → <code>cd</code> → <code>nano user_list.txt</code> (admin/root/msfadmin 1 ชื่อ/บรรทัด)</li>
+        <li>ตรวจสอบ: <code>ls -la</code>, <code>cat user_list.txt</code></li>
+      </ol>
+      <div class="note-s"><strong>Checklist:</strong> ภาพ ip a + ping สำเร็จ · WHOIS/DNS records · Google Dorking · โฟลเดอร์+wordlist บน Kali</div>
+    </section>
+
+    <!-- ================= L2 (Linux) ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L2 · Linux Fundamentals (Kali)</span><small>คำสั่งพื้นฐานสำหรับงาน Pentest</small></div>
+      <div class="sub">Navigation &amp; File</div>
+      <p><code>pwd</code> · <code>ls -la</code>(รวม hidden) · <code>cd</code> · <code>mkdir</code> / <code>rmdir</code> / <code>rm</code> · <code>touch f</code> สร้างไฟล์ · <code>cp src dst</code> · <code>mv</code> ย้าย/rename · <code>cat f</code> ดูเนื้อหา · <code>nano/vim f</code> edit · <code>stat f</code> file status · <code>grep kw file</code> ค้นคำในไฟล์ · <code>find dir -name f</code> · <code>man cmd</code> คู่มือ</p>
+      <div class="sub">Permission / Ownership</div>
+      <p><code>chmod perm f</code> — R=4 W=2 X=1 (เช่น 755 = rwxr-xr-x) · <code>chown user:group f</code> เปลี่ยนเจ้าของ · <code>chgrp grp f</code> — exercise: สร้าง my_file.txt/my_dir → chmod octal rwxr-xr-- → chown ด้วย sudo</p>
+      <div class="sub">Process / System info</div>
+      <p><code>ps</code> snapshot process · <code>top</code>/<code>htop</code> interactive sort CPU/mem (apt install htop) · <code>kill PID</code> vs <code>kill -9 PID</code> (SIGTERM vs SIGKILL) · <code>pkill name</code> · ทดลอง <code>sleep 60 &amp;</code> แล้ว kill · sysinfo: <code>uname -a</code> · <code>df -h</code> disk · <code>free -h</code> mem · <code>uptime</code> load · <code>lshw</code> hardware · <code>cat /proc/cpuinfo|meminfo</code></p>
+      <div class="sub">Networking</div>
+      <p><code>ip a</code>/ifconfig interfaces · <code>ip r</code>/route -n routing table · <code>cat /etc/resolv.conf</code> DNS settings · <code>ss -tuln</code>/netstat -tuln listening ports · netstat flags: <code>-l</code> listening, <code>-a</code> all sockets, <code>-t</code> TCP, <code>-u</code> UDP, <code>| grep http</code> filter · <code>ping 127.0.0.1</code>/gateway/google.com · <code>traceroute google.com</code></p>
+      <div class="sub">Users / Package mgmt</div>
+      <p><code>whoami</code> · <code>passwd</code> เปลี่ยนรหัสผ่าน · <code>useradd u</code> · APT: <code>sudo apt update</code> → <code>upgrade</code> → <code>apt search/show pkg</code> → <code>install/remove/purge pkg</code> → <code>autoremove</code> · queries ด้วย dpkg/rpm</p>
+      <div class="sub">Command chaining operators</div>
+      <p><code>&amp;</code> run background · <code>&amp;&amp;</code> รันต่อเมื่อคำสั่งก่อน succeed · <code>|</code> pipe output→input · <code>&gt;</code> overwrite file · <code>&gt;&gt;</code> append file</p>
+      <table class="tbl">
+        <tr><th>Dir</th><th>มุม Pentest</th></tr>
+        <tr><td>/bin</td><td>executables — persist scripts</td></tr>
+        <tr><td>/etc</td><td>configs — credentials! (/etc/passwd, shadow)</td></tr>
+        <tr><td>/home</td><td>home directories</td></tr>
+        <tr><td>/opt</td><td>third-party software</td></tr>
+        <tr><td>/tmp</td><td>temp (ล้างตอน reboot) — enum scripts</td></tr>
+        <tr><td>/usr</td><td>user programs</td></tr>
+        <tr><td>/var</td><td>logs — forensic evidence</td></tr>
+      </table>
+      <div class="sub">Compress / Decompress</div>
+      <p><code>tar -cvf a.tar dir</code> สร้าง · <code>tar -xvf a.tar</code> แตก · <code>-xvzf f.tgz</code> · <code>-xvjf f.tbz</code>/<code>jxf</code> · <code>gzip/gunzip f</code> · <code>bzip2 -d f.bz2</code> · <code>unzip f.zip</code> · <code>7z x f.7z</code> · <code>unxz f.xz</code> (apt install xz-utils)</p>
+      <div class="sub">Kali tools highlights (100 commands)</div>
+      <p>nmap · arp/dig/traceroute/iptable/tcpdump/wireshark/tshark · ssh/nc/socat · metasploit/msfvenom/db_nmap · hydra/john/hashcat · aircrack-ng/reaver/wifite · sqlmap · enum4linux/nbtscan · nikto/dirb/gobuster/dirbuster/wpscan · burp · ettercap/bettercap/mitmproxy/mitm6 · snort/openvas · armitage · steghide/binwalk/exiftool/foremost/scalpel · mimikatz/chntpw/pcredz/samdump2 · lynis/maltego/volatility/autopsy/yara · theharvester/dmitry/metagoofil/p0f/dnsenum/dnsrecon · macchanger/sslscan/ike-scan/ipcalc/hash-identifier/unshadow/radare2</p>
+    </section>
+
+    <!-- ================= L3 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L3 · Scanning &amp; Port Scanning (Nmap)</span><small>Active — เริ่มส่งแพ็กเก็ตจริง</small></div>
+      <div class="sub">Objectives &amp; types</div>
+      <ul>
+        <li>Objectives: หา live systems · active/open ports · OS fingerprint · services listening · target IP (Metasploit มี db_nmap built-in)</li>
+        <li>Types: <strong>Port scan</strong> (service↔well-known port, list ใน /etc/services) · <strong>Network scan</strong> (หา active hosts) · <strong>Vulnerability scan</strong> (automated known vulns)</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Port state</th><th>Mechanics</th></tr>
+        <tr><td>Open</td><td>มี server process listen — SYN → SYN/ACK กลับ</td></tr>
+        <tr><td>Closed</td><td>ไม่มี service — SYN → RST กลับ</td></tr>
+        <tr><td>Filtered</td><td>firewall/iptables drop — ไม่ตอบกลับเลย</td></tr>
+      </table>
+      <table class="tbl">
+        <tr><th>Technique</th><th>Behavior</th></tr>
+        <tr><td>TCP Connect <code>-sT</code></td><td>handshake เต็ม SYN→SYN/ACK→ACK แล้ว RST; accurate, ไม่ต้อง root, log ง่าย (vanilla/full connect)</td></tr>
+        <tr><td>SYN half-open <code>-sS</code></td><td>SYN→SYN/ACK→ส่ง RST ทันที; stealth ลด logging, ต้อง sudo/root</td></tr>
+        <tr><td>FIN <code>-sF</code></td><td>ส่ง FIN flag; silent=open, RST=closed — หลบ logging บาง firewall</td></tr>
+        <tr><td>XMAS <code>-sX</code></td><td>FIN+URG+PUSH; silent=open, RST=closed</td></tr>
+        <tr><td>NULL <code>-sN</code></td><td>ไม่มี flag เลย; silent=open, RST=closed/filtered</td></tr>
+        <tr><td>ACK <code>-sA</code></td><td>ทดสอบ stateful firewall/ACL: silent=stateful filtering, RST=packet ผ่านถึง dest</td></tr>
+        <tr><td>UDP <code>-sU</code></td><td>ICMP port-unreachable=closed, silence=open/filtered; ช้ากว่า TCP (DNS/DHCP/SNMP)</td></tr>
+        <tr><td>FTP bounce <code>-b</code></td><td>ใช้ FTP server ส่งแทน — ซ่อนตัว attacker (anonymous relay)</td></tr>
+      </table>
+      <div class="sub">Host discovery</div>
+      <p>Step แรกของ network pentest = รู้ว่าอะไร alive · <code>nmap -sP|-sn &lt;IP&gt;</code> ping scan · sweep ทั้งวง <code>nmap -sP 192.168.37.1/24</code> · เร็วสุด: <code>sudo masscan --ports 0-65535 &lt;IP&gt;</code> · External = จำกัดเฉพาะ IP ใน scope, Internal = scan ทั้ง subnet/subnets</p>
+      <div class="sub">Common ports</div>
+      <p>21 FTP · 22 SSH · 23 Telnet · 25 SMTP · 53 DNS · 80 HTTP · 110 POP3 · 143 IMAP · 161 SNMP · 443 HTTPS · 139 NetBIOS · 445 SMB · 3389 RDP</p>
+      <div class="sub">Detection options</div>
+      <ul>
+        <li><code>-sV</code> probe ถามเวอร์ชัน service (Apache, vsFTPd, OpenSSH…)</li>
+        <li><code>-O</code> OS fingerprint จารูปแบบ TCP/IP stack response</li>
+        <li><code>-sC</code> รัน default NSE scripts ตามพอร์ตที่พบ</li>
+        <li><code>-A</code> aggressive = -sV + -O + -sC + traceroute → <code>nmap -n -A -T5 &lt;IP&gt;</code></li>
+        <li><code>-p-</code> scan ครบ 65,535 ports · <code>-T0..T5</code> timing paranoid→insane</li>
+        <li>Output files: <code>-oN</code> normal · <code>-oG</code> greppable · <code>-oX</code> XML · <code>-oA name</code> ทุก format (.nmap/.xml/.gnmap)</li>
+      </ul>
+      <div class="sub">Lab steps (ตามลำดับ)</div>
+      <ol>
+        <li><code>nmap -sn 192.168.56.0/24</code> → หา IP เครื่อง target</li>
+        <li><code>sudo nmap -sS &lt;Target_IP&gt;</code> top-1000 ports stealth</li>
+        <li><code>nmap -sT -p 21,80,445 &lt;Target_IP&gt;</code> connect scan เจาะจงพอร์ต</li>
+        <li><code>nmap -sV &lt;Target_IP&gt;</code> version detection</li>
+        <li><code>sudo nmap -O -T4 &lt;Target_IP&gt;</code> OS fingerprint + speed</li>
+        <li><code>sudo nmap -A &lt;Target_IP&gt;</code> aggressive ครบชุด</li>
+        <li><code>nmap -sT -p 80 &lt;Target_IP&gt; -oN mscan.txt</code> → <code>cat mscan.txt</code></li>
+        <li><code>nmap -sV &lt;Target_IP&gt; -oA lab3_scan_results</code> ทุก format</li>
+        <li>Exercise: <code>sudo nmap -sS -sV -sC -p- -T5 192.168.37.129 -o nmaplist.txt</code> → <code>ls</code>/<code>cat</code> เทียบผลกับแบบไม่ใส่ <code>-sC</code></li>
+      </ol>
+      <div class="note-s"><strong>Assignment:</strong> ภาพ -sS/-sT แสดง port states · -sV/-O ระบุ version+OS · save file (-oN) + cat ทุกขั้นตอน</div>
+    </section>
+
+
+
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>Penetration Testing &amp; Protection (0406136051) — แผ่นสรุป A4 แนวนอน</span>
+      <span>หน้า 1/2 · L1–L3 · ต่อหน้า 2/2: L4–L6</span>
+    </div>
+  </main>
+</body>
+</html>

