@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S1A — สรุปทฤษฎีสอบข้อเขียน (Roadmap + L1–L6)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">Roadmap</a>
+      <a href="summary1.html" title="สรุป A4 แนวนอน หน้า 1/2 (L1-L3)">S1</a>
+      <a href="summary2.html" title="สรุป A4 แนวนอน หน้า 2/2 (L4-L6)">S2</a>
+      <a href="summary1a.html" class="active" title="สรุปทฤษฎีสอบข้อเขียน (Roadmap+L1-L6)">S1A</a>
+      <a href="summary2a.html" title="สรุป Command/Lab Steps + เกล็ดความรู้">S2A</a>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>S1A · สรุปทฤษฎีสำหรับสอบข้อเขียน — Roadmap + L1–L6 (เน้นความเข้าใจ ไม่มีคำสั่ง)</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">S1</a><a href="summary2.html">S2</a><a href="summary2a.html">S2A →</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= ROADMAP ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Roadmap · ภาพใหญ่ของทั้งวิชา</span><small>Kill Chain</small></div>
+      <p>การแฮกระบบ <strong>ไม่ใช่การยิงมั่ว</strong> — เป็นสายพานต่อเนื่อง โดย <strong>ผลลัพธ์ของขั้นก่อนหน้า = อาวุธของขั้นถัดไปเสมอ</strong></p>
+      <p class="step"><strong>L1 เตรียมสนาม</strong> → <strong>L2 สืบข่าว Passive</strong> → <strong>L3 สแกน Active</strong> → <strong>L4 แจกแจงลึก</strong> → <strong>L5 วิเคราะห์ช่องโหว่</strong> → <strong>L6 เจาะจริง</strong> → <strong>L7 ถอดรหัส/คงสิทธิ์</strong></p>
+      <table class="tbl">
+        <tr><th>PTES Phase</th><th>Lecture</th><th>คำถามหลักของเฟส</th></tr>
+        <tr><td>Pre-engagement</td><td>L1</td><td>ได้อนุญาตหรือยัง · ขอบเขตไหน</td></tr>
+        <tr><td>Intelligence Gathering</td><td>L2</td><td>เป้าหมายมีอะไรเปิดเผยอยู่บ้าง</td></tr>
+        <tr><td>Threat Modeling / Vuln Analysis</td><td>L3–L5</td><td>ประตูไหนเปิด · ช่องโหว่อะไร · แรงแค่ไหน</td></tr>
+        <tr><td>Exploitation</td><td>L6</td><td>เจาะผ่านไหม · ได้สิทธิ์อะไร</td></tr>
+        <tr><td>Post-Exploitation</td><td>L6–L7</td><td>ยกระดับสิทธิ์ · ขยายผล · ยึดข้อมูล</td></tr>
+        <tr><td>Reporting</td><td>ทุกขั้น</td><td>เก็บหลักฐานคำสั่ง+ผลลัพธ์ทุก step</td></tr>
+      </table>
+      <div class="note-s"><strong>Hidden Objective:</strong> ฝึกคิดแบบ Offensive Security Professional — เริ่มจากไม่รู้อะไรเลย จบด้วยการควบคุมระบบ+ยึดข้อมูลสำคัญอย่างเป็นระบบ</div>
+      <div class="warn-s"><strong>กฎเหล็ก:</strong> ต้องได้ Permission (เขียนไว้) เท่านั้น — แฮกโดยไม่ได้อนุญาต = ผิดกฎหมาย</div>
+    </section>
+
+    <!-- ================= L1 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L1 · Foundation &amp; Methodology</span><small>รู้จักเกม+กติกา ก่อนลงสนาม</small></div>
+      <p><strong>Pentest คือ:</strong> จำลองการโจมตี<strong>อย่างถูกกฎหมาย</strong> เพื่อหาจุดอ่อน<strong>ก่อน</strong>ผู้ไม่หวังดี — ต่างจากแฮกเกอร์ตรงที่มีขอบเขต + ส่งรายงานช่วยให้องค์กรแข็งแรงขึ้น (ประเมิน controls 3 ด้าน: เทคโนโลยี / ขั้นตอน / การปฏิบัติ)</p>
+      <p><strong>Pentester:</strong> ใช้วิธี+เครื่องมือแบบ attacker เพื่อพิสูจน์ว่าจุดอ่อนสร้างความเสียหายจริงแค่ไหน แล้วแนะนำวิธีแก้</p>
+      <table class="tbl">
+        <tr><th>คู่เปรียบเทียบ (ออกสอบบ่อย)</th><th>ต่างกันอย่างไร</th></tr>
+        <tr><td><b>VA</b> Vulnerability Assessment</td><td>เดินเช็กทั้งบ้านเทียบรายการช่องโหว่ที่รู้จัก — <b>กว้าง</b> · ไม่เปิดประตู · ได้รายการ+ระดับความเสี่ยง</td></tr>
+        <tr><td><b>PT</b> Penetration Testing</td><td>สวมบทโจรลองงัดบ้านจริง — <b>ลึก</b> · พิสูจน์เข้าได้จริง+ผลกระทบ · มี ROE กำกับ</td></tr>
+        <tr><td>Red Teaming</td><td>PT แบบ adversarial — ซ่อนตัวไม่ให้ Blue Team รู้ วัดการตอบโต้จริง</td></tr>
+        <tr><td>Vuln Scan ⊂ VA ⊂ PT ⊂ Red Team</td><td>รันสแกนเฉยๆ ⊂ เช็ก+ยืนยัน ⊂ เจาะจริง ⊂ ศึกจำลองมีทีมรับ</td></tr>
+      </table>
+      <ul>
+        <li><strong>Black box:</strong> ให้แต่ที่อยู่ (IP ranges) = โจรข้างนอก · <strong>White box:</strong> ให้แบบแปลน+source code/configs · <strong>Gray box:</strong> ให้บัญชีพนักงานธรรมดา</li>
+        <li><strong>ตามเป้าหมาย:</strong> Network / Physical (ล็อก กล้อง sensor) / Web application / Wireless</li>
+      </ul>
+      <div class="sub">มาตรฐาน 5 ตัว (จำสั้นๆ)</div>
+      <table class="tbl">
+        <tr><th>มาตรฐาน</th><th>จุดขาย</th></tr>
+        <tr><td>PTES</td><td>7 เฟสยอดนิยม เชื่อม business+technical</td></tr>
+        <tr><td>OSSTMM</td><td>วัด OpSec จริง · รายงาน STAR</td></tr>
+        <tr><td>OWASP OTG</td><td>เฉพาะ Web/API</td></tr>
+        <tr><td>NIST SP800-115</td><td>แนวทาง US ทำซ้ำได้ มีเอกสาร</td></tr>
+        <tr><td>ISSAF</td><td>9 ขั้น ละเอียดถึง Cover tracks</td></tr>
+      </table>
+      <div class="sub">ROE ต้องมีอะไร</div>
+      <ul>
+        <li>Permission to hack + NDA (ลงนามสองฝ่าย)</li>
+        <li>Scope (ห้ามเกิน) · ระยะเวลา start/end · Methodology · Goals</li>
+        <li>อนุญาต/ห้าม เทคนิคไหน (เช่น DoS) · Liabilities ถ้าระบบพัง/ข้อมูลหลุด</li>
+      </ul>
+      <div class="sub">Lab แต่ละตัวมีบทบาท</div>
+      <ul>
+        <li><strong>Kali</strong> = กล่องดาบ (tools ครบ) · <strong>Metasploitable2</strong> = เป้าฝึกยิง Linux ที่ตั้งใจมีช่องโหว่ · <strong>DVWA</strong> = เป้าเว็บ (SQLi/XSS) · <strong>VirtualBox/VMware Host-Only</strong> = สนามปิด ไม่กระทบภายนอก</li>
+        <li>Metasploitable: v1 (2010 เก่า) / v2 (2012 เป้าหลัก) / v3 (มี Windows)</li>
+      </ul>
+    </section>
+
+    <!-- ================= L2 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L2 · Passive Recon &amp; Linux</span><small>"สืบข่าวโดย target ไม่รู้ตัว"</small></div>
+      <table class="tbl">
+        <tr><th>ศัพท์ (ซ้อนกันเป็นชั้น)</th><th>แปลง่ายๆ</th></tr>
+        <tr><td>Information Gathering</td><td>ร่มใบใหญ่ ครอบการเก็บข่าวทุกแบบ</td></tr>
+        <tr><td>Reconnaissance</td><td>ส่องภาพรวมจากข้างนอก: เว็บ/โซเชียล/IP range/โดเมน/อีเมล</td></tr>
+        <tr><td>Footprinting</td><td>ซูมเข้ารายละเอียด technical: network scan, service fingerprint, DNS subdomain</td></tr>
+        <tr><td>OSINT</td><td>เก็บจากแหล่งสาธารณะ+search ขั้นสูง</td></tr>
+        <tr><td>Enumeration</td><td>เคาะประตูถามตรงๆ — users/shares/apps/configs</td></tr>
+      </table>
+      <ul>
+        <li><strong>Passive = ไม่แตะ target</strong> (อ่านข้อมูลที่คนอื่นเก็บไว้แล้ว) → ไม่มี log · ทำก่อนเสมอเพื่อความเนียน</li>
+        <li><strong>Active = ส่งอะไรบางอย่างหา target</strong> → เริ่มมี footprint · เก็บได้ลึก/ทันสมัยกว่า</li>
+        <li>ทำไม recon สำคัญ: กำหนด scope · หา attack surface · เลือกยิงตรงจุด ประหยัดเวลา · ลดโอกาสโดนจับได้</li>
+      </ul>
+      <div class="sub">เครื่องมือ passive แต่ละตัวตอบคำถามอะไร</div>
+      <table class="tbl">
+        <tr><th>Tool</th><th>ตอบว่า…</th></tr>
+        <tr><td>WHOIS</td><td>ใครเป็นเจ้าของโดเมน/IP · ลงทะเบียนเมื่อไร · NS ใช้ค่ายไหน</td></tr>
+        <tr><td>DNS query / Zone transfer</td><td>mail server ไหน · subdomain ซ่อนอะไร (AXFR สำเร็จ=DNS ตั้งค่าพลาด ได้ทั้งแผนที่)</td></tr>
+        <tr><td>Google Dorking</td><td>มีไฟล์/หน้า admin/index อะไรหลุด index ผ่าน search operators</td></tr>
+        <tr><td>Shodan</td><td>มีอุปกรณ์/service อะไรเปิดสู่อินเทอร์เน็ต + banner บอกเวอร์ชัน</td></tr>
+        <tr><td>theHarvester</td><td>อีเมล/โดเมนย่อยจาก search engine+แหล่ง public</td></tr>
+        <tr><td>recon-ng</td><td>ระบบ OSINT อัตโนมัติ เก็บเป็นฐานข้อมูลจัดการต่อได้</td></tr>
+        <tr><td>OSINT Framework</td><td>สารบัญรวม tools ตามหมวด (username/email/social…)</td></tr>
+      </table>
+      <div class="sub">Linux ที่ต้องรู้ (มุม security)</div>
+      <ul>
+        <li><strong>/etc</strong> = config + <b>รหัสผ่าน (passwd, shadow)</b> → ที่หอกข้าวของ attacker · <strong>/var</strong> = logs (หลักฐาน) · <strong>/tmp</strong> = ขยะชั่วคราว (จุดวาง script) · <strong>/bin</strong> = โปรแกรม (จุดฝัง persistence) · /home /opt /usr</li>
+        <li><strong>Permission rwx:</strong> Read=4 Write=2 eXecute=1 → 755 = เจ้าของทำได้หมด คนอื่นอ่าน+รัน · root = เทพ ทำได้ทุกอย่าง</li>
+        <li><strong>เชื่อมคำสั่ง:</strong> &amp;&amp; ทำต่อเมื่อสำเร็จ · | ส่งผลต่อ · &gt; เขียนทับ · &gt;&gt; ต่อท้าย · &amp; พื้นหลัง</li>
+      </ul>
+    </section>
+
+    <!-- ================= L3 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L3 · Scanning Concepts</span><small>"เคาะประตูทีละบานอย่างมีชั้นเชิง"</small></div>
+      <p><strong>เป้าหมายของการสแกน:</strong> ใครยังมีชีวิต (hosts) · ประตูไหนเปิด (ports) · ใครยืนอยู่หลังประตู (services+version) · บ้านสไตล์ไหน (OS)</p>
+      <table class="tbl">
+        <tr><th>สถานะพอร์ต</th><th>แปลวว่า</th></tr>
+        <tr><td>Open</td><td>มี service นั่งรอรับ connection จริง</td></tr>
+        <tr><td>Closed</td><td>เครื่องอยู่ แต่ประตูนี้ไม่มีใครใช้ (ตอบ RST)</td></tr>
+        <tr><td>Filtered</td><td>firewall ดักไว้ — ไม่รู้จริงว่าข้างหลังมีอะไร</td></tr>
+      </table>
+      <div class="sub">ตระกูลเทคนิคสแกน (เข้าใจหลักคิด ไม่ต้องจำ flag)</div>
+      <table class="tbl">
+        <tr><th>ตระกูล</th><th>หลักคิด / จุดเด่น</th></tr>
+        <tr><td>Full connect (TCP Connect)</td><td>จับมือครบ 3 จังหวะ — แม่นยำ ไม่ต้องสิทธิ์พิเศษ แต่<b>ถูกจด log ชัด</b></td></tr>
+        <tr><td>SYN half-open</td><td>จับมือครึ่งจังหวะแล้ววางสาย — <b>stealth</b> มาตรฐาน, ต้องสิทธิ์ root</td></tr>
+        <tr><td>FIN / XMAS / NULL</td><td>ส่งธงแปลกๆ อาศัยกฎ RFC (เงียบ=open) — หวังหลบ log ของ firewall บางตัว</td></tr>
+        <tr><td>ACK scan</td><td>ไม่ได้หา port เปิด — ใช้<b>สอบ firewall</b> ว่า stateful หรือเปล่า</td></tr>
+        <tr><td>UDP scan</td><td>เงียบ=เปิดหรือถูกกรอง (กำกวม) — ช้า, จำเป็นกับ DNS/SNMP/DHCP</td></tr>
+        <tr><td>FTP bounce</td><td>ยืม FTP server คนอื่นเป็นนายพล — ซ่อนตัวเรา</td></tr>
+      </table>
+      <div class="sub">Port ↔ Service (ท่องให้ขึ้นใจ)</div>
+      <p>21 FTP · 22 SSH · 23 Telnet · 25 SMTP · 53 DNS · 80 HTTP · 110 POP3 · 143 IMAP · 161 SNMP · 443 HTTPS · 139 NetBIOS · 445 SMB/CIFS · 3389 RDP</p>
+      <div class="sub">ต่อยอดหลังสแกน</div>
+      <ul>
+        <li><b>Version detection</b>: ถามว่า service นี้เวอร์ชันอะไร — <u>เวอร์ชัน = กุญแจไปหา CVE</u> ใน L5–L6</li>
+        <li><b>OS fingerprinting</b>: อ่านนิสัย TCP/IP stack → ระบบอะไร เวอร์ชันไหน</li>
+        <li><b>Aggressive mode</b>: version+OS+default scripts+traceroute ในที่เดียว (เสียงดังสุด)</li>
+        <li><b>Output formats</b>: normal/greppable/XML/all — เก็บเป็น<b>หลักฐาน</b>+นำไปประมวลต่อ</li>
+        <li><b>Host discovery</b>: ping sweep หา "ใครยังอยู่" ก่อนสแกนลึก — masscan สำหรับวงใหญ่</li>
+      </ul>
+    </section>
+
+    <!-- ================= L4 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L4 · Enumeration Concepts</span><small>"เปิดตู้เซฟดูของข้างใน"</small></div>
+      <p><strong>Enumeration = คุยกับ service ที่เปิดอยู่โดยตรง</strong> เพื่อดึงข้อมูลมีค่า: ชื่อผู้ใช้ / กลุ่ม / share / โฟลเดอร์ซ่อน / config — เป็น<b>สะพาน</b>จาก "รู้ว่าประตูไหนเปิด" ไปสู่ "รู้ว่าจะเข้ายังไง"</p>
+      <ul>
+        <li><b>ทำไมสำคัญ:</b> user list → แหล่ง brute-force · share → จุดวางไฟล์/ข้อมูลหลุด · config พลาด → ช่องเข้าตรงๆ</li>
+        <li><b>Active vs Passive scan:</b> active ครบแต่เสียงดัง · passive เนียนแต่เห็นน้อย — เลือกตามสถานการณ์+ROE</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Protocol</th><th>บอกอะไรเราได้</th></tr>
+        <tr><td>SMB (139/445)</td><td>แชร์ไฟล์ Windows/Samba — users, groups, shares, process (ต้องมี creds บางอย่าง)</td></tr>
+        <tr><td>RPC (111)</td><td>portmapper ทำเนียบบริการ — nfs/mountd ฯลฯ</td></tr>
+        <tr><td>NFS (2049)</td><td>export โฟลเดอร์อะไรให้ใคร (ถ้า export "/" = ทั้งเครื่อง)</td></tr>
+        <tr><td>NetBIOS (137–139)</td><td>ชื่อเครื่อง/legacy info</td></tr>
+        <tr><td>Web (80/443)</td><td>โฟลเดอร์ซ่อน admin panel phpinfo — ประตูข้างหลังบ้าน</td></tr>
+      </table>
+      <p><strong>Tools และหน้าที่ (ไม่ต้องจำ syntax):</strong> smbclient=เดินเข้า share · SMBMap=ดูสิทธิ์ share เป็นแผนที่ · enum4linux=ดึง users/groups/OS แบบครบชุด · NBTscan/nbstat=ชื่อ NetBIOS · http-enum/Nikto=สำรวจ path+ช่องโหว่เว็บ · <code>-sC</code>=ชุด script อัตโนมัติตาม port</p>
+    </section>
+
+    <!-- ================= L5 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L5 · Vulnerability Assessment</span><small>"จัดอันดับความอันตรายของประตูที่พบ"</small></div>
+      <p><strong>VA = หา+จำแนก+จัดลำดับ</strong>ช่องโหว่โดยเทียบฐานข้อมูลที่รู้จัก (known vulnerabilities) — เน้น "ค้นพบ+ประเมิน" ไม่ใช่เจาะจริง · ทดสอบว่าระบบ<b>ตรวจจับ/ตอบโต้</b> DoS, MITM, SQLi ได้ไหม</p>
+      <table class="tbl">
+        <tr><th>ชนิดช่องโหว่</th><th>ตัวอย่างเข้าใจง่าย</th></tr>
+        <tr><td>Technological</td><td>ของมี bug เอง (app X พัง → ควบคุม system Y)</td></tr>
+        <tr><td>Configuration</td><td>คนตั้งค่าพลาด (เปิด RDP ทิ้งไว้บน firewall)</td></tr>
+        <tr><td>Policy</td><td>ไม่มีกฎ/ไม่ทำตามกฎ (ประตู server room ไม่ล็อก)</td></tr>
+      </table>
+      <table class="tbl">
+        <tr><th>Risk</th><th>ความหมาย</th><th>เร่งแค่ไหน</th></tr>
+        <tr><td>High</td><td>โจมตีง่าย → เสียเมืองทั้งเมือง</td><td>แก้ทันที</td></tr>
+        <tr><td>Medium</td><td>ยากหน่อย/ได้น้อย</td><td>ระยะสั้น</td></tr>
+        <tr><td>Low</td><td>ให้ข้อมูลผู้โจมตีต่อ</td><td>ค่อยว่ากัน</td></tr>
+      </table>
+      <ul>
+        <li><b>Scanner +/−:</b> (+) อัตโนมัติ เร็ว ครอบคลุม (−) เสียงดังโดนจับได้ + false positive/negative → ต้อง<em>ตรวจซ้ำด้วยมือ</em></li>
+        <li><b>VA steps (7):</b> ping เช็ก alive → stealth scan ports → scanner หา vuln+report → จำแนก+วางแผนตอบ → จัด asset สำคัญ → ทำ report ตามหลัง → วางระบบรักษาภาพรวมต่อเนื่อง</li>
+      </ul>
+      <div class="sub">CVSS v4.0 — ไม้บรรทัดวัดความรุนแรง (FIRST)</div>
+      <ul>
+        <li>4 กลุ่ม: <b>Base</b>(ธรรมชาติช่องโหว่) / <b>Threat</b>(สถานการณ์ exploit) / <b>Environmental</b>(ปรับตามบ้านเรา) / <b>Supplemental</b>(context เสริม ไม่มีผลคะแนน)</li>
+        <li>Base สำคัญ: AV(โจมตีจากไหน N/A/L/P) · AC(ยาก/ง่าย) · AT · PR · UI + ผลกระทบ C/I/A ทั้งระบบเป้าหมายและระบบต่อข้างหลัง</li>
+        <li>ชื่อคะแนน: CVSS-B → BT → BE → BTE (ใส่กลุ่มไหนบ้าง)</li>
+      </ul>
+      <table class="tbl">
+        <tr><th>Band</th><th>คะแนน</th><th>Band</th><th>คะแนน</th></tr>
+        <tr><td>None</td><td>0.0</td><td>High</td><td>7.0–8.9</td></tr>
+        <tr><td>Low</td><td>0.1–3.9</td><td>Critical</td><td>9.0–10.0</td></tr>
+        <tr><td>Medium</td><td>4.0–6.9</td><td colspan="2">CVE ตัวอย่าง: 2523 vsftpd backdoor · 3566 POODLE · 1823 PHP-CGI RCE</td></tr>
+      </table>
+      <ul>
+        <li><b>CVE</b> = เลขประจำตัวช่องโหว่ (MITRE) · <b>NVD</b> = CVE+วิเคราะห์+คะแนน CVSS (US gov) · <b>CWE</b> = สาเหตุรากของปัญหา · <b>KEV</b> = ช่องที่โจรใช้จริงต้องรีบแก้</li>
+        <li><b>Report 8 ส่วน:</b> Executive Summary → Introduction → Findings(ID/impact/PoC) → Risk Assessment → Recommendations → Appendix · เคล็ด: ภาษาชัด มีภาพ เรียงตาม severity ให้ทำได้จริง</li>
+        <li><b>Tools 3 สาย:</b> NSE(nmap scripts หา vuln ราย service) · Nessus(สแกน host/network ครบ มี remediation) · ZAP(เฉพาะ web app แบบ proxy+active scan)</li>
+      </ul>
+    </section>
+
+    <!-- ================= L6 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L6 · Exploitation Concepts</span><small>"พิสูจน์ว่าประตูนี้งัดได้จริง"</small></div>
+      <p><strong>Exploit = เอาช่องโหว่มาใช้จริง</strong>เพื่อ bypass การป้องกัน — แต่ละ OS/service/เวอร์ชันต้องใช้วิธีต่างกัน · เป้าหมายไม่ใช่ "พังให้ได้" แต่คือ <b>พิสูจน์ impact</b>+เข้าใจความลึกของปัญหา เพื่อเขียน report ที่หนักแน่น</p>
+      <table class="tbl">
+        <tr><th>Goals 5 ข้อ</th><th>แปลง่ายๆ</th></tr>
+        <tr><td>Validate</td><td>ช่องโหว่ที่ scanner ว่าใช่ — จริงป่าว</td></tr>
+        <tr><td>Assess Impact</td><td>ถ้าโจรใช้ จะเจ็บแค่ไหน</td></tr>
+        <tr><td>Gain Access</td><td>ได้ shell/บัญชี/ข้อมูลโดยไม่อนุญาต</td></tr>
+        <tr><td>Elevate Privileges</td><td>จากพนักงาน → เจ้าของบ้าน (root/SYSTEM)</td></tr>
+        <tr><td>Persistence</td><td>ล็อกกุญแจสำรองไว้กลับมาใหม่ได้</td></tr>
+      </table>
+      <div class="sub">4 ช่วงของ Exploitation Phase</div>
+      <ol>
+        <li><b>Prep:</b> คัดช่องโหว่ที่คุ้ม (severity/impact/exploitability) → เตรียม/custom exploit</li>
+        <li><b>Execute:</b> ยิง → ได้ foothold แรก (shell/บัญชี/คุมเว็บ)</li>
+        <li><b>Post-Exploit:</b> privesc → สำรวจข้างใน (sw/network/security config) → ดึงข้อมูลสำคัญ → ฝัง persistence</li>
+        <li><b>Cleanup+Docs:</b> ลบร่องรอย + จดทุกอย่างลง report (โจทย์จริงคือ report!)</li>
+      </ol>
+      <div class="sub">Metasploit = ชุดเครื่องมือเจาะแบบต่อชิ้น</div>
+      <ul>
+        <li><b>Modules 7:</b> Exploits(ลูกศร) · Payloads(ดินระเบิดปลายทาง: reverse/meterpreter) · Encoders(ห่อหุ้มหลบ AV/IDS) · Auxiliary(สแกน/fuzz/brute ไม่มี payload) · NOP(stuffer) · Post(privesc/เก็บ creds หลังเจาะ) · Evasion(หลบ EDR)</li>
+        <li><b>สถาปัตยกรรม:</b> Rex(ซ็อกเก็ตพื้นฐาน) → MSF Core(จัดการ session/UI/module) → MSF Base(API ให้ msfconsole ใช้) — UI: msfconsole(CLI)/Armitage(GUI)</li>
+        <li><b>Reverse vs Bind shell (ออกสอบ):</b> Bind = เราโทร<em>เข้า</em> target (target เปิด port รอ) · Reverse = target โทร<em>กลับ</em>มาหาเรา (ผ่าน NAT/FW ได้, นิยมกว่า)</li>
+        <li><b>Connection Auto/Bind/Reverse:</b> auto เลือกให้เองตามสถานการณ์ NAT</li>
+      </ul>
+      <div class="note-s"><strong>สะพานไป L7:</strong> พอเจาะได้ root → ดึง /etc/shadow (รายการ hash รหัสผ่าน) ออกมา → ส่งต่อ John/Hashcat ถอด = ยึดบัญชีทั้งเครื่อง (Post-Exploitation ต่อเนื่อง)</div>
+    </section>
+
+    <!-- ================= RECALL ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>⚡ Quick Recall ก่อนเข้าห้องสอบ</span><small>10 ข้อที่ต้องไม่ลืม</small></div>
+      <ol>
+        <li>Pentest = แฮก<b>ที่มีกระดาษอนุญาต</b> + ROE + รายงาน</li>
+        <li>VA=กว้าง/เช็ก known · PT=ลึก/พิสูจน์ impact — <b>ไม่แทนกัน</b></li>
+        <li>Black=โจรนอก · White=มีแบบแปลน · Gray=มีบัญชีธรรมดา</li>
+        <li>PTES 7: Pre-engage → Intel → Threat Model → Vuln Analysis → Exploit → Post → Report</li>
+        <li>Passive ไม่มี log / Active เริ่มมี footprint — passive ก่อนเสมอ</li>
+        <li>/etc เก็บ password · /tmp วาง script · /bin ฝัง persistence · /var คือหลักฐาน</li>
+        <li>Open/Closed/Filtered · SYN stealth · ACK สอบ firewall · UDP กำกวม</li>
+        <li>Port: 21 FTP · 22 SSH · 25 SMTP · 80 HTTP · 443 HTTPS · 445 SMB · 3389 RDP</li>
+        <li>CVSS: None 0 · Low &lt;4 · Med &lt;7 · High &lt;9 · Critical ≥9 · CVE=ID · KEV=โจรใช้จริง</li>
+        <li>Reverse shell = target โทรกลับ (ผ่าน NAT) · Bind = เราโทรเข้า</li>
+      </ol>
+      <div class="tip">สูตรตอบข้อสอบ: "ขั้นตอน + เหตุผล + ผลลัพธ์" เช่น ทำ recon เพื่อ…→ ได้ scope/version → นำไปเลือก scan/exploit ตรงจุด</div>
+    </section>
+
+
+
+
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>S1A — ทฤษฎีสำหรับสอบข้อเขียน (ไม่มีคำสั่ง)</span>
+      <span>Command/Lab อยู่ที่ S2A</span>
+    </div>
+  </main>
+</body>
+</html>

