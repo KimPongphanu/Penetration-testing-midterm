@@ -431,3 +431,266 @@ tr:nth-child(even) {
     display: none;
   }
 }
+
+/* ============================================================
+   RESPONSIVE — Mobile (navbar bottom + A4 adaptation)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* --- Navbar → fixed bottom bar --- */
+  .navbar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    z-index: 2000;
+  }
+
+  .nav-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 8px 10px;
+    scrollbar-width: none;          /* Firefox */
+  }
+
+  .nav-inner::-webkit-scrollbar {
+    display: none;                  /* Chrome / Safari */
+  }
+
+  .brand {
+    font-size: 11pt;
+    padding: 4px 10px;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  .brand img.brand-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .navbar a {
+    font-size: 11pt;
+    padding: 6px 10px;
+    flex-shrink: 0;
+  }
+
+  /* --- Body: space for bottom navbar --- */
+  body {
+    font-size: 13pt;
+    line-height: 1.55;
+    padding: 12px 10px 80px;
+  }
+
+  /* --- A4 page: fit mobile screen --- */
+  .a4 {
+    width: 100%;
+    min-height: auto;
+    padding: 14px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  /* --- Typography --- */
+  h1 {
+    font-size: 15pt;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .subtitle {
+    font-size: 10.5pt;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 13pt;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 12pt;
+    margin-top: 12px;
+  }
+
+  p {
+    font-size: 12.5pt;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  code {
+    font-size: 11pt;
+    word-break: break-all;
+  }
+
+  pre {
+    font-size: 10.5pt;
+    padding: 10px;
+  }
+
+  table {
+    font-size: 11pt;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th, td {
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+
+  .note, .warn, .tip {
+    font-size: 12pt;
+    padding: 10px 12px;
+  }
+
+  /* --- Lecture cards --- */
+  .lecture-card {
+    padding: 10px 12px;
+    margin: 10px 0;
+  }
+
+  .lecture-card .lc-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .lecture-card h3 {
+    font-size: 12pt;
+  }
+
+  .lecture-card .lc-obj {
+    font-size: 12pt;
+  }
+
+  .lecture-card .lc-next {
+    font-size: 11pt;
+    padding: 6px 10px;
+  }
+
+  /* --- Roadmap → stack vertically --- */
+  .roadmap {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .roadmap .rm-step {
+    min-width: auto;
+    font-size: 11pt;
+    padding: 8px 10px;
+  }
+
+  .roadmap .rm-arrow {
+    font-size: 14pt;
+    transform: rotate(90deg);
+    padding: 2px 0;
+  }
+
+  /* --- Arrow flow: wrap more tightly --- */
+  .arrow-flow {
+    gap: 4px;
+  }
+
+  .arrow-flow .af-step {
+    font-size: 10pt;
+    padding: 5px 8px;
+  }
+
+  .arrow-flow .af-arrow {
+    font-size: 12pt;
+  }
+
+  /* --- Bigpic --- */
+  .bigpic {
+    padding: 12px;
+    font-size: 11pt;
+    margin: 12px 0;
+  }
+
+  /* --- Footer --- */
+  .footer {
+    margin-bottom: 80px;           /* space above fixed navbar */
+    font-size: 10pt;
+    padding: 8px;
+  }
+}
+
+/* --- Very small phones (< 400px) --- */
+@media (max-width: 400px) {
+  body {
+    padding: 8px 6px 72px;
+    font-size: 12pt;
+  }
+
+  .a4 {
+    padding: 10px 8px;
+    border-radius: 6px;
+  }
+
+  h1 {
+    font-size: 13pt;
+  }
+
+  .subtitle {
+    font-size: 10pt;
+  }
+
+  h2 {
+    font-size: 12pt;
+  }
+
+  h3 {
+    font-size: 11pt;
+  }
+
+  p {
+    font-size: 11.5pt;
+  }
+
+  .navbar a {
+    font-size: 10pt;
+    padding: 5px 8px;
+  }
+
+  .brand {
+    font-size: 10pt;
+    padding: 3px 8px;
+  }
+
+  th, td {
+    font-size: 10pt;
+    padding: 5px 6px;
+  }
+
+  .lecture-card .lc-num {
+    font-size: 11pt;
+    padding: 4px 10px;
+    min-width: 44px;
+  }
+
+  .lecture-card h3 {
+    font-size: 11pt;
+  }
+
+  .lecture-card .lc-obj {
+    font-size: 11pt;
+  }
+
+  .note, .warn, .tip {
+    font-size: 11pt;
+    padding: 8px 10px;
+  }
+}
