@@ -33,7 +33,7 @@
 
     <header class="sheet-head">
       <img src="icon.jpg" alt="logo" class="cs-logo">
-      <h1>S2A · Command &amp; Lab Steps — ไล่ทีละขั้น + 💡เกล็ดความรู้ (L2→L7 workflow)</h1>
+      <h1>S2A · Command &amp; Lab Steps — ไล่ทีละขั้น + 💡เกล็ดความรู้ (Exam Workflow L1–L6)</h1>
       <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">S1</a><a href="summary2.html">S2</a><a href="summary1a.html">← S1A</a></div>
     </header>
 
@@ -160,21 +160,17 @@
       <p class="step">💡 version ที่เจอใน Step 2–3 = ตัวชี้ว่าใช้ module ไหน — เจาะไม่ตรงเวอร์ชัน = crash เปล่า</p>
     </section>
 
-    <!-- ================= STEP 6 ================= -->
+    <!-- ================= WRAP-UP ================= -->
     <section class="sec">
-      <div class="sec-h"><span>Step 6 · Post-Exploitation → Crack</span><small>L6→L7 สะพานสุดท้าย</small></div>
+      <div class="sec-h"><span>Wrap-up · Evidence &amp; Report</span><small>จบ Scope L1–L6</small></div>
       <ol>
-        <li>บน target (root): <code>cat /etc/shadow</code> → copy รายการ hash กลับ Kali → <code>nano meta_shadow</code></li>
-        <li>John: <code>john --format=crypt meta_shadow</code> / ใส่ wordlist <code>--wordlist=/usr/share/wordlists/rockyou.txt</code> → ดูผล <code>john --show meta_shadow</code></li>
-        <li>Hashcat: <code>hashcat -m 500 -a 0 meta_shadow_cut rockyou.txt</code> (-m500=md5crypt; $6$ ใช้ -m1800 sha512crypt)</li>
-        <li>Online brute: <code>hydra -L users.txt -P passwords.txt &lt;IP&gt; ftp</code> (ssh/telnet เปลี่ยน service ท้ายคำ) → ยืนยัน login จริง</li>
-        <li>WiFi: <code>aircrack-ng -w rockyou.txt -b &lt;MAC&gt; cap*.cap</code></li>
-        <li>Cleanup: ลบ account/artifact ที่ฝัง · จดทุก step เขียน report (Exec Summary/Findings/Risk/Recs)</li>
+        <li><b>Lab proof (p96):</b> <code>smbclient //&lt;IP&gt;/tmp</code> → <code>mkdir &lt;studentID&gt;</code> → <code>ls</code> (ฝั่ง Kali) · ยืนยันฝั่ง target: <code>ls -l /tmp</code> = write access พิสูจน์แล้ว</li>
+        <li><b>รวม evidence ทุก step:</b> recon outputs · nmap -oN/-oA · enum results (users/shares/exports) · vuln findings + CVE/CVSS band · exploit proof (whoami/id/uname -a)</li>
+        <li><b>เขียน report:</b> Executive Summary → Findings (เรียง severity + PoC screenshot) → Risk Assessment → Recommendations</li>
       </ol>
-      <p class="step">💡 อ่าน prefix ทรู hash: $1$=MD5 · $2a$=bcrypt · $5$=SHA256 · $6$=SHA512 · $y$=yescrypt · ไม่มี=DES → เลือก -m ให้ถูก</p>
-      <p class="step">💡 rockyou ต้องแตกก่อน: <code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code> · นับจำนวน <code>wc -l</code></p>
-      <p class="step">💡 Assignment p96: mkdir studentID ใน //IP/tmp จาก Kali + ยืนยัน ls -l ฝั่ง Metasploitable2 — พิสูจน์ write access = post-exploit evidence</p>
-      <div class="note-s"><strong>จบเกม:</strong> Setup → Recon → Scan → Enumerate → VA → Exploit → Post/Crack — ทำตามสายพานนี้ทุกครั้ง = pentester ที่โจรต้องยอกล้อง 🎯</div>
+      <p class="step">💡 Cleanup ก่อนส่งมอบ: ลบ accounts/artifacts ที่ฝังระหว่าง exploit (ขั้น 4 ของ Exploitation Phase — Cleanup &amp; Documentation)</p>
+      <p class="step">💡 pentest จบที่ "report" — ไม่มีหลักฐาน = ไม่เคยทำ · capture command+ผลลัพธ์ตั้งแต่ Step 0</p>
+      <div class="note-s"><strong>จบเกม:</strong> Setup → Recon → Scan → Enumerate → Analyze → Exploit — ครบ Exam Workflow L1–L6 🎯</div>
     </section>
 
 
