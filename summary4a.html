@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S4A — Command/Lab Steps + แนวข้อสอบ (L10–L11)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+      <div class="nav-item">
+        <span class="nav-label" tabindex="0">Midterm</span>
+        <div class="nav-drop">
+          <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+          <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+          <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+          <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+          <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+          <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+          <a href="L3.html">L3 · Scanning (Nmap)</a>
+          <a href="L4.html">L4 · Enumeration</a>
+          <a href="L5.html">L5 · Vulnerability Assessment</a>
+          <a href="L6.html">L6 · Exploitation</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <span class="nav-label active" tabindex="0">Final</span>
+        <div class="nav-drop">
+          <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+          <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+          <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+          <a href="summary4a.html" class="active">S4A · Command/Lab Steps (L10–L11)</a>
+          <a href="L7.html">L7 · Password Cracking</a>
+          <a href="L8.html">L8 · Web Hacking</a>
+          <a href="L9.html">L9 · Reverse Engineering</a>
+          <a href="L10.html">L10 · Penetration Testing Report</a>
+          <a href="L11.html">L11 · Incident Response</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>S4A · Command &amp; Lab Steps + 🎯 แนวข้อสอบ — L10 Kioptrix Lab · L11 ทฤษฎี Q&amp;A</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary3.html">S3</a><a href="summary4.html">S4</a><a href="summary3a.html">← S3A</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= L10 LAB ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L10 · Kioptrix Level 1 — Lab Steps</span><small>โจทย์แนว: เติมคำสั่งหาช่องโหว่/เจาะเครื่อง</small></div>
+      <ol>
+        <li>Import VM: แก้ config <code>bridged → nat</code> → save → ดับเบิลคลิกเปิดเครื่อง</li>
+        <li>หา IP เป้าหมาย: <code>sudo arp-scan -l</code> หรือ <code>sudo netdiscover -P -r 192.168.74.0/24</code></li>
+        <li>สแกนช่องโหว่ด้วย NSE: <code>nmap --script vuln 192.168.74.130</code></li>
+        <li>เช็ค FTP anonymous: <code>nmap --script ftp-anon 192.168.74.130</code> · SSH methods: <code>nmap --script ssh-auth-methods.nse &lt;IP&gt;</code></li>
+        <li>หา hidden path บนเว็บ: <code>gobuster dir -u http://192.168.74.130/ -w /usr/share/wordlists/dirb/common.txt</code></li>
+        <li>Enum จาก SMB/NetBIOS: <code>enum4linux -a 192.168.74.130</code></li>
+        <li>สแกนเว็บละเอียด: <code>nikto -h http://192.168.74.130</code></li>
+        <li>Exploit: <code>msfconsole</code> → <code>search smb version</code> → <code>set rhost 192.168.74.130</code> → <code>run</code></li>
+      </ol>
+      <table class="tbl">
+        <tr><th>คำสั่ง</th><th>วัตถุประสงค์ (ออกสอบบ่อย)</th></tr>
+        <tr><td><code>arp-scan -l</code></td><td>สแกนหาอุปกรณ์ทั้ง local network ผ่าน ARP</td></tr>
+        <tr><td><code>netdiscover -P -r …</code></td><td>-P = โหมด passive · -r = ระบุช่วง IP ที่ค้น</td></tr>
+        <tr><td><code>--script vuln</code></td><td>รันชุด NSE ตรวจช่องโหว่ของบริการที่พบ</td></tr>
+        <tr><td><code>--script ftp-anon</code></td><td>เช็คว่า FTP เปิด anonymous login หรือไม่</td></tr>
+        <tr><td><code>gobuster dir -u … -w …</code></td><td>dir = โหมดบรูท directory/file · -u = URL เป้า · -w = wordlist (หา /admin, /backup.zip ที่ไม่ถูก link)</td></tr>
+        <tr><td><code>enum4linux -a</code></td><td>enumerate ครบ — users / groups / shares / OS จาก SMB+NetBIOS</td></tr>
+        <tr><td><code>nikto -h …</code></td><td>web vuln scanner — -h ระบุ host/URL เป้าหมาย</td></tr>
+        <tr><td><code>search</code> / <code>set rhost</code> / <code>run</code></td><td>msfconsole: หา module / กำหนดเครื่องเป้าหมาย / เริ่มโจมตี</td></tr>
+      </table>
+      <p class="step">⚠️ <b>กับดักจากสไลด์:</b> ตอน exploit SMB เครื่อง Kioptrix — msf ล้มเหลวเพราะ <b>"ขาด payload"</b> → ต้องเพิ่ม payload ให้ตรงกับเป้า (เช่น <code>set PAYLOAD</code> หรือเปลี่ยน module) ไม่งั้นยิงไม่เข้า</p>
+    </section>
+
+    <!-- ================= L10 REPORT Q&A ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L10 · Penetration Testing Report — Q&amp;A</span><small>โจทย์แนว: อธิบาย/เรียงขั้นตอน</small></div>
+      <table class="tbl">
+        <tr><th>คำถามแนวสอบ</th><th>คำตอบสั้น</th></tr>
+        <tr><td>เก็บเอกสาร 5 ขั้นตอน?</td><td>1) <b>Project folder</b> (ชื่อลูกค้า · External/Internal · logbook · reports แยกตาม tool · template — เก็บในที่เข้ารหัส) 2) <b>Logbook</b> จดทุกวัน ณ เวลาที่ทำ 3) <b>Capture images/video</b> ตั้งชื่อ <code># Exploit – Apache Webserver.jpg</code> 4) <b>Findings chart</b> (high risk + exploit ง่ายสุดก่อน) 5) <b>Template</b></td></tr>
+        <tr><td>โครงรายงานหลักมีอะไรบ้าง?</td><td><b>Executive Summary → Methodology → Findings (+PoC) → Recommendations → Appendices</b></td></tr>
+        <tr><td>Executive Summary เขียนให้ใคร มีอะไร?</td><td>ผู้บริหารไม่เทคนิค — Engagement objectives · Scope · Key findings · Overall security posture · Recommendations</td></tr>
+        <tr><td>Findings ต้องมีอะไร?</td><td>CVE ID · Description · Severity (high/med/low/info) · Evidence — พร้อม Impact Assessment + Risk Assessment</td></tr>
+        <tr><td>PoC คืออะไร มีกี่รูปแบบ?</td><td>หลักฐานพิสูจน์ว่าโจมตีได้จริง: exploit code · manual demonstration · screenshots/logs</td></tr>
+        <tr><td>รายงาน 3 ประเภท ต่างกันยังไง?</td><td><b>Executive</b> (C-level: risk classification/statistics/risk matrix) · <b>Management</b> (compliance/assumptions/change+config mgmt) · <b>Technical</b> (request-response data/vulnerability map/exploit map/best practices)</td></tr>
+        <tr><td>ทำไมต้อง reproducible?</td><td>ลูกค้าจะทำตาม steps ของเราเพื่อยืนยันว่าแก้ได้จริง + ใช้ trace เหตุการณ์ระหว่าง test window · false negative = ขายความมั่นใจปลอม</td></tr>
+        <tr><td>Post-testing procedures?</td><td>Remediation ตาม recommendations · ติดตั้ง IDS/IPS-firewall-AV · divide-and-conquer network zones · เสริม secure coding + code audit · อัปเดตระบบ (CIA) · ตรวจยืนยันโซลูชันทั้งหมด</td></tr>
+      </table>
+      <p class="step">💡 <b>จำ:</b> ไม่มีรายงาน = ไม่มีผลงาน · ทุก input/output ของเครื่องมือต้องถูกบันทึก · รายงานต้องตรงกลุ่มผู้อ่าน (ผู้บริหาร ≠ ทีมเทคนิค)</p>
+    </section>
+
+    <!-- ================= L11 Q&A ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L11 · Incident Response &amp; Risk Management — Q&amp;A</span><small>ทฤษฎีล้วน — ท่องตัวเลข + วงจร</small></div>
+      <table class="tbl">
+        <tr><th>คำถามแนวสอบ</th><th>คำตอบสั้น</th></tr>
+        <tr><td>Risk Management คือ? (proactive/reactive)</td><td><b>Proactive</b> — คาดการณ์ก่อนเกิด: <b>Identify → Assess → Mitigate → Monitor</b> (ลดโอกาส + ผลกระทบ)</td></tr>
+        <tr><td>Incident Response คือ?</td><td><b>Reactive</b> — หลังเกิดเหตุ: ลดความเสียหาย → ฟื้นระบบ → เรียนรู้</td></tr>
+        <tr><td>Incident (FISMA 2014) นิยาม?</td><td>เหตุที่คุกคาม/ใกล้คุกคาม C-I-A ของข้อมูลหรือระบบ โดยไม่มีอำนาจตามกฎหมาย หรือละเมิดกฎหมาย/นโยบายความปลอดภัย</td></tr>
+        <tr><td>ตัวอย่าง incident?</td><td>Malicious code (ransomware) · DoS · Phishing · Unauthorized access · Insider · Data breach · Targeted attack</td></tr>
+        <tr><td>IR Life Cycle 4 เฟส?</td><td><b>Preparation → Detection &amp; Analysis → Containment/Eradication/Recovery → Post-Incident</b> (รุ่นใหม่ SP 800-61r3 อิง CSF 2.0 + continuous improvement กลางวงจร)</td></tr>
+        <tr><td>CSF 2.0 6 Functions?</td><td><b>Govern</b> → Identify → Protect → Detect → Respond → Recover (Govern เพิ่มใหม่ใน 2.0)</td></tr>
+        <tr><td>IR Plan ขั้นต่ำต้องมี?</td><td>Key contacts (≥2 ช่องทาง/≥2 คน) · Escalation criteria · Flowchart ครบ life-cycle · Conference number · Legal/regulatory guidance</td></tr>
+        <tr><td>บทบาทในทีม IR?</td><td>Incident handlers · Leadership · Technology · Legal · PR/Media · HR · Physical security · Asset owners</td></tr>
+        <tr><td>IR vs IM?</td><td><b>IM</b> ครอบทุกขั้น — สื่อสาร/จัดการสื่อ/escalate/report ให้เป็นหนึ่งเดียว · <b>IR</b> = งานเทคนิค: triage · วิเคราะห์ · กู้คืน</td></tr>
+        <tr><td>4 ปัจจัยประเมินระดับภัยคุกคาม?</td><td>ผลกระทบต่อ (1) อุปกรณ์/ระบบ (2) ข้อมูล (3) แนวโน้มกู้คืน (4) ลูกค้า/ผู้ใช้ → ระดับ: ไม่ร้ายแรง/ร้ายแรง/วิกฤต ก./วิกฤต ข.</td></tr>
+        <tr><td>มาตรการ 4 ระยะ?</td><td>Preparation → Detection &amp; Analysis → Containment/Eradication/Recovery → Post-Incident Activity</td></tr>
+        <tr><td>กฎหมาย/ตัวเลขสำคัญ (ไทย)?</td><td>Cybersecurity audit <b>≥ปีละครั้ง</b> + ส่ง NCSA <b>ภายใน 30 วัน</b> · Risk assessment <b>≥ปีละครั้ง</b> · IRP อัปเดต <b>≥ปีละครั้ง</b> · พ.ร.บ. ไซเบอร์ 2562 (ม.49 CII / ม.60 ลักษณะภัย) · เอกสาร ก๑/ก๒/หมวด ง</td></tr>
+        <tr><td>Framework 5 ด้าน (ประกาศฯ)?</td><td>Identify (Asset · Risk · <b>VAPT</b> · Third-party) · Protect · Detect · Respond · Recover</td></tr>
+      </table>
+      <p class="step">💡 <b>จำ:</b> RM = กันก่อนเกิด · IR = กู้หลังเกิด · CSF 2.0 = GV-ID-PR-DE-RS-RC · บทเรียนต้องแชร์ทันทีที่พบ (ไม่รอจบ recovery)</p>
+    </section>
+
+    <!-- ================= DRILLS ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>🎯 แนวข้อสอบเติมช่องว่าง (L10–L11)</span><small>ให้ shell มา → เติมให้ถูก</small></div>
+      <table class="tbl">
+        <tr><th>โจทย์ (เติม ____)</th><th>คำตอบ</th></tr>
+        <tr><td><code>nmap --script ____ 192.168.74.130</code> — สแกนช่องโหว่</td><td><code>vuln</code></td></tr>
+        <tr><td><code>gobuster dir -u http://&lt;IP&gt;/ ____ /usr/share/wordlists/dirb/common.txt</code></td><td><code>-w</code> (ระบุ wordlist)</td></tr>
+        <tr><td><code>enum4linux ____ 192.168.74.130</code></td><td><code>-a</code> (ตรวจครบทุกอย่าง)</td></tr>
+        <tr><td><code>nikto ____ http://192.168.74.130</code></td><td><code>-h</code></td></tr>
+        <tr><td><code>sudo ____ -l</code> — สแกนอุปกรณ์ใน local network</td><td><code>arp-scan</code></td></tr>
+        <tr><td><code>sudo netdiscover -P ____ 192.168.74.0/24</code></td><td><code>-r</code> (ระบุช่วง IP)</td></tr>
+        <tr><td>msfconsole: ค้นหา module ยืนยันเวอร์ชัน SMB</td><td><code>search smb version</code></td></tr>
+        <tr><td>msfconsole: กำหนดเครื่องเป้าหมาย</td><td><code>set rhost 192.168.74.130</code></td></tr>
+        <tr><td>IR Life Cycle เฟสแรกสุด</td><td>Preparation</td></tr>
+        <tr><td>CSF 2.0 เรียง 6 Functions</td><td>Govern → Identify → Protect → Detect → Respond → Recover</td></tr>
+        <tr><td>หน่วยงาน CII ส่งสรุปผล audit ให้ NCSA ภายใน</td><td><b>30 วัน</b> นับจากตรวจสอบเสร็จ</td></tr>
+        <tr><td>Cybersecurity Risk Assessment ต้องทำบ่อยแค่ไหน</td><td>อย่างน้อย <b>ปีละครั้ง</b></td></tr>
+      </table>
+      <div class="note-s"><strong>⚡ ท่องก่อนสอบ:</strong> 30 วัน (ส่ง NCSA) · ปีละครั้ง (audit / risk assessment / IRP update) · 6 Functions (GV-ID-PR-DE-RS-RC) · 4 เฟส IR · 4 ปัจจัยประเมินภัย · ก๑ = ข้อมูลที่ต้องแจ้ง · ก๒ = แบบรายงาน · หมวด ง = รายละเอียดภัยคุกคาม</div>
+    </section>
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>S4A — Command/Lab Steps + แนวข้อสอบ (L10–L11)</span>
+      <span>จาก S3A (L7–L9) · ทฤษฎีเต็ม: S4</span>
+    </div>
+
+  </main>
+</body>
+</html>
