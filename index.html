@@ -15,24 +15,36 @@
   <body>
     <nav class="navbar">
       <div class="nav-inner">
-        <a href="index.html" class="brand active"
-          ><img
-            src="icon.jpg"
-            alt="PenTest Logo"
-            class="brand-logo"
-          />Roadmap</a
-        >
-        <a href="summary1.html" title="สรุป A4 แนวนอน 1/2 (L1-L3)">S1</a>
-        <a href="summary2.html" title="สรุป A4 แนวนอน 2/2 (L4-L6)">S2</a>
-        <a href="summary1a.html" title="สรุปทฤษฎีสอบข้อเขียน (Roadmap+L1-L6)">S1A</a>
-        <a href="summary2a.html" title="สรุป Command/Lab Steps + เกล็ดความรู้">S2A</a>
-        <a href="L1.html">L1</a>
-        <a href="L2.html">L2</a>
-        <a href="L3.html">L3</a>
-        <a href="L4.html">L4</a>
-        <a href="L5.html">L5</a>
-        <a href="L6.html">L6</a>
-        <a href="L7.html">L7</a>
+        <a href="index.html" class="brand active"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Midterm</span>
+          <div class="nav-drop">
+            <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+            <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+            <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+            <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+            <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+            <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+            <a href="L3.html">L3 · Scanning (Nmap)</a>
+            <a href="L4.html">L4 · Enumeration</a>
+            <a href="L5.html">L5 · Vulnerability Assessment</a>
+            <a href="L6.html">L6 · Exploitation</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Final</span>
+          <div class="nav-drop">
+            <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+            <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+            <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+            <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+            <a href="L7.html">L7 · Password Cracking</a>
+            <a href="L8.html">L8 · Web Hacking</a>
+            <a href="L9.html">L9 · Reverse Engineering</a>
+            <a href="L10.html">L10 · Penetration Testing Report</a>
+            <a href="L11.html">L11 · Incident Response</a>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -47,7 +59,7 @@
 
       <h2>ภาพรวมของหลักสูตร (Overview)</h2>
       <p>
-        เนื้อหาตั้งแต่ <strong>Lecture 1 ถึง Lecture 7</strong> ถูกร้อยเรียงตาม
+        เนื้อหาตั้งแต่ <strong>Lecture 1 ถึง Lecture 11</strong> ถูกร้อยเรียงตาม
         <strong
           >วงจรชีวิตของการทดสอบเจาะระบบจริง (Penetration Testing Execution
           Standard - PTES)</strong
@@ -77,6 +89,14 @@
         <div class="rm-step">L6<small>Exploit</small></div>
         <div class="rm-arrow">&#10132;</div>
         <div class="rm-step">L7<small>Post-Exploit / Crack</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L8<small>Web Hacking</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L9<small>Reverse Eng</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L10<small>Reporting</small></div>
+        <div class="rm-arrow">&#10132;</div>
+        <div class="rm-step">L11<small>Blue Team</small></div>
       </div>
 
       <div class="bigpic">
@@ -95,6 +115,14 @@
           <span class="af-step">Exploit (L6)</span>
           <span class="af-arrow">&#8594;</span>
           <span class="af-step">Post-Exploit/Crack (L7)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Web Hacking (L8)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Reverse Engineering (L9)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Reporting (L10)</span>
+          <span class="af-arrow">&#8594;</span>
+          <span class="af-step">Incident Response (L11)</span>
         </div>
       </div>
 
@@ -222,6 +250,81 @@
           Exploitation (เช่น <code>/etc/shadow</code>) มาถอดรหัสด้วย John the
           Ripper / Hashcat หรือทำ Brute-force ซ้ำด้วย Hydra เพื่อยึดบัญชีอื่นๆ
           ในระบบ
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L8:</strong> เมื่อยึดบัญชีในระบบได้แล้ว
+          เป้าหมายถัดไปคือบริการที่เปิดสู่โลกภายนอก —
+          เว็บแอปพลิเคชันคือพื้นที่โจมตีที่พบบ่อยที่สุด
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L8</span>
+          <h3>Web Hacking &amp; Burp Suite (เจาะช่องโหว่เว็บแอปพลิเคชัน)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> เจาะช่องโหว่เว็บคลาสสิกบน DVWA และ
+          PortSwigger Labs — SQL Injection (<code>sqlmap</code>), XSS, CSRF —
+          พร้อมใช้ Burp Suite ดักและแก้ HTTP request/response เพื่อพิสูจน์ impact
+          รวมถึงจับช่องโหว่เชิงตรรกะธุรกิจ (Business Logic Flaw)
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L9:</strong> เมื่อไม่มี source code
+          ของเป้าหมาย ต้องเข้าใจพฤติกรรมจาก "สิ่งที่คอมไพล์แล้ว" —
+          เปิดโลกของการวิเคราะห์ไบนารี
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L9</span>
+          <h3>Reverse Engineering (ถอดวิเคราะห์ไบนารีและซอฟต์แวร์)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> ใช้ <code>strings</code>,
+          <code>ltrace</code>, <code>strace</code>, <code>objdump</code> และ
+          Ghidra ถอดรหัสไฟล์ executable — หาจุดรับ input/จุดตัดสินใจ และ
+          credentials ที่ฝังอยู่ ผ่านห้องแล็บ TryHackMe (crackme1–8)
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L10:</strong>
+          ทักษะการเจาะระบบจะสมบูรณ์เมื่อถ่ายทอดผลลัพธ์และหลักฐานออกมาเป็นรายงาน
+          ที่ลูกค้านำไปแก้ไขได้จริง
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L10</span>
+          <h3>Penetration Testing Report (จัดทำรายงานเจาะระบบ)</h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> เก็บหลักฐานอย่างเป็นระบบ (logbook,
+          screenshots, findings chart) และจัดทำรายงานครบโครง Executive Summary ·
+          Methodology · Findings · Recommendations · Appendices
+          พร้อมลงมือแล็บ Kioptrix Level 1 แบบครบวงจร
+        </p>
+        <div class="lc-next">
+          <strong>&#10132; จุดเชื่อมต่อไปยัง L11:</strong>
+          ผลการทดสอบจะถูกแปลงเป็นแผนป้องกัน —
+          องค์กรรับมือภัยคุกคามจริงอย่างไรตามมาตรฐานและกฎหมาย
+        </div>
+      </div>
+
+      <div class="lecture-card">
+        <div class="lc-head">
+          <span class="lc-num">L11</span>
+          <h3>
+            Incident Response &amp; Risk Management
+            (มุมฝั่งตั้งรับ มาตรฐาน และกฎหมาย)
+          </h3>
+        </div>
+        <p class="lc-obj">
+          <strong>Objective:</strong> เรียนรู้ Risk Management (proactive) และ
+          Incident Response (reactive) ผ่าน NIST CSF 2.0, IR Life Cycle,
+          บทบาทหน้าที่ของทีมตอบสนอง incident และกฎหมายไซเบอร์ไทย
+          (MDES / กมช. / กกม.) — ปิดวงจร Offense + Defense ของทั้งวิชา
         </p>
       </div>
 
