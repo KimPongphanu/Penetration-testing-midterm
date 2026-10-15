@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 สรุป Final 2/2 — L10 Penetration Testing Report · L11 Incident Response</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+      <div class="nav-item">
+        <span class="nav-label" tabindex="0">Midterm</span>
+        <div class="nav-drop">
+          <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+          <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+          <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+          <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+          <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+          <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+          <a href="L3.html">L3 · Scanning (Nmap)</a>
+          <a href="L4.html">L4 · Enumeration</a>
+          <a href="L5.html">L5 · Vulnerability Assessment</a>
+          <a href="L6.html">L6 · Exploitation</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <span class="nav-label active" tabindex="0">Final</span>
+        <div class="nav-drop">
+          <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+          <a href="summary4.html" class="active">S4 · สรุป A4 L10–L11</a>
+          <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+          <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+          <a href="L7.html">L7 · Password Cracking</a>
+          <a href="L8.html">L8 · Web Hacking</a>
+          <a href="L9.html">L9 · Reverse Engineering</a>
+          <a href="L10.html">L10 · Penetration Testing Report</a>
+          <a href="L11.html">L11 · Incident Response</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>PenTest สรุปละเอียดทุก Step — A4 แนวนอน Final 2/2 : L10 Penetration Testing Report · L11 Incident Response &amp; Risk Management</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">S1</a><a href="summary2.html">S2</a><a href="summary3.html">← S3</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= L10 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L10 · Penetration Testing Report</span><small>Reporting — เฟสสุดท้ายที่ทำให้งานมีคุณค่า</small></div>
+      <p><strong>5 เฟสของ Pentest:</strong> Recon → Scanning → Vuln Assessment → Exploitation → <b>Reporting</b> · <b>Post-Engagement:</b> (1) Report Generation — findings + recommendations (2) Remediation — จัดลำดับ + patch (3) Awareness Training (4) Follow-up — re-test + monitoring</p>
+      <p><b>ทำไมสำคัญ:</b> ทุก input/output ต้องบันทึกให้ <b>reproducible</b> — ลูกค้าจะทำตามขั้นตอนเราเพื่อยืนยันว่าแก้ได้จริง + ใช้ย้อนรอยเหตุการณ์ระหว่าง test window</p>
+      <div class="sub">ลักษณะรายงานที่ดี</div>
+      <ul>
+        <li>Consistency กับสิ่งที่พบจริง · จัดทำดี + สนับสนุน compliance</li>
+        <li>ระบุ: modus operandi ของ attacker · tools/techniques · ช่องโหว่ · วิธีการ exploit ที่พิสูจน์แล้ว</li>
+        <li>⚠️ False negatives = "ขายความมั่นใจปลอม" — integrity ของข้อมูลทดสอบห้ามมีข้อผิดพลาด</li>
+      </ul>
+      <div class="sub">5 ขั้นตอนเก็บเอกสาร</div>
+      <ol>
+        <li><b>Project folder:</b> ชื่อลูกค้า → External/Internal Hacking → logbook + subfolder phase/tools + reports (แยกตาม tool) + template ใส่ข้อมูลลูกค้า · <b>เก็บในที่เข้ารหัส</b></li>
+        <li><b>Logbook:</b> จดทุกวัน ณ เวลาที่ทำ (กันลืม + copy-paste เข้ารายงานได้)</li>
+        <li><b>Capture images/video:</b> จุดสำคัญ (เจอ vuln, เจาะเข้าได้, trophy) — ตั้งชื่อ เช่น <code># Exploit – Apache Webserver.jpg</code></li>
+        <li><b>Findings chart:</b> สรุปตารางช่องโหว่ — เริ่มจาก high risk + exploit ง่ายสุด</li>
+        <li><b>Template:</b> Executive Summary · Methodology · Findings · Recommendations · Appendices</li>
+      </ol>
+      <div class="sub">โครงสร้างรายงาน (จำให้ครบ)</div>
+      <table class="tbl">
+        <tr><th>ส่วน</th><th>ต้องมีอะไร</th></tr>
+        <tr><td>Executive Summary</td><td>เขียนให้คนไม่เทคนิค: Objectives · Scope · Key findings · Overall posture · Recommendations</td></tr>
+        <tr><td>Methodology</td><td>Testing approach (black/gray/white-box + เหตุผล) · Scope · Tools/techniques · Procedures · Ethics</td></tr>
+        <tr><td>Findings</td><td>Vulnerability details: CVE ID · Description · Severity (high/med/low/info) · Evidence → Impact Assessment → Risk Assessment</td></tr>
+        <tr><td>PoC</td><td>Exploit code · Manual demonstration · Screenshots/logs (พิสูจน์ว่าโจมตีได้จริง)</td></tr>
+        <tr><td>Recommendations</td><td>Technical/Admin/Physical controls · Prioritization ตาม severity+งบ · Timeline</td></tr>
+        <tr><td>Appendices</td><td>Technical reports · logs · network diagrams · configs · PoC · screenshots</td></tr>
+      </table>
+      <div class="sub">รายงาน 3 ประเภท</div>
+      <table class="tbl">
+        <tr><th>Report</th><th>ผู้อ่าน</th><th>จุดเน้น</th></tr>
+        <tr><td>Executive</td><td>C-level (CEO/CTO/CIO)</td><td>Project objective · Risk classification · Executive summary · Statistics · <b>Risk matrix</b></td></tr>
+        <tr><td>Management</td><td>ฝ่ายบริหาร</td><td>Compliance · Methodology · Assumptions/limitations · Change mgmt · Config mgmt</td></tr>
+        <tr><td>Technical</td><td>ทีมเทคนิค</td><td>Security issues + request/response (original vs attack) · <b>Vulnerabilities map</b> · <b>Exploits map</b> (private/public) · Best practices</td></tr>
+      </table>
+      <p>ทุกฉบับต้องอยู่ใต้ NDA · legal notice · pentest agreement</p>
+      <div class="sub">Post-Testing Procedures</div>
+      <p>Remediation ตาม recommendations (ระวังอย่ากระทบฟังก์ชัน) · ติดตั้ง IDS/IPS, firewall, content protection, AV · <b>Divide-and-conquer zones</b> แยก secure ออกจาก public · เสริมทักษะ secure coding + code audit · อัปเดตระบบสม่ำเสมอ (CIA) · ตรวจยืนยันทุกโซลูชันที่แนะนำ</p>
+      <div class="sub">Lab: Kioptrix Level 1</div>
+      <p>Import: แก้ config <code>bridged → nat</code> · หา IP: <code>sudo arp-scan -l</code> หรือ <code>sudo netdiscover -P -r 192.168.74.0/24</code></p>
+      <ol>
+        <li><code>nmap --script vuln &lt;IP&gt;</code> · <code>nmap --script ftp-anon &lt;IP&gt;</code> · <code>nmap --script ssh-auth-methods.nse &lt;IP&gt;</code></li>
+        <li><code>gobuster dir -u http://&lt;IP&gt;/ -w /usr/share/wordlists/dirb/common.txt</code> — หา hidden paths (/admin, /backup.zip)</li>
+        <li><code>enum4linux -a &lt;IP&gt;</code> — users/groups จาก SMB/NetBIOS · <code>nikto -h http://&lt;IP&gt;</code> — web vulns</li>
+        <li><code>msfconsole</code> → <code>search smb version</code> → <code>set rhost &lt;IP&gt;</code> → <code>run</code> → ⚠️ สไลด์: exploit ไม่สำเร็จเพราะ <b>ขาด payload</b> — ต้องเลือก payload ให้ตรง</li>
+      </ol>
+      <p class="step">💡 <b>เกร็ด:</b> ทุกคำสั่งใน lab = หลักฐานที่ต้องแคป+จดใน logbook ตั้งแต่ต้น — ถ้าเก็บตอนทำ รายงานจะเสร็จเอง (copy-paste) · ตั้งชื่อไฟล์ S3L10_&lt;รหัส&gt;.pdf</p>
+    </section>
+
+    <!-- ================= L11 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L11 · Incident Response &amp; Risk Management</span><small>ฝั่ง Blue Team — มาตรฐาน + กฎหมาย</small></div>
+      <table class="tbl">
+        <tr><th>Red Team (Offensive)</th><th>Blue Team (Defender)</th></tr>
+        <tr><td>Vulnerability Assessment · Penetration Testing · Adversary Emulation · Exploitation · PrivEsc</td><td>Asset Protection · Incident Response · Threat Detection · Triage (contain/eradicate/recover) · Hardening · Digital Forensics</td></tr>
+      </table>
+      <div class="sub">Risk Management (Proactive) vs Incident Response (Reactive)</div>
+      <p><b>RM</b> = คาดการณ์+ลดความเสี่ยงก่อนเกิด: <b>Identify</b> (ระบุความเสี่ยง) → <b>Assess</b> (โอกาส×ผลกระทบ) → <b>Mitigate</b> (controls: patch/policy) → <b>Monitor</b> (ติดตามต่อเนื่อง) · <b>IR</b> = รับมือหลังเกิด: ลดความเสียหาย ฟื้นระบบ เรียนรู้</p>
+      <div class="sub">Incident (FISMA 2014)</div>
+      <p>เหตุที่คุกคาม (หรือใกล้คุกคาม) Confidentiality/Integrity/Availability โดยไม่มีอำนาจตามกฎหมาย หรือละเมิดกฎหมาย/นโยบายความปลอดภัย/นโยบายการใช้งาน</p>
+      <p><b>ตัวอย่าง (NCSC):</b> Malicious code (ransomware) · DoS · Phishing · Unauthorized access · Insider · Data breach · Targeted attack</p>
+      <div class="sub">IR Life Cycle (NIST SP 800-61)</div>
+      <ol>
+        <li><b>Preparation:</b> แผน + ทีม CIRT/CSIRT + tools</li>
+        <li><b>Detection &amp; Analysis:</b> รู้ว่าเกิด + ขอบเขต (วิเคราะห์เทคนิค → social media)</li>
+        <li><b>Containment, Eradication &amp; Recovery:</b> บล็อก/แยกเครื่อง/reset บัญชี (+media handling) · eradicated = ถอนราก · recover = business as usual</li>
+        <li><b>Post-Incident:</b> บันทึก + lessons learned</li>
+      </ol>
+      <p class="note-s"><b>r3 update:</b> โมเดลใหม่ตาม <b>CSF 2.0</b> — continuous improvement อยู่กลางวงจร (ID.IM) · บทเรียนจากทุก Function ป้อนกลับไปปรับปรุงทั้งหมด</p>
+      <p><b>Challenges:</b> ไม่มีสองเหตุการณ์เหมือนกัน · ต้องใช้ People+Process+Technology ร่วมกัน · <b>วางแผนล่วงหน้า = ตัวกำหนดผลลัพธ์</b></p>
+      <p><b>IR vs IM:</b> IM ครอบทุกขั้น — สื่อสาร/จัดการสื่อ/escalate/รายงาน ให้ response ทั้งหมดเป็นหนึ่งเดียว · IR = งานเทคนิค: triage, วิเคราะห์ลึก, กู้คืน</p>
+      <div class="sub">IR Plan ขั้นต่ำ + Post-Incident</div>
+      <ul>
+        <li><b>Key contacts:</b> IR team, IT, Mgmt, Legal, PR, HR, Insurance — ≥2 ช่องทาง, ≥2 คน/กลุ่ม</li>
+        <li><b>Escalation criteria</b> (severity → เร็วแค่ไหน/ถึงใคร) · <b>Flowchart</b> ครบ life-cycle · <b>Conference number</b> · <b>Legal guidance</b></li>
+        <li>บทเรียนควรแชร์<b>ทันทีที่พบ</b> ไม่รอจบ recovery · ปรับปรุงต่อเนื่องเสมอ</li>
+        <li><b>Post-incident review:</b> lessons from incident (ป้องกัน/ตรวจจับเร็วขึ้นได้ไหม, tactical vs strategic, data ที่ขาด) + lessons from response (สำเร็จไหม, จุดที่ทำได้ดีกว่า, data ที่ไม่มีใช้)</li>
+      </ul>
+      <div class="sub">NIST CSF 2.0 — 6 Functions</div>
+      <table class="tbl">
+        <tr><th>GV</th><th>ID</th><th>PR</th><th>DE</th><th>RS</th><th>RC</th></tr>
+        <tr><td>Govern</td><td>Identify</td><td>Protect</td><td>Detect</td><td>Respond</td><td>Recover</td></tr>
+        <tr><td>กลยุทธ์/นโยบายกำหนด+ติดตาม</td><td>เข้าใจความเสี่ยงปัจจุบัน</td><td>มี safeguards</td><td>หา+วิเคราะห์การโจมตี</td><td>ลงมือกับเหตุการณ์</td><td>ฟื้นทรัพย์สิน/ระบบ</td></tr>
+      </table>
+      <p><b>Roles:</b> Incident handlers (ประจำ/outsource SOC-MSSP/on-call — ยืนยันเหตุ, เก็บหลักฐาน, สืบสาเหตุ, กู้คืน) · Leadership (งบ + ตัดสินใจผลกระทบสูง) · Technology pros · Legal (compliance, สัญญา, MOU) · PR/Media · HR (screening, กรณีพนักงานก่อเหตุ) · Physical security · Asset owners (ข้อมูลลำดับความสำคัญกู้คืน)</p>
+      <div class="sub">กฎหมาย/มาตรฐานไทย (MDES)</div>
+      <table class="tbl">
+        <tr><th>ประกาศ</th><th>สาระ</th></tr>
+        <tr><td>ประมวลแนวทางปฏิบัติ ฯ (กก. ๒๕๖๔)</td><td>กรอบมาตรฐานสำหรับหน่วยงานรัฐ + CII</td></tr>
+        <tr><td>กมช. ลักษณะภัยคุกคาม ๒๕๖๔</td><td>ระดับภัย + มาตรการป้องกัน/รับมือ/ประเมิน/ปราบปราม/ระงับ</td></tr>
+        <tr><td>กกม. การรายงานภัยคุกคาม ๒๕๖๖</td><td>หลักเกณฑ์/วิธีการรายงาน</td></tr>
+      </table>
+      <table class="tbl">
+        <tr><th>Component</th><th>ข้อกำหนด</th></tr>
+        <tr><td>1. Audit Plan</td><td>ตรวจสอบ <b>≥ปีละครั้ง</b> (internal/external independent) · scope = BIA + critical services · ส่งสรุปให้ <b>NCSA ใน 30 วัน</b></td></tr>
+        <tr><td>2. Risk Assessment</td><td><b>≥ปีละครั้ง</b>: Identification → Analysis → Evaluation (นิยาม risk appetite) · Treatment (residual risk ในระดับยอมรับได้ + KRI) · Monitoring · Reporting</td></tr>
+        <tr><td>3. IRP</td><td>CIRT roles+contacts · Reporting structure (ตามกฎหมาย/CII) · Activation criteria · Contain/Recover/Investigate · <b>Evidence + chain-of-custody ก่อนกู้คืน</b> · Third-party (forensics/เจ้าหน้าที่) · After-action review + อัปเดตแผน<b>≥ปีละครั้ง</b></td></tr>
+      </table>
+      <p><b>Framework 5 ด้าน:</b> Identify (Asset mgmt · Risk assessment · <b>VAPT</b> · Third-party) · Protect (Access control · Hardening · Remote access · Removable media · Awareness · Info sharing) · Detect (Monitoring) · Respond (IRP · Crisis comms · Exercise) · Recover (Resilience)</p>
+      <p><b>ระดับภัยคุกคาม:</b> ไม่ร้ายแรง / ร้ายแรง / วิกฤติ ก / วิกฤติ ข — ประเมินจาก <b>4 ปัจจัย:</b> (๑) ผลกระทบต่ออุปกรณ์/ระบบ (๒) ผลกระทบต่อข้อมูล (๓) แนวโน้มกู้คืน (๔) ผลกระทบต่อลูกค้า/ผู้ใช้</p>
+      <p><b>มาตรการ 4 ระยะ:</b> Preparation → Detection &amp; Analysis → Containment/Eradication/Recovery → Post-Incident · <b>พ.ร.บ. ไซเบอร์ ๒๕๖๒</b> มาตรา ๔๙ (CII) / ๖๐ (ลักษณะภัย) · เอกสาร <b>ก๑</b> (ข้อมูลที่ต้องแจ้ง) <b>ก๒</b> (แบบรายงาน) <b>หมวด ง</b> (รายละเอียดภัย)</p>
+      <p class="step">💡 <b>จุดที่ออกสอบบ่อย:</b> RM (proactive) vs IR (reactive) · IR Life Cycle 4 เฟส · CSF 2.0 = GV-ID-PR-DE-RS-RC (Govern เพิ่มใหม่ใน 2.0) · IR Plan ขั้นต่ำ 5 อย่าง · audit/risk assessment ปีละครั้ง + NCSA 30 วัน · 4 ปัจจัยประเมินภัยคุกคาม</p>
+    </section>
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>Penetration Testing &amp; Protection (0406136051) — แผ่นสรุป A4 แนวนอน · Final</span>
+      <span>หน้า Final 2/2 · L10–L11 · จาก Final 1/2: S3 (L7–L9)</span>
+    </div>
+
+  </main>
+</body>
+</html>

