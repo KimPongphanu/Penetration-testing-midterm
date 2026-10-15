@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 9 - Reverse Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Midterm</span>
+          <div class="nav-drop">
+            <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+            <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+            <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+            <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+            <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+            <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+            <a href="L3.html">L3 · Scanning (Nmap)</a>
+            <a href="L4.html">L4 · Enumeration</a>
+            <a href="L5.html">L5 · Vulnerability Assessment</a>
+            <a href="L6.html">L6 · Exploitation</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-label active" tabindex="0">Final</span>
+          <div class="nav-drop">
+            <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+            <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+            <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+            <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+            <a href="L7.html">L7 · Password Cracking</a>
+            <a href="L8.html">L8 · Web Hacking</a>
+            <a href="L9.html" class="active">L9 · Reverse Engineering</a>
+            <a href="L10.html">L10 · Penetration Testing Report</a>
+            <a href="L11.html">L11 · Incident Response</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="a4">
+      <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 9: Reverse Engineering</h1>
+      <p style="color: #e74c3c; font-weight: bold; text-align: center;">#ออกสอบ Final</p>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051) — Cloud Lab
+        (TryHackMe) · File Inspection · ltrace / strace / objdump / Ghidra
+      </p>
+
+      <h2>1. Reverse Engineering คืออะไร และทำไมต้องใช้ใน Pentest</h2>
+      <p>
+        <strong>Reverse Engineering (RE)</strong> คือกระบวนการ
+        <strong>"ถอดประกอบ" และวิเคราะห์</strong>ผลิตภัณฑ์ ระบบ หรือซอฟต์แวร์
+        เพื่อเข้าใจการทำงานภายใน หลักการออกแบบ และฟังก์ชันของมัน —
+        เปรียบเหมือนการแยกชิ้นส่วนจิ๊กซอว์ที่ประกอบเสร็จแล้วเพื่อดูว่ามันถูกสร้างมาได้อย่างไร
+        ใช้กันในหลายวงการ ทั้ง software development, hardware design และ cybersecurity
+      </p>
+      <p>
+        ในมุมของแฮกเกอร์: เมื่อเข้าใจว่าแอปพลิเคชันทำงานอย่างไร ก็สามารถ
+        <strong>ทำให้มันทำงานในแบบที่ผู้ออกแบบไม่ได้ตั้งใจ</strong>ได้ — ซึ่งสำหรับฝั่ง Pentest
+        การทำ RE ระบบ/แอปพลิเคชันเพื่อหาช่องโหว่ที่ซ่อนอยู่คือเครื่องมือสำคัญ
+        ที่ช่วยให้ "แฮกเกอร์ฝ่ายดีคิดเหมือนฝ่ายร้าย" เพื่อหาจุดอ่อนก่อนที่ตัวจริงจะเจอ
+      </p>
+      <table>
+        <tr>
+          <th>เป้าหมาย (Goals)</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Understand system behavior</strong></td>
+          <td>เข้าใจอย่างลึกซึ้งว่าระบบทำงานอย่างไร</td>
+        </tr>
+        <tr>
+          <td><strong>Identify vulnerabilities</strong></td>
+          <td>ค้นหาจุดอ่อนที่สามารถถูกใช้โจมตีได้</td>
+        </tr>
+        <tr>
+          <td><strong>Develop exploits</strong></td>
+          <td>สร้างเครื่องมือหรือเทคนิคเพื่อโจมตีช่องโหว่ที่พบ</td>
+        </tr>
+        <tr>
+          <td><strong>Gain unauthorized access</strong></td>
+          <td>ได้สิทธิ์เข้าถึงระบบ/เครือข่ายโดยไม่ได้รับอนุญาต (ในบริบท lab/test)</td>
+        </tr>
+      </table>
+      <p><strong>บทบาทของ RE ในงาน Pentest (3 ด้าน):</strong></p>
+      <ul>
+        <li><strong>Identifying Vulnerabilities:</strong> ค้นหาช่องโหว่ที่ "มองไม่เห็นด้วยตาเปล่า" จากการถอดรหัสพฤติกรรมซอฟต์แวร์ที่ซับซ้อน</li>
+        <li><strong>Developing Customized Security Solutions:</strong> เข้าใจระบบลึกขึ้น → ป้องกันได้ตรงจุดขึ้น ปรับแต่งเฉพาะระบบนั้น</li>
+        <li><strong>Enhancing Cyber Defence Strategies:</strong> คาดการณ์แนวทางโจมตีล่วงหน้า → เสริมเกราะเชิงรุก (proactive) ไม่ใช่ตั้งรับอย่างเดียว</li>
+      </ul>
+
+      <h2>2. เทคนิค 5 หลัก · ความท้าทาย · จริยธรรม</h2>
+      <table>
+        <tr>
+          <th>เทคนิค</th>
+          <th>ทำอะไร</th>
+          <th>จุดสังเกต</th>
+        </tr>
+        <tr>
+          <td><strong>Disassembly</strong></td>
+          <td>แตก compiled code กลับเป็น Assembly language เพื่อดูตรรกะและหาช่องโหว่</td>
+          <td>ได้ "ภาษาเครื่อง" ที่คนอ่านพอเข้าใจได้</td>
+        </tr>
+        <tr>
+          <td><strong>Decompilation</strong></td>
+          <td>แปลง compiled code กลับเป็นภาษาโปรแกรมระดับสูง (อ่านง่ายกว่า Assembly มาก)</td>
+          <td>ใช้ใน Ghidra, Jad (Java)</td>
+        </tr>
+        <tr>
+          <td><strong>Static analysis</strong></td>
+          <td>ตรวจโค้ด<strong>โดยไม่รัน</strong>มันเลย เพื่อหาช่องโหว่ที่อาจเป็นไปได้</td>
+          <td>ปลอดภัยกว่า — โปรแกรมไม่ทำงานจริง</td>
+        </tr>
+        <tr>
+          <td><strong>Dynamic analysis</strong></td>
+          <td><strong>รัน</strong>โค้ดจริงและเฝ้าติดตามพฤติกรรมเพื่อหาช่องโหว่</td>
+          <td>เห็นผลจริงของโปรแกรม (เช่น ltrace/strace)</td>
+        </tr>
+        <tr>
+          <td><strong>Fuzzing</strong></td>
+          <td>ยิง input แปลกๆ / ไม่คาดคิด เพื่อทำให้ระบบพังแล้วหาช่องโหว่</td>
+          <td>มักใช้คู่กับ dynamic analysis</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>ความท้าทาย (Challenges)</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Complexity</strong></td>
+          <td>ระบบสมัยใหม่ซับซ้อนมาก จนเข้าใจการทำงานภายในได้ยาก</td>
+        </tr>
+        <tr>
+          <td><strong>Obfuscation</strong></td>
+          <td>ระบบอาจถูกทำให้อ่านยากโดยเจตนา (เช่น code ที่ถูกอำพราง)</td>
+        </tr>
+        <tr>
+          <td><strong>Legal implications</strong></td>
+          <td>การ RE อาจติดประเด็นกฎหมาย โดยเฉพาะซอฟต์แวร์กรรมสิทธิ์ (proprietary software)</td>
+        </tr>
+      </table>
+      <div class="warn">
+        <strong>ข้อพิจารณาด้านจริยธรรมและกฎหมาย (สำคัญมาก):</strong>
+        <ul>
+          <li><strong>Obtain authorization:</strong> ต้องมีสิทธิ์/ความยินยอมก่อนทำ RE เสมอ — การเข้าถึงหรือวิเคราะห์โดยไม่ได้รับอนุญาตอาจมีโทษทางอาญา</li>
+          <li><strong>Respect intellectual property:</strong> ระวังลิขสิทธิ์/สิทธิบัตรของเป้าหมาย — RE ต้องทำเพื่อวัตถุประสงค์ที่ชอบธรรม</li>
+          <li><strong>Use tools responsibly:</strong> ใช้เพื่อ security testing, vulnerability research หรือการเรียนรู้เท่านั้น</li>
+          <li><strong>Respect privacy:</strong> ระวังข้อมูลส่วนบุคคล — จัดการข้อมูลอ่อนไหวด้วยความรอบคอบตามนโยบายความเป็นส่วนตัว</li>
+        </ul>
+      </div>
+
+      <h2>3. เครื่องมือ Reverse Engineering</h2>
+      <table>
+        <tr>
+          <th>หมวด</th>
+          <th>เครื่องมือ</th>
+          <th>หน้าที่</th>
+        </tr>
+        <tr>
+          <td rowspan="4"><strong>Disassemblers &amp; Decompilers</strong></td>
+          <td><strong>IDA Pro</strong></td>
+          <td>Disassembler + debugger ทรงพลัง รองรับสถาปัตยกรรมและไฟล์หลากหลาย</td>
+        </tr>
+        <tr>
+          <td><strong>Ghidra</strong></td>
+          <td>ฟรีและ open-source พัฒนาโดย NSA — disassembler + decompiler (ใช้ใน Lab 2)</td>
+        </tr>
+        <tr>
+          <td><strong>OllyDbg</strong></td>
+          <td>Debugger ฟรีบน Windows สำหรับวิเคราะห์ executable</td>
+        </tr>
+        <tr>
+          <td><strong>Jad</strong></td>
+          <td>Java decompiler — แปลง bytecode กลับเป็น Java source code</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Static Analysis</strong></td>
+          <td><strong>BinDiff</strong></td>
+          <td>เปรียบเทียบ 2 binary เพื่อหาความเหมือน/ต่าง</td>
+        </tr>
+        <tr>
+          <td><strong>Radare2</strong></td>
+          <td>Framework ครบเครื่อง: disassembler + debugger + scripting language</td>
+        </tr>
+        <tr>
+          <td><strong>Cuckoo Sandbox</strong></td>
+          <td>ระบบวิเคราะห์ malware อัตโนมัติ</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Dynamic Analysis</strong></td>
+          <td><strong>Wireshark</strong></td>
+          <td>ดักและวิเคราะห์ network traffic</td>
+        </tr>
+        <tr>
+          <td><strong>Process Monitor</strong></td>
+          <td>ติดตาม process และ file system บน Windows</td>
+        </tr>
+        <tr>
+          <td><strong>Regmon</strong></td>
+          <td>ติดตามการเปลี่ยนแปลง Registry บน Windows</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>อื่นๆ</strong></td>
+          <td>Hex Editors</td>
+          <td>HexEdit, HxD — ดูและแก้ไข binary data ระดับ byte</td>
+        </tr>
+        <tr>
+          <td>Debuggers</td>
+          <td>ไล่โค้ดทีละบรรทัด ตั้ง breakpoint ตรวจสอบตัวแปร</td>
+        </tr>
+        <tr>
+          <td>Scripting</td>
+          <td>Python / Perl — เขียน automate งานและสร้างเครื่องมือเอง</td>
+        </tr>
+      </table>
+      <div class="note">
+        <strong>บน Kali:</strong> เครื่องมือเหล่านี้ส่วนใหญ่ติดตั้งมาให้แล้ว — IDA Pro, Ghidra, OllyDbg, Jad,
+        BinDiff, Radare2, Wireshark, Process Monitor, Regmon, hex editors, debuggers และ scripting languages
+      </div>
+      <p>
+        <strong>การเลือกเครื่องมือ</strong>ขึ้นอยู่กับ: แพลตฟอร์ม (OS/architecture ของเป้าหมาย) ·
+        ชนิดไฟล์ (executable, library, script) · ความซับซ้อนของระบบ ·
+        และความคุ้นเคยของผู้ใช้ต่อเครื่องมือนั้น
+      </p>
+
+      <h2>4. คำสั่งพื้นฐานบน Kali — File Inspection &amp; Analysis</h2>
+      <h3>4.1 File Inspection — รู้จักไฟล์ก่อนอื่น</h3>
+      <table>
+        <tr>
+          <th>คำสั่ง</th>
+          <th>ทำอะไร / ตัวอย่าง</th>
+        </tr>
+        <tr>
+          <td><code>file</code></td>
+          <td>
+            บอก<strong>ชนิดของไฟล์</strong> — ขั้นแรกที่ขาดไม่ได้ เพราะต้องรู้ก่อนว่าเจอ text, binary
+            executable, script หรือ image<br /><code>file mysterious_file</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>strings</code></td>
+          <td>
+            ดึงข้อความที่อ่านได้ (printable strings) จากไฟล์ binary — ใช้หา error message, URL
+            หรือแม้แต่ flag ที่ฝังอยู่ในโปรแกรม<br /><code>strings my_program</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>hexdump -C</code> / <code>xxd</code></td>
+          <td>
+            แสดงไฟล์ในรูปแบบ hexadecimal ดิบ — ดู byte pattern ที่ไม่ปรากฏเป็นข้อความ<br /><code>hexdump -C my_file</code>
+          </td>
+        </tr>
+      </table>
+
+      <h3>4.2 File Analysis — ดูพฤติกรรมและคำสั่งจริง</h3>
+      <table>
+        <tr>
+          <th>คำสั่ง</th>
+          <th>ทำอะไร / ตัวอย่าง</th>
+        </tr>
+        <tr>
+          <td><code>ltrace</code></td>
+          <td>
+            ติดตาม<strong>library calls</strong> — โปรแกรมเรียกใช้ฟังก์ชันจาก shared library อะไรบ้าง
+            (เช่น เปิด network หรือเขียนไฟล์) ช่วยเดาจุดประสงค์ของโปรแกรม<br /><code>ltrace ./my_program</code>
+            · กรองเฉพาะฟังก์ชัน: <code>ltrace ./crackme4 strcmp</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>strace</code></td>
+          <td>
+            ติดตาม<strong>system calls</strong> — เห็นโปรแกรมคุยกับ OS ระดับล่าง เช่น <code>open</code>,
+            <code>read</code>, <code>write</code>, <code>socket</code>, <code>connect</code><br /><code>strace ./my_program</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>gdb</code></td>
+          <td>
+            GNU Debugger — รันโปรแกรมทีละบรรทัด ตั้ง breakpoints และตรวจสอบหน่วยความจำ
+            เป็นเครื่องมือพื้นฐานที่สุดในการทำความเข้าใจ flow การทำงาน<br /><code>gdb ./my_program</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>objdump -d</code></td>
+          <td>
+            แสดงข้อมูลจาก object file รวมถึง <strong>disassembly</strong> ของ executable —
+            อ่าน assembly code เพื่อดูคำสั่งดิบของโปรแกรม<br /><code>objdump -d ./my_program</code>
+          </td>
+        </tr>
+      </table>
+      <div class="tip">
+        <strong>เกร็ด:</strong> <code>ltrace</code> = ระดับ "ฟังก์ชัน/library" · <code>strace</code> =
+        ระดับ "ระบบปฏิบัติการ" — ถ้าโปรแกรมอ่านรหัสผ่านแล้วเทียบด้วย <code>strcmp</code> ให้ใช้ ltrace
+        แต่ถ้าต้องรู้ว่าโปรแกรมเปิดไฟล์/ต่อเน็ตที่ไหน ให้ใช้ strace
+      </div>
+
+      <h2>5. Workflow วิเคราะห์ Binary ทีละขั้น</h2>
+      <p>สมมติมีไฟล์ binary ชื่อ <code>challenge</code> — ลำดับที่สไลด์แนะนำ:</p>
+      <ol>
+        <li><strong>ระบุชนิดไฟล์:</strong> <code>file challenge</code></li>
+        <li>
+          <strong>ดึงข้อความที่อ่านได้:</strong> <code>strings challenge | less</code>
+          (pipe ไป less เพื่อเลื่อนดู output ยาวๆ) — มองหาอะไรที่น่าสนใจ เช่น hint หรือ flag
+        </li>
+        <li><strong>รันพร้อมติดตามพฤติกรรม:</strong> <code>strace ./challenge</code> หรือ <code>ltrace ./challenge</code> → สังเกตการทำงาน</li>
+        <li>
+          <strong>Disassemble:</strong> <code>objdump -d ./challenge | less</code> → ได้ assembly code
+          ไว้วิเคราะห์ตรรกะของโปรแกรม (เช่น การเช็ครหัสผ่าน)
+        </li>
+      </ol>
+      <div class="note">
+        <strong>ELF (Executable and Linkable Format):</strong> ไฟล์ฟอร์แมตมาตรฐานบนระบบ
+        Unix-like (Linux, FreeBSD, Android) สำหรับ executable files, object code, shared libraries
+        และ core dumps — ให้โครงสร้างที่ยืดหยุ่นและขยายได้สำหรับเก็บ binary code และ data
+        ที่ OS ต้องใช้รันโปรแกรม (คู่กับ PE บน Windows)
+      </div>
+
+      <h2>6. Assembly Code Analysis — หารหัสผ่านจาก objdump</h2>
+      <p>
+        <strong>เป้าหมายหลัก:</strong> หา<strong>จุดรับ input</strong>และ<strong>จุดตัดสินใจ</strong>
+        (decision point) ภายในโปรแกรม เพื่อวิเคราะห์ตรรกะการตรวจรหัสผ่าน
+      </p>
+      <table>
+        <tr>
+          <th>ขั้น</th>
+          <th>มองหาอะไรใน assembly</th>
+        </tr>
+        <tr>
+          <td><strong>1. หาจุดเริ่มต้น (Main Function)</strong></td>
+          <td>โปรแกรมส่วนใหญ่เริ่มที่ main — จุดที่รับ input จากผู้ใช้และตรวจ credential</td>
+        </tr>
+        <tr>
+          <td><strong>2. หาฟังก์ชันรับ input</strong></td>
+          <td>ค้นหาการเรียกฟังก์ชันมาตรฐาน เช่น <code>scanf</code>, <code>fgets</code>, <code>gets</code></td>
+        </tr>
+        <tr>
+          <td><strong>3. หาจุดตัดสินใจ (Comparison Logic)</strong></td>
+          <td>
+            คำสั่งเปรียบเทียบ: <code>cmp</code> (Compare) และ <code>test</code> ตามด้วย conditional jumps:<br />
+            <code>je</code> (Jump if Equal) — กระโดดเมื่อค่าตรงกัน = <strong>รหัสผ่านถูก</strong><br />
+            <code>jne</code> (Jump if Not Equal) — กระโดดเมื่อไม่ตรง = <strong>รหัสผ่านผิด</strong>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. หา Hardcoded Credentials</strong></td>
+          <td>ค่าที่อยู่ติดกับคำสั่ง <code>cmp</code> หรือค่าที่โหลดเข้า register ก่อนเทียบ มักเป็นรหัสผ่านจริง</td>
+        </tr>
+      </table>
+      <p><strong>ตัวอย่างจริง (Task 6 — crackme6):</strong> objdump เผยชุดคำสั่งเทียบทีละตัวอักษร:</p>
+      <p>
+        <code>cmp $0x31,%al</code> · <code>cmp $0x33,%al</code> · <code>cmp $0x33,%al</code> ·
+        <code>cmp $0x37,%al</code> · <code>cmp $0x5f,%al</code> · <code>cmp $0x70,%al</code> ·
+        <code>cmp $0x77,%al</code> · <code>cmp $0x64,%al</code>
+      </p>
+      <p>
+        นำค่า hex มาต่อกันได้ <code>313333375f707764</code> แล้วแปลงจาก hex เป็นข้อความ:<br />
+        <code>echo "313333375f707764" | xxd -r -p</code> → ได้รหัสผ่าน <strong>1337_pwd</strong>
+      </p>
+      <div class="tip">
+        <strong>เกร็ดการอ่าน hex:</strong> แต่ละคู่ <code>0x31</code> <code>0x33</code> … คือ ASCII หนึ่งตัว
+        (<code>0x31</code> = '1', <code>0x5f</code> = '_', <code>0x64</code> = 'd') — การอ่าน cmp
+        ทีละตัวแบบนี้คือหัวใจของการ crack binary พื้นฐาน
+      </div>
+
+      <h2>7. Lab 1: TryHackMe — Reversefiles (Tasks 1–8)</h2>
+      <p>
+        ห้องฝึกสำหรับผู้เริ่มต้น: <code>https://tryhackme.com/room/reverselfiles</code> —
+        โจทย์ <code>crackme1</code> ถึง <code>crackme8</code> ไต่ระดับความยาก
+        (ต้องใช้ VPN เชื่อมต่อ TryHackMe ก่อนทำ lab)
+      </p>
+      <table>
+        <tr>
+          <th>Task</th>
+          <th>ไฟล์</th>
+          <th>เครื่องมือ / วิธี</th>
+          <th>แนวจับทาง</th>
+        </tr>
+        <tr>
+          <td><strong>Task 1</strong></td>
+          <td>crackme1</td>
+          <td><code>chmod +x crackme1</code> แล้ว <code>./crackme1</code></td>
+          <td>ลองรันตรงๆ — โปรแกรมอาจโชว์อะไรให้</td>
+        </tr>
+        <tr>
+          <td><strong>Task 2</strong></td>
+          <td>crackme2</td>
+          <td><code>strings crackme2</code></td>
+          <td>มองหาข้อความที่มีความหมายใน binary</td>
+        </tr>
+        <tr>
+          <td><strong>Task 3</strong></td>
+          <td>crackme3</td>
+          <td><code>strings crackme3</code> → เจอ Base64 → decode ด้วย CyberChef หรือ <code>echo "ZjByX3kwdXJfNWVjMG5kX2xlNTVvbl91bmJhc2U2NF80bGxfN2gzXzdoMW5nNQ==" | base64 -d</code></td>
+          <td>ได้ข้อความ <em>f0r_y0ur_5ec0nd_le55on_unbase64_4ll_7h3_7h1ng5</em></td>
+        </tr>
+        <tr>
+          <td><strong>Task 4</strong></td>
+          <td>crackme4</td>
+          <td><code>ltrace ./crackme4</code> (กรองด้วย <code>strcmp</code>)</td>
+          <td>ดูค่าเทียบรหัสผ่านผ่าน library call</td>
+        </tr>
+        <tr>
+          <td><strong>Task 5</strong></td>
+          <td>crackme5</td>
+          <td><code>ltrace ./crackme5</code></td>
+          <td>ตามรอยการเทียบ input ผ่าน library call</td>
+        </tr>
+        <tr>
+          <td><strong>Task 6</strong></td>
+          <td>crackme6</td>
+          <td><code>strace ./crackme6</code> และ <code>objdump -d ./crackme6</code></td>
+          <td>อ่านชุด <code>cmp</code> → hex <code>313333375f707764</code> → <code>echo ... | xxd -r -p</code> → 1337_pwd</td>
+        </tr>
+        <tr>
+          <td><strong>Task 7</strong></td>
+          <td>crackme7</td>
+          <td><code>ghidra</code> (วิเคราะห์ใน GUI)</td>
+          <td>ค่า <code>7a69</code> (hex) = <code>python3 -c 'print(int("7a69", 16))'</code> → 31337</td>
+        </tr>
+        <tr>
+          <td><strong>Task 8</strong></td>
+          <td>crackme8</td>
+          <td>Ghidra / assembly analysis</td>
+          <td>โจทย์ระดับยาก — ฝึกวิเคราะห์ด้วยตัวเอง</td>
+        </tr>
+      </table>
+      <div class="note">
+        <strong>หมายเหตุ Task 8:</strong> สไลด์ไม่แสดงเฉลย (เป็นโจทย์ท้าทายให้ทำเอง) —
+        แนวทางคือใช้ Ghidra เปิดไฟล์, หา main, ตามหา input/compare logic เหมือน Task 6–7
+      </div>
+
+      <h2>8. Lab 2: TryHackMe — Basic Malware RE (strings1)</h2>
+      <p>
+        ห้องฝึก malware ขั้นต้น: <code>https://tryhackme.com/room/basicmalwarere</code> —
+        ฝึกแกะไฟล์ต้องสงสัยอย่างปลอดภัยใน VM
+      </p>
+      <h3>8.1 ขั้นเตรียมและ Strings Challenge</h3>
+      <ul>
+        <li><code>cd Downloads</code> → <code>ls -l</code> ดูไฟล์ที่ได้</li>
+        <li>ติดตั้ง 7-Zip: <code>sudo apt install p7zip-full</code></li>
+        <li>
+          แตกไฟล์ ZIP ที่ติดรหัส: <code>7z x strings1_1574787519246.zip -pMalwareTech</code>
+          (password คือ <em>MalwareTech</em>)
+        </li>
+        <li>ใช้ <code>strings strings1.exe_</code> ดึงข้อความจากไฟล์ → ได้ flag ของ Challenge 1</li>
+      </ul>
+      <h3>8.2 Ghidra Challenge</h3>
+      <ol>
+        <li>เปิด Ghidra → <strong>File → New Project → Non-Shared Project</strong> → กำหนด path → สร้างโปรเจกต์</li>
+        <li><strong>File → Import File</strong> → เลือก executable ที่ต้องการวิเคราะห์</li>
+        <li>เปิดใน CodeBrowser → ตรวจสอบ memory address <code>00432294</code> (จุดที่ซ่อนคำตอบ)</li>
+        <li>
+          Challenge 3 — สังเกตการเรียกฟังก์ชัน Windows:
+          <code>LoadStringA((HINSTANCE)0x0, 0x110, &amp;local_4a4, 0x3ff);</code>
+          (โหลดข้อความจาก resource string ID <code>0x110</code>) → คำตอบอยู่ใน resource นั้น
+        </li>
+      </ol>
+      <div class="tip">
+        <strong>เกร็ด:</strong> ไฟล์ malware ใน lab ถูกออกแบบมาให้วิเคราะห์ด้วย static analysis
+        (strings / Ghidra) ก่อน — ห้ามรันบนเครื่องจริง ต้องทำใน VM ที่แยกจากเครือข่ายเสมอ
+        (ห้องนี้ยืนยันแนวคิด "RE อย่างปลอดภัย")
+      </div>
+
+      <hr />
+
+      <h2>9. สรุปภาระงานที่ต้องส่ง (Assignment Checklist)</h2>
+      <ul>
+        <li><strong>Lab 1 (Reversefiles):</strong> ทำ crackme1–crackme8 ให้ครบ พร้อมแคปเจอร์ภาพคำตอบของแต่ละ Task</li>
+        <li><strong>Lab 2 (Basic Malware RE):</strong> แคปภาพผล <code>strings</code>, การ import เข้า Ghidra และคำตอบจาก challenge</li>
+        <li><strong>สรุปเครื่องมือที่ใช้:</strong> ระบุว่าแต่ละ Task ใช้เครื่องมืออะไร (file / strings / ltrace / strace / objdump / Ghidra) และเพราะอะไร</li>
+        <li><strong>หลักฐาน:</strong> ตั้งชื่อไฟล์ตามรูปแบบ Section+Lab+รหัสนักศึกษา (ตามที่อาจารย์กำหนด)</li>
+      </ul>
+      <div class="note">
+        <strong>สรุปแนวคิดเดียวของทั้งบท:</strong> RE = อ่าน "ของที่คอมไพล์แล้ว" ให้ออก —
+        เริ่มจากของง่าย (file → strings) ไปของยาก (ltrace/strace → objdump/Ghidra)
+        และหัวใจของการ crack คือการหาจุดเปรียบเทียบ (cmp + je/jne) แล้วอ่านค่า
+        ที่ถูกนำมาเทียบ
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 9 &mdash; Penetration Testing and Protection &copy; 2026
+    </div>
+  </body>
+</html>

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 10 - Penetration Testing Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Midterm</span>
+          <div class="nav-drop">
+            <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+            <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+            <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+            <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+            <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+            <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+            <a href="L3.html">L3 · Scanning (Nmap)</a>
+            <a href="L4.html">L4 · Enumeration</a>
+            <a href="L5.html">L5 · Vulnerability Assessment</a>
+            <a href="L6.html">L6 · Exploitation</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-label active" tabindex="0">Final</span>
+          <div class="nav-drop">
+            <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+            <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+            <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+            <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+            <a href="L7.html">L7 · Password Cracking</a>
+            <a href="L8.html">L8 · Web Hacking</a>
+            <a href="L9.html">L9 · Reverse Engineering</a>
+            <a href="L10.html" class="active">L10 · Penetration Testing Report</a>
+            <a href="L11.html">L11 · Incident Response</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="a4">
+      <h1>สรุปเนื้อหาและปฏิบัติการ Lecture 10: Penetration Testing Report</h1>
+      <p style="color: #e74c3c; font-weight: bold; text-align: center;">#ออกสอบ Final</p>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051) — Documentation ·
+        Report Template · Report Types · Kioptrix Level 1 Lab
+      </p>
+
+      <h2>1. Post-Engagement &amp; ความสำคัญของการรายงาน</h2>
+      <p>
+        การทดสอบเจาะระบบมี <strong>5 เฟส</strong> ได้แก่ reconnaissance → scanning →
+        vulnerability assessment → exploitation → <strong>reporting</strong> —
+        เฟสสุดท้ายคือหัวใจที่ทำให้งานทั้งหมด "มีคุณค่า" เพราะลูกค้าต้องนำผลไปแก้ไขจริง
+        เฟสหลังการทดสอบ (Post-Engagement) ประกอบด้วย:
+      </p>
+      <table>
+        <tr>
+          <th>กิจกรรม</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>1. Report Generation</strong></td>
+          <td>
+            รวบรวม <em>Detailed Findings</em> — ช่องโหว่ที่พบ ระดับความรุนแรง และความเสี่ยงที่อาจเกิดขึ้น
+            พร้อม <em>Recommendations</em> — คำแนะนำที่ลงมือทำได้จริงเพื่อปิดช่องโหว่
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. Vulnerability Remediation</strong></td>
+          <td>
+            องค์กรจัดลำดับช่องโหว่ตามความรุนแรง/ผลกระทบ → ติดตั้ง patch และอัปเดตที่จำเป็น
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. Security Awareness Training</strong></td>
+          <td>อบรมพนักงานให้เข้าใจความเสี่ยงและวิธีหลีกเลี่ยงการตกเป็นเหยื่อ</td>
+        </tr>
+        <tr>
+          <td><strong>4. Follow-up Activities</strong></td>
+          <td>
+            <em>Re-testing:</em> ทดสอบซ้ำเพื่อยืนยันว่าการแก้ไขได้ผล ·
+            <em>Continuous Monitoring:</em> เฝ้าระวังภัยคุกคามใหม่ต่อเนื่อง
+          </td>
+        </tr>
+      </table>
+      <div class="note">
+        <strong>Key Considerations:</strong> Clear Communication (สื่อสารเปิดเผยตลอดกระบวนการ) ·
+        Timely Remediation (แก้ไขทันเวลาเพื่อลดความเสี่ยง) · Ongoing Security Posture
+        (ประเมินและอัปเดตสม่ำเสมอเพื่อรักษาความแข็งแกร่งของระบบ)
+      </div>
+
+      <h3>1.1 ทำไมการรายงานจึงสำคัญ (The Importance of Reporting)</h3>
+      <ul>
+        <li>
+          <strong>Assessment tracking &amp; documentation</strong> เป็นส่วนสำคัญของงาน pentest
+          มืออาชีพ — ทุก input และ output ของเครื่องมือต้องถูกบันทึก
+          เพื่อให้<strong>ผลลัพธ์สามารถทำซ้ำได้ (reproducible)</strong>อย่างแม่นยำและสม่ำเสมอ
+        </li>
+        <li>
+          ลูกค้าจะนำ findings ไปแก้ไขช่องโหว่ แล้ว<strong>ลองทำตามขั้นตอนของเรา (mimic your steps)</strong>
+          เพื่อยืนยันว่าการแก้ไขได้ผลจริง — ถ้าไม่มีเอกสารที่ชัดเจน เขาจะทำซ้ำไม่ได้
+        </li>
+        <li>
+          เอกสารที่ครบถ้วนทำให้เราสามารถ<strong>ย้อนรอย (trace)</strong>ได้ว่าเราทำอะไรไปบ้าง
+          เผื่อเกิดเหตุการณ์ไม่เกี่ยวกับการทดสอบระหว่างช่วงเวลาที่ตกลงกันไว้ (test window)
+        </li>
+      </ul>
+
+      <h2>2. ลักษณะรายงานที่จำเป็น (Report Essential Characteristics)</h2>
+      <ul>
+        <li>
+          รายงานต้อง<strong>สอดคล้องกับสิ่งที่พบจริง (consistency)</strong> — ไม่ใช่แค่ชี้จุดอ่อน
+          แต่ต้องจัดทำอย่างดีและ<strong>แสดงหลักฐานสนับสนุนข้อกำหนด compliance</strong>ที่เกี่ยวข้อง
+        </li>
+        <li>
+          ต้องระบุชัดเจน: <strong>modus operandi ของ attacker, เครื่องมือและเทคนิคที่ใช้,
+          ช่องโหว่ที่พบ และวิธีการ exploitation ที่พิสูจน์แล้ว</strong>
+        </li>
+        <li>
+          ถ้ามี <strong>false negatives</strong> (ช่องโหว่จริงแต่ไม่ถูกรายงาน) ลูกค้าอาจเข้าใจผิดว่า
+          ระบบปลอดภัย — เสมือน "ขายความมั่นใจปลอม" ความสมบูรณ์ของข้อมูลทดสอบจึงต้องไม่มีข้อผิดพลาด
+        </li>
+      </ul>
+
+      <h2>3. 5 ขั้นตอนการจัดทำเอกสาร (Steps to Facilitate Documentation)</h2>
+      <table>
+        <tr>
+          <th>ขั้น</th>
+          <th>สิ่งที่ต้องทำ</th>
+        </tr>
+        <tr>
+          <td><strong>1. Create a folder for the project</strong></td>
+          <td>
+            ตั้งชื่อโฟลเดอร์ตามชื่อลูกค้า · แยก subfolder <em>External Hacking</em> กับ
+            <em>Internal Hacking</em> · ในแต่ละอันมี logbook + subfolders ของแต่ละ phase/tools +
+            folder เก็บ reports/data/trophies · ใน <em>reports</em> แยกตาม tools ·
+            ที่ root วาง final report template ที่ใส่ข้อมูลลูกค้าแล้ว
+            <strong>และเก็บข้อมูลในที่ที่เข้ารหัส (encrypted location) เสมอ</strong>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. Carry out a logbook</strong></td>
+          <td>
+            จดงานที่ทำ<strong>ทุกวัน ณ เวลาที่ลงมือทำ</strong> (จะง่ายแค่ text file หรือใช้ suite
+            สำหรับ audit ก็ได้) — กันลืมรายละเอียดสำคัญ + ตอนเขียนรายงานแค่ copy + paste ·
+            มักแนบ summary ของ findings ประจำวันด้วย
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. Capture images / video</strong></td>
+          <td>
+            เก็บภาพช่วงสำคัญ: พบช่องโหว่ร้ายแรง, เจาะเข้าได้สำเร็จ, ดึงข้อมูลได้, หรือวาง trophy ·
+            ตั้งชื่อไฟล์ให้สื่อ เช่น <code># Exploit – Apache Webserver.jpg</code> (แทน # ด้วยเลขลำดับ)
+            เพื่อค้นหาและอ้างอิงในรายงานได้เร็ว · ภาพที่เหลือเก็บเข้า subfolder Archives
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. Keep a record of findings</strong></td>
+          <td>
+            ทำตารางสรุปช่องโหว่ที่เกี่ยวข้อง — เน้น <strong>high-level risk</strong> และตัวที่
+            <strong>exploit ง่ายสุดก่อน</strong> ถ้ามีเวลาค่อยลงไประดับความเสี่ยงรองๆ
+          </td>
+        </tr>
+        <tr>
+          <td><strong>5. Use a template</strong></td>
+          <td>
+            ใช้ template ประหยัดเวลา และทำให้อธิบาย findings + conclusion + recommendations
+            ได้ครบ — โครงหลัก: <strong>Executive Summary · Methodology · Findings ·
+            Recommendations · Appendices</strong> (ปรับตามความต้องการของแต่ละองค์กร)
+          </td>
+        </tr>
+      </table>
+
+      <h2>4. โครงสร้างรายงานฉบับสมบูรณ์ (Report Structure)</h2>
+
+      <h3>4.1 Executive Summary</h3>
+      <p>ภาพรวมสั้นและได้ใจความของทั้งเล่ม เขียนให้<strong>คนไม่เทคนิค</strong> (ผู้บริหาร/ผู้ตัดสินใจ) อ่านรู้เรื่อง:</p>
+      <ul>
+        <li><strong>Engagement Objectives:</strong> เป้าหมายของงาน เช่น หาช่องโหว่ ประเมินความเสี่ยง ตรวจสอบ security controls</li>
+        <li><strong>Scope of Work:</strong> สรุประบบ/เครือข่าย/แอปพลิเคชันที่ถูกประเมิน</li>
+        <li><strong>Key Findings:</strong> ช่องโหว่หรือจุดอ่อนที่สำคัญที่สุด</li>
+        <li><strong>Overall Security Posture:</strong> ประเมินภาพรวมความมั่นคงปลอดภัย จุดแข็ง/จุดที่ต้องปรับปรุง</li>
+        <li><strong>Recommendations:</strong> คำแนะนำสำคัญที่สุดแบบสั้นๆ</li>
+      </ul>
+
+      <h3>4.2 Methodology</h3>
+      <p>อธิบายแนวทาง เครื่องมือ และเทคนิคที่ใช้อย่างละเอียด เพื่อให้ผลลัพธ์เชื่อถือได้:</p>
+      <ul>
+        <li><strong>Testing Approach:</strong> black-box / gray-box / white-box พร้อมเหตุผลที่เลือก</li>
+        <li><strong>Scope of Testing:</strong> นิยามขอบเขตให้ชัดเจน</li>
+        <li><strong>Tools and Techniques:</strong> เครื่องมือ, เทคนิค, scanner, exploitation tools, การทดสอบ manual</li>
+        <li><strong>Testing Procedures:</strong> ขั้นตอนหาและใช้ช่องโหว่ ตั้งแต่ network reconnaissance ถึง application testing</li>
+        <li><strong>Ethical Considerations:</strong> มาตรการที่ทำเพื่อให้งานมีจริยธรรมและรบกวนระบบน้อยที่สุด</li>
+      </ul>
+
+      <h3>4.3 Findings, PoC &amp; Recommendations</h3>
+      <table>
+        <tr>
+          <th>ส่วน</th>
+          <th>องค์ประกอบ</th>
+        </tr>
+        <tr>
+          <td><strong>Findings</strong></td>
+          <td>
+            <em>Vulnerability Details:</em> CVE ID (ถ้ามี) · Description (สาเหตุ + ผลกระทบ + exploitability) ·
+            Severity (high/medium/low/informational) · Evidence (screenshot, log, PoC exploit)<br />
+            <em>Impact Assessment:</em> ประเมินผลเสียหากถูกโจมตี — data loss, unauthorized access,
+            service disruption และผลต่อ critical assets<br />
+            <em>Risk Assessment:</em> ประเมินโอกาสถูกใช้โจมตีจากความรุนแรง + สภาพความปลอดภัยขององค์กร + ภัยคุกคามปัจจุบัน
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Proof of Concept (PoC)</strong></td>
+          <td>
+            หลักฐานพิสูจน์ว่าโจมตีได้จริง รูปแบบ: <em>Exploit code</em> (สคริปต์) ·
+            <em>Manual demonstration</em> (อธิบายทีละขั้น) · <em>Screenshots or logs</em> —
+            PoC ที่ชัดเจนช่วย convince stakeholders ให้ยอมจ่ายและเร่งแก้ไข
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Recommendations</strong></td>
+          <td>
+            <em>Mitigation Strategies:</em> Technical Controls (patch, config, security controls) ·
+            Administrative Controls (policy, training, องค์กร) · Physical Controls (access control)<br />
+            <em>Prioritization:</em> จัดลำดับตามความรุนแรง/ผลกระทบ + งบประมาณและ risk tolerance<br />
+            <em>Timeline:</em> เสนอกรอบเวลาที่เหมาะสมต่อการลงมือทำ
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Appendices</strong></td>
+          <td>
+            เอกสารเทคนิคแบบละเอียด · logs และหลักฐาน · network diagrams ·
+            system configurations · PoC exploits · screenshots
+          </td>
+        </tr>
+      </table>
+
+      <h2>5. รายงาน 3 ประเภท (Types of Reports)</h2>
+      <p>
+        เมื่อรวมผลการทดสอบทั้งหมดแล้ว ต้องเรียบเรียงเป็นรายงานอย่างเป็นระบบก่อนส่งมอบ —
+        มี 3 แบบตามกลุ่มผู้อ่าน (ทุกแบบต้องอยู่ภายใต้ NDA, legal notice และข้อตกลง pentest):
+      </p>
+      <table>
+        <tr>
+          <th>ประเภท</th>
+          <th>ผู้อ่าน</th>
+          <th>องค์ประกอบหลัก</th>
+        </tr>
+        <tr>
+          <td><strong>Executive Report</strong></td>
+          <td>C-level (CEO, CTO, CIO)</td>
+          <td>
+            มุมมองภาพรวมเชิงกลยุทธ์ธุรกิจ — Project objective · Vulnerability risk classification
+            (critical/high/medium/low/informational) · Executive summary (จำนวนช่องโหว่ที่พบและ
+            exploit สำเร็จ) · Statistics (กราฟ/แผนภูมิ) · <strong>Risk matrix</strong> สรุปความเสี่ยง
+            ทรัพยากรที่ได้รับผลกระทบ และ references
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Management Report</strong></td>
+          <td>ระดับบริหารจัดการ</td>
+          <td>
+            Compliance achievement (เทียบมาตรฐาน + ชี้การละเมิดที่เสี่ยง) · Testing methodology
+            (อธิบายวงจร pentest) · Assumptions and limitations (ข้อจำกัดที่ทำให้ทำไม่ครบ) ·
+            Change management (กระบวนการควบคุมการเปลี่ยนแปลง) · Configuration management
+            (ความสม่ำเสมอของระบบหลังแก้ไข)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Technical Report</strong></td>
+          <td>ทีมเทคนิค</td>
+          <td>
+            รายละเอียดช่องโหว่ทุกจุด + วิธี exploit + business impact + แนวทางแก้ —
+            <em>Security issues:</em> ต่อ attack method ระบุ affected resources, implications,
+            request/response data (original + simulated attack), references, recommendations<br />
+            <em>Vulnerabilities map:</em> รายการช่องโหว่จับคู่ resource (IP/target name)<br />
+            <em>Exploits map:</em> exploit ที่พิสูจน์แล้วว่าได้ผล ระบุ private/public, แหล่งที่มา, ระยะเวลาที่มีให้ใช้<br />
+            <em>Best practices:</em> ข้อบกพร่องด้าน design/implementation/operation ที่ควรแก้
+          </td>
+        </tr>
+      </table>
+
+      <h2>6. Post-Testing Procedures (ขั้นตอนหลังการทดสอบ)</h2>
+      <ul>
+        <li>
+          <strong>Remediation measures / corrective steps:</strong> การแก้ไขตามคำแนะนำอาจต้อง
+          ตรวจสอบเพิ่มเติม เพื่อให้มั่นใจว่าการเปลี่ยนแปลงไม่กระทบฟังก์ชันการทำงานของระบบ
+        </li>
+        <li>
+          <strong>ติดตั้งโซลูชันที่เชื่อถือได้:</strong> IDS/IPS, firewall, ระบบป้องกันเนื้อหา, antivirus
+        </li>
+        <li>
+          <strong>Divide-and-conquer network design:</strong> แยก secure network zones
+          ออกจากโซนที่ไม่ปลอดภัย/เปิดสู่สาธารณะ
+        </li>
+        <li>
+          <strong>เสริมทักษะ developer:</strong> เขียนโค้ดอย่างปลอดภัย + ทำ code audit —
+          ให้ผลตอบแทนคุ้มค่ากับองค์กร
+        </li>
+        <li>
+          <strong>อัปเดตระบบความปลอดภัยสม่ำเสมอ:</strong> เพื่อรักษา Confidentiality, Integrity,
+          Availability (CIA)
+        </li>
+        <li>
+          <strong>ตรวจสอบยืนยัน:</strong> ไล่เช็คทุกโซลูชันที่แนะนำไปแล้ว
+          เพื่อตัดความเป็นไปได้ที่จะถูกบุกรุกซ้ำ
+        </li>
+      </ul>
+
+      <h2>7. รายละเอียดขั้นตอนปฏิบัติการ Lab (Kioptrix Level 1)</h2>
+      <p>
+        ห้องแล็บจริงจาก VulnHub (<code>kioptrix-level-1</code>) — เครื่อง VM แบบ boot2root
+        ที่ต้องไล่ตั้งแต่หาที่อยู่เครื่องจนถึงเจาะระบบ (ครบทุกเฟสที่เรียนมา):
+      </p>
+
+      <h3>ตอนที่ 1: เตรียมและหาเครื่องเป้าหมาย</h3>
+      <ul>
+        <li>
+          <strong>Import เครื่อง:</strong> ดาวน์โหลดจาก <code>vulnhub.com/entry/kioptrix-level-1-1,22/</code> ·
+          เปิดไฟล์ config ด้วย notepad → เปลี่ยนจาก <code>bridged</code> เป็น <code>nat</code> →
+          save แล้วดับเบิลคลิกเปิด
+        </li>
+        <li>
+          <strong>เปิด Kali แล้วหา IP เป้าหมาย:</strong> <code>sudo arp-scan -l</code>
+          หรือ <code>sudo netdiscover -P -r 192.168.74.0/24</code>
+        </li>
+      </ul>
+
+      <h3>ตอนที่ 2: Scanning &amp; Enumeration</h3>
+      <ul>
+        <li><strong>สแกนช่องโหว่ด้วย NSE:</strong> <code>nmap --script vuln 192.168.74.130</code></li>
+        <li><strong>เช็ค FTP anonymous:</strong> <code>nmap --script ftp-anon 192.168.74.130</code></li>
+        <li><strong>เช็ค SSH auth methods:</strong> <code>nmap --script ssh-auth-methods.nse 192.168.37.130</code></li>
+        <li>
+          <strong>หา hidden path บนเว็บ:</strong>
+          <code>gobuster dir -u http://192.168.74.130/ -w /usr/share/wordlists/dirb/common.txt</code><br />
+          (gobuster = Directory and File Brute-Forcing — หา path ที่ไม่ถูก link ไว้ เช่น
+          <code>/admin</code>, <code>/backup.zip</code>, <code>/config.php</code>)
+        </li>
+        <li><strong>Enum ผู้ใช้จาก SMB/NetBIOS:</strong> <code>enum4linux -a 192.168.74.130</code> (Windows/Samba)</li>
+        <li><strong>สแกนเว็บละเอียด:</strong> <code>nikto -h http://192.168.74.130</code></li>
+      </ul>
+
+      <h3>ตอนที่ 3: Exploitation</h3>
+      <ul>
+        <li><code>msfconsole</code> → <code>search smb version</code> → เลือก auxiliary เพื่อยืนยันเวอร์ชัน Samba</li>
+        <li><code>set rhost 192.168.74.130</code> → <code>run</code></li>
+        <li>
+          <strong>ข้อสังเกตสำคัญจากสไลด์:</strong> เมื่อลอง exploit พบว่า
+          <em>"Exploit ไม่สำเร็จ ขาด payload"</em> — ต้องเลือก payload ให้ถูกกับสถาปัตยกรรม/บริการเป้าหมาย
+          เติม payload แล้วลองใหม่
+        </li>
+      </ul>
+      <div class="tip">
+        <strong>เกร็ด:</strong> Kioptrix เป็นบทฝึกที่ดีเยี่ยมสำหรับ "รายงาน" —
+        ทุกคำสั่งตั้งแต่ arp-scan ถึง msfconsole คือหลักฐานที่ต้องแคปภาพและบันทึกใน logbook
+        ตาม 5 ขั้นตอนในข้อ 3 → กลายเป็นรายงานส่งอาจารย์ได้เลย
+      </div>
+
+      <hr />
+
+      <h2>8. สรุปภาระงานที่ต้องส่ง (Assignment Checklist)</h2>
+      <ul>
+        <li>
+          <strong>จัดทำรายงานเจาะระบบจาก Kioptrix Level 1</strong> ตาม template ของอาจารย์
+          (<code>Penetration_Testing_Report_Kioptrix_Lab_Template.docx</code>)
+          ให้ครบโครง: Executive Summary · Methodology · Findings · Recommendations · Appendices
+        </li>
+        <li>
+          <strong>แนบหลักฐาน:</strong> Screenshot ทุกขั้นตอนสำคัญ — arp-scan/netdiscover,
+          nmap vuln, gobuster, enum4linux, nikto, msfconsole (พร้อม payload ที่ทำให้ exploit สำเร็จ)
+        </li>
+        <li>
+          <strong>ระบุ Findings:</strong> ช่องโหว่ที่พบ + severity + PoC + แนวทางแก้ไข
+          ในตาราง summary ที่อ้างอิงจากภาพหลักฐาน
+        </li>
+        <li>
+          <strong>ตั้งชื่อไฟล์:</strong> ตามรูปแบบ Section + Lab + รหัสนักศึกษา เช่น
+          <code>S3L10_6604061234567.pdf</code>
+        </li>
+      </ul>
+      <div class="note">
+        <strong>สรุปแนวคิดเดียวของทั้งบท:</strong> รายงานคือ "ของจริง" ของงาน pentest —
+        ไม่มีรายงาน = ไม่มีผลงาน · เก็บทุกอย่างตั้งแต่ตอนทำ (logbook + screenshot + findings chart)
+        เวลาสรุปจะง่ายมาก · และต้องเขียนให้ตรงกลุ่มผู้อ่าน (ผู้บริหาร vs ทีมเทคนิค)
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 10 &mdash; Penetration Testing and Protection &copy; 2026
+    </div>
+  </body>
+</html>

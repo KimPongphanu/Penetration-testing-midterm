@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 11 - Incident Response &amp; Risk Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand"><img src="icon.jpg" alt="PenTest Logo" class="brand-logo" />Roadmap</a>
+        <div class="nav-item">
+          <span class="nav-label" tabindex="0">Midterm</span>
+          <div class="nav-drop">
+            <a href="summary1.html">S1 · สรุป A4 L1–L3</a>
+            <a href="summary2.html">S2 · สรุป A4 L4–L6</a>
+            <a href="summary1a.html">S1A · ทฤษฎีสอบข้อเขียน (L1–L6)</a>
+            <a href="summary2a.html">S2A · Command/Lab Steps (L1–L6)</a>
+            <a href="L1.html">L1 · Foundation &amp; Methodology</a>
+            <a href="L2.html">L2 · Reconnaissance &amp; Linux</a>
+            <a href="L3.html">L3 · Scanning (Nmap)</a>
+            <a href="L4.html">L4 · Enumeration</a>
+            <a href="L5.html">L5 · Vulnerability Assessment</a>
+            <a href="L6.html">L6 · Exploitation</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-label active" tabindex="0">Final</span>
+          <div class="nav-drop">
+            <a href="summary3.html">S3 · สรุป A4 L7–L9</a>
+            <a href="summary4.html">S4 · สรุป A4 L10–L11</a>
+            <a href="summary3a.html">S3A · Command/Lab Steps (L7–L9)</a>
+            <a href="summary4a.html">S4A · Command/Lab Steps (L10–L11)</a>
+            <a href="L7.html">L7 · Password Cracking</a>
+            <a href="L8.html">L8 · Web Hacking</a>
+            <a href="L9.html">L9 · Reverse Engineering</a>
+            <a href="L10.html">L10 · Penetration Testing Report</a>
+            <a href="L11.html" class="active">L11 · Incident Response</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="a4">
+      <h1>
+        สรุปเนื้อหาและปฏิบัติการ Lecture 11: Incident Response &amp; Cybersecurity
+        Risk Management
+      </h1>
+      <p style="color: #e74c3c; font-weight: bold; text-align: center;">#ออกสอบ Final</p>
+      <p class="subtitle">
+        วิชา Penetration Testing and Protection (0406136051) — Risk Management · NIST
+        CSF 2.0 · Incident Response Life Cycle · กฎหมายไซเบอร์ไทย (MDES)
+      </p>
+
+      <h2>1. Offensive vs Defensive Security — สองด้านของเหรียญ</h2>
+      <table>
+        <tr>
+          <th>Red Team (Ethical Hacker / Offensive)</th>
+          <th>Blue Team (Defender / Defensive)</th>
+        </tr>
+        <tr>
+          <td>Vulnerability Assessment</td>
+          <td>Asset Protection (ปกป้องทรัพย์สินไอที)</td>
+        </tr>
+        <tr>
+          <td>Penetration Testing</td>
+          <td>Incident Response (รับมือเหตุการณ์)</td>
+        </tr>
+        <tr>
+          <td>Adversary Emulation (จำลองผู้โจมตีจริง)</td>
+          <td>Threat Detection (ตรวจจับภัยคุกคาม)</td>
+        </tr>
+        <tr>
+          <td>Vulnerability Exploitation</td>
+          <td>Triage — containment, eradication, recovery</td>
+        </tr>
+        <tr>
+          <td>Privilege Escalation</td>
+          <td>Security Hardening (เสริมความแข็งแกร่ง)</td>
+        </tr>
+        <tr>
+          <td>—</td>
+          <td>Digital Forensics (พิสูจน์หลักฐานดิจิทัล)</td>
+        </tr>
+      </table>
+      <div class="tip">
+        <strong>จุดเชื่อมโยง:</strong> สิ่งที่ Red Team ทำ (บท 1–10 ของวิชา) คือสิ่งที่ Blue Team
+        ต้องรับมือ — บทนี้จะพลิกมุมมองจาก "คนเจาะ" มาเป็น "คนป้องกันและกู้คืน"
+      </div>
+
+      <h2>2. Risk Management — การจัดการความเสี่ยง (เชิงรุก)</h2>
+      <p>
+        <strong>Risk Management</strong> คือกระบวนการ<strong>เชิงรุก (proactive)</strong>
+        ที่มุ่งระบุ ประเมิน และบรรเทาภัยคุกคามที่อาจเกิดขึ้น
+        <strong>ก่อน</strong>ที่มันจะกลายเป็นเหตุการณ์จริง — คือการคาดการณ์ว่า "อะไรอาจผิดพลาดได้"
+        เป้าหมายคือลดทั้ง<strong>โอกาสเกิด (likelihood)</strong>และ<strong>ผลกระทบ (impact)</strong>
+        และเป็นกระบวนการต่อเนื่องที่ฝังอยู่ในกลยุทธ์และการดำเนินงานขององค์กร
+      </p>
+      <table>
+        <tr>
+          <th>กิจกรรมหลัก</th>
+          <th>ทำอะไร</th>
+          <th>ตัวอย่าง</th>
+        </tr>
+        <tr>
+          <td><strong>Identification</strong></td>
+          <td>ระบุความเสี่ยงที่อาจเกิดขึ้น</td>
+          <td>พบช่องโหว่ซอฟต์แวร์ที่รู้จัก, รหัสผ่านอ่อนแอ</td>
+        </tr>
+        <tr>
+          <td><strong>Assessment</strong></td>
+          <td>วิเคราะห์โอกาสเกิดและผลกระทบของแต่ละความเสี่ยง</td>
+          <td>ให้คะแนน likelihood × impact</td>
+        </tr>
+        <tr>
+          <td><strong>Mitigation</strong></td>
+          <td>ติดตั้งมาตรการควบคุมเพื่อลด/กำจัดความเสี่ยง</td>
+          <td>Patch ช่องโหว่, บังคับนโยบายรหัสผ่านที่แข็งแรง</td>
+        </tr>
+        <tr>
+          <td><strong>Monitoring</strong></td>
+          <td>ติดตามความเสี่ยงและมาตรการอย่างต่อเนื่องให้ยังได้ผล</td>
+          <td>ทบทวนและวัดผลสม่ำเสมอ</td>
+        </tr>
+      </table>
+
+      <h2>3. Incident คืออะไร และ Incident Response</h2>
+      <p>
+        <strong>Cybersecurity Incident</strong> ตามนิยาม Federal Information Security
+        Modernization Act of 2014 (FISMA) คือ —
+        <em
+          >"เหตุการณ์ที่คุกคาม (หรือกำลังจะคุกคาม) โดยไม่มีอำนาจตามกฎหมาย ต่อ Confidentiality,
+          Integrity หรือ Availability ของข้อมูลหรือระบบสารสนเทศ หรือเป็นการละเมิด/ภัยใกล้ตัวของ
+          การละเมิดกฎหมาย นโยบายความปลอดภัย กระบวนการความปลอดภัย หรือนโยบายการใช้งานที่ยอมรับได้"</em
+        >
+      </p>
+      <table>
+        <tr>
+          <th>ตัวอย่างเหตุการณ์ (อ้างอิง NCSC)</th>
+          <th>ลักษณะ</th>
+        </tr>
+        <tr>
+          <td><strong>Malicious code</strong></td>
+          <td>Malware แพร่ในเครือข่าย รวมถึง Ransomware</td>
+        </tr>
+        <tr>
+          <td><strong>Denial of Service</strong></td>
+          <td>ทราฟฟิกท่วมจนเว็บล่ม — กระทบได้ทั้งสายโทรศัพท์ ระบบภายนอก และระบบภายใน</td>
+        </tr>
+        <tr>
+          <td><strong>Phishing</strong></td>
+          <td>อีเมลหลอกให้เชื่อใจและคลิกลิงก์/ไฟล์แนบ</td>
+        </tr>
+        <tr>
+          <td><strong>Unauthorized Access</strong></td>
+          <td>บุคคล (ภายใน/ภายนอก) เข้าถึงระบบ บัญชี หรือข้อมูลโดยไม่ได้รับอนุญาต</td>
+        </tr>
+        <tr>
+          <td><strong>Insider</strong></td>
+          <td>พนักงานกระทำการอันตราย (เจตนา/ไม่เจตนา) จนเกิดเหตุการณ์ความปลอดภัย</td>
+        </tr>
+        <tr>
+          <td><strong>Data breach</strong></td>
+          <td>อุปกรณ์/เอกสารสูญหาย-ถูกขโมย หรือข้อมูลถูกเข้าถึง/ดึงออกโดยไม่ได้รับอนุญาต</td>
+        </tr>
+        <tr>
+          <td><strong>Targeted attack</strong></td>
+          <td>โจมตีเจาะจงองค์กร โดยผู้โจมตีระดับสูง (มักประกอบหลายรูปแบบข้างต้น)</td>
+        </tr>
+      </table>
+      <p>
+        <strong>Incident Response (IR)</strong> คือกระบวนการ<strong>เชิงรับ (reactive)</strong>
+        ที่โฟกัสการจัดการ breach หรือ cyberattack
+        <strong>หลังจาก</strong>มันเกิดขึ้นแล้ว — เป็นคำตอบสำหรับ "ทำอะไรเมื่อความเสี่ยงกลายเป็นเหตุจริง"
+        เป้าหมาย: ลดความเสียหายให้เหลือน้อยสุด ฟื้นระบบกลับสู่ปกติ และเรียนรู้จากเหตุการณ์
+      </p>
+      <div class="note">
+        <strong>เทียบให้เข้าใจง่าย:</strong> Risk Management = "ตรวจสุขภาพ + ฉีดวัคซีน" (กันไว้ก่อน) ·
+        Incident Response = "ห้องฉุกเฉิน" (เกิดแล้วต้องกู้ให้เร็วที่สุด)
+      </div>
+
+      <h2>4. Incident Response Life Cycle</h2>
+      <p>
+        โมเดลคลาสสิกจาก <strong>NIST SP 800-61 Rev. 2</strong> แบ่งเป็น 4 เฟสหลัก:
+      </p>
+      <table>
+        <tr>
+          <th>เฟส</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>1. Preparation</strong></td>
+          <td>วางแผน จัดตั้งทีม (CIRT/CSIRT) และเตรียมเครื่องมือล่วงหน้าสำหรับตอนเกิดเหตุ</td>
+        </tr>
+        <tr>
+          <td><strong>2. Detection &amp; Analysis</strong></td>
+          <td>
+            รู้ว่ามีเหตุการณ์เกิดแล้วและเข้าใจขอบเขตของมัน — ครอบคลุมทุกอย่างตั้งแต่การวิเคราะห์เชิงเทคนิค
+            จนถึงการทบทวนปฏิกิริยาบน social media
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. Containment, Eradication &amp; Recovery</strong></td>
+          <td>
+            <em>Containment:</em> ลดผลกระทบและกันไม่ให้ลุกลาม — บล็อกกิจกรรม แยกเครื่องที่ติดเชื้อ รีเซ็ตบัญชี
+            รวมถึงงานที่ไม่ใช่เทคนิค (การจัดการสื่อ) และการตัดสินใจสำคัญ (เช่น ปิดระบบหลัก — ต้องชั่งผลที่ตามมา)<br />
+            <em>Eradication:</em> กำจัดภัยคุกคามหรือต้นตอของเหตุการณ์ออกให้หมด<br />
+            <em>Recovery:</em> ระบบกลับสู่สภาวะ "business as usual"
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. Post-Incident Activity</strong></td>
+          <td>บันทึกเหตุการณ์และนำ "บทเรียนที่ได้" ไปปรับปรุงการป้องกันในอนาคต</td>
+        </tr>
+      </table>
+      <div class="warn">
+        <strong>ทำไมต้องมีโมเดลใหม่:</strong> สมัยที่เขียน Rev.2 เหตุการณ์ยังเกิดน้อย ขอบเขตแคบ
+        และกู้คืนได้ใน 1–2 วัน — แต่ปัจจุบันเหตุการณ์เกิดบ่อย สร้างความเสียหายมากกว่ามาก
+        และใช้เวลากู้คืนเป็นสัปดาห์หรือเป็นเดือน เพราะความกว้าง ความซับซ้อน และพลวัตของมัน
+      </div>
+      <p>
+        โมเดลใหม่ (<strong>NIST SP 800-61r3</strong>) อิงกับ <strong>CSF 2.0 Functions</strong>
+        โดยมี "การปรับปรุงอย่างต่อเนื่อง (continuous improvement)" อยู่ชั้นกลางของวงจร —
+        บทเรียนจากทุก Function จะถูกป้อนเข้าสู่ Improvement เพื่อวิเคราะห์ จัดลำดับความสำคัญ
+        และส่งกลับไปปรับทุก Function
+      </p>
+
+      <h3>4.1 Incident Response Challenge</h3>
+      <ul>
+        <li><strong>ไม่มีสองเหตุการณ์ที่เหมือนกันเลย</strong> — แผนสำเร็จรูปใช้ไม่ได้ 100%</li>
+        <li>
+          ทุกการตอบสนองต้องอาศัย <strong>People + Process + Technology</strong> ทำงานร่วมกันจึงจะสำเร็จ
+        </li>
+        <li><strong>การวางแผนล่วงหน้าคือปัจจัยตัดสินผลลัพธ์ของเหตุการณ์จริง</strong>มากที่สุด</li>
+      </ul>
+
+      <h3>4.2 Incident Response (IR) vs Incident Management (IM)</h3>
+      <table>
+        <tr>
+          <th>Incident Management (IM)</th>
+          <th>Incident Response (IR)</th>
+        </tr>
+        <tr>
+          <td>
+            อยู่ครอบคลุมและแทรกในทุกขั้นตอนของ response process — ดูแลให้ทุก stage ถูกจัดการ:
+            การสื่อสาร, การจัดการสื่อ, การ escalate, การรายงาน ปัญหาต่างๆ ดึงการตอบสนองทั้งหมดให้เป็นหนึ่งเดียว
+            อย่างสอดคล้องและครบถ้วน (oversee, communicate, engage support, escalate, report, notify)
+          </td>
+          <td>
+            งานปฏิบัติการเชิงเทคนิค: triage, การวิเคราะห์เชิงลึก, การกู้คืนทางเทคนิค และอื่นๆ —
+            "ลงมือทำ" กับตัวเหตุการณ์โดยตรง
+          </td>
+        </tr>
+      </table>
+
+      <h2>5. การจัดทำ Incident Response Plan</h2>
+      <p>
+        ปัจจุบัน IR ถือเป็นส่วนสำคัญของ cybersecurity risk management ที่ต้องถูกผสานเข้ากับการดำเนินงาน
+        ขององค์กร — และบทเรียนที่ได้ระหว่าง response ควรเผยแพร่ทันทีที่ค้นพบ
+        <strong>ไม่ใช่รอจนกู้คืนเสร็จ</strong> ส่วนการปรับปรุงอย่างต่อเนื่องเป็นสิ่งจำเป็นสำหรับทุกด้าน
+        เพื่อให้ทันกับภัยคุกคามสมัยใหม่
+      </p>
+      <table>
+        <tr>
+          <th>องค์ประกอบแผน IR ขั้นพื้นฐาน</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>Key contacts</strong></td>
+          <td>
+            รายชื่อทีมที่ต้องติดต่อ: IR team/provider, IT, Senior Management, Legal, PR, HR,
+            Insurance — ต้องเผื่อคนไม่ว่าง: มีอย่างน้อย <strong>2 ช่องทางติดต่อ</strong> และ
+            <strong>อย่างน้อย 2 คน/กลุ่ม</strong>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Escalation criteria</strong></td>
+          <td>เกณฑ์การตัดสินใจและอำนาจอนุมัติ — ระดับความรุนแรงกำหนดว่าต้องจัดการเร็วแค่ไหนและ escalate ถึงใคร</td>
+        </tr>
+        <tr>
+          <td><strong>Basic flowchart / process</strong></td>
+          <td>ผังกระบวนการที่ครอบคลุม incident life-cycle ทั้งหมด</td>
+        </tr>
+        <tr>
+          <td><strong>Conference number</strong></td>
+          <td>อย่างน้อย 1 เบอร์ประชุมสายที่พร้อมใช้เสมอสำหรับเหตุฉุกเฉิน</td>
+        </tr>
+        <tr>
+          <td><strong>Legal / regulatory guidance</strong></td>
+          <td>แนวทางเบื้องต้นว่าควรเรียกฝ่ายกฎหมาย/HR เมื่อไหร่ และแนวปฏิบัติการเก็บหลักฐานอย่างระมัดระวัง</td>
+        </tr>
+      </table>
+      <h3>5.1 Post-Incident Review — บทเรียนหลังเหตุการณ์</h3>
+      <ul>
+        <li>
+          <strong>บทเรียนจากตัวเหตุการณ์:</strong> มีการปรับปรุงความปลอดภัยอะไรที่จะป้องกันเหตุนี้
+          หรือตรวจจับได้เร็วขึ้นไหม — ดูทั้งการแก้ระยะสั้น (tactical) และแนวทางระยะยาว (strategic)
+          ที่เห็นได้เมื่อมองหลายเหตุการณ์ร่วมกัน · มีข้อมูลอะไรที่ถ้ามีแล้วจะช่วยตอบสนองได้มาก
+          แต่หาไม่ได้ตอนเกิดเหตุ → วางแผนเก็บข้อมูลนั้นล่วงหน้าสำหรับครั้งหน้า
+        </li>
+        <li>
+          <strong>บทเรียนจากการตอบสนอง:</strong> การตอบสนองสำเร็จและมีประสิทธิผลไหม ·
+          มีส่วนไหนที่จัดการได้ดีกว่านี้ · มีข้อมูลที่เป็นประโยชน์แต่กลับไม่มีใช้ตอนนั้นหรือไม่
+        </li>
+      </ul>
+
+      <h2>6. NIST Cybersecurity Framework (CSF) 2.0</h2>
+      <p>
+        CSF ถูกสร้างขึ้นเพื่อให้มี <strong>ภาษากลางและแนวทางเชิงระบบ</strong>สำหรับการจัดการความเสี่ยงไซเบอร์
+        ช่วยให้องค์กร: เข้าใจ posture ปัจจุบัน · ประเมินและจัดลำดับความเสี่ยง ·
+        สื่อสารความต้องการด้านไซเบอร์ระหว่างทีมเทคนิคกับผู้บริหาร · ปรับแต่งแนวปฏิบัติให้เข้ากับพันธกิจและ risk
+        tolerance ของตัวเอง
+      </p>
+      <table>
+        <tr>
+          <th>Function</th>
+          <th>ความหมาย</th>
+        </tr>
+        <tr>
+          <td><strong>Govern (GV)</strong></td>
+          <td>กลยุทธ์ ความคาดหวัง และนโยบาย cybersecurity risk management ถูกกำหนด สื่อสาร และติดตาม</td>
+        </tr>
+        <tr>
+          <td><strong>Identify (ID)</strong></td>
+          <td>เข้าใจความเสี่ยงไซเบอร์ปัจจุบันขององค์กร</td>
+        </tr>
+        <tr>
+          <td><strong>Protect (PR)</strong></td>
+          <td>มีมาตรการป้องกัน (safeguards) เพื่อจัดการความเสี่ยง</td>
+        </tr>
+        <tr>
+          <td><strong>Detect (DE)</strong></td>
+          <td>ค้นหาและวิเคราะห์การโจมตีหรือการ compromise ที่อาจเกิดขึ้น</td>
+        </tr>
+        <tr>
+          <td><strong>Respond (RS)</strong></td>
+          <td>ลงมือเมื่อตรวจพบเหตุการณ์ความปลอดภัยไซเบอร์</td>
+        </tr>
+        <tr>
+          <td><strong>Recover (RC)</strong></td>
+          <td>ฟื้นฟูทรัพย์สินและการดำเนินงานที่ได้รับผลกระทบ</td>
+        </tr>
+      </table>
+      <div class="tip">
+        <strong>จุดจำ:</strong> CSF 2.0 มี 6 Functions เรียงตามวงจรชีวิต: Govern (GV) →
+        Identify (ID) → Protect (PR) → Detect (DE) → Respond (RS) → Recover (RC) —
+        โดย Govern เป็น Function ที่เพิ่มใหม่ในเวอร์ชัน 2.0 (เวอร์ชัน 1.1 มี 5 ตัว)
+      </div>
+
+      <h3>6.1 Incident Response Roles and Responsibilities</h3>
+      <p>
+        ความสำเร็จของ IR ขึ้นอยู่กับความร่วมมือของหลายฝ่ายทั้งภายในและภายนอก ซึ่งกระจายอยู่ทั่วโลก:
+      </p>
+      <table>
+        <tr>
+          <th>บทบาท</th>
+          <th>หน้าที่</th>
+        </tr>
+        <tr>
+          <td><strong>Incident handlers</strong></td>
+          <td>
+            ยืนยันว่าเกิดเหตุจริง · เก็บและวิเคราะห์ข้อมูล/หลักฐาน · จัดลำดับกิจกรรม ·
+            ลงมือเพื่อจำกัดความเสียหาย หาสาเหตุราก และกู้คืนระบบ — อาจเป็นพนักงานประจำ,
+            ว่าจ้างภายนอก (SOC/MSSP, cloud provider) หรือพร้อมใช้เมื่อเรียก (องค์กรแม่, พันธมิตร,
+            หน่วยงานบังคับใช้กฎหมาย)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Leadership</strong></td>
+          <td>กำกับดูแล IR จัดสรรงบประมาณ และมีอำนาจตัดสินใจใน action ผลกระทบสูง เช่น ปิดบริการสำคัญหรือสร้างระบบ authentication ใหม่</td>
+        </tr>
+        <tr>
+          <td><strong>Technology professionals</strong></td>
+          <td>สถาปนิก/วิศวกร/ผู้ดูแลระบบด้าน cybersecurity, privacy, system, network, cloud และนักพัฒนา software</td>
+        </tr>
+        <tr>
+          <td><strong>Legal</strong></td>
+          <td>
+            ทบทวนแผน/นโยบายให้สอดคล้องกฎหมาย (รวมสิทธิความเป็นส่วนตัว) · ตรวจสัญญากับซัพพลายเออร์ ·
+            ให้คำแนะนำเมื่อเหตุมีนัยทางกฎหมาย (ฟ้องร้อง คดี MOU)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Public affairs &amp; media relations</strong></td>
+          <td>แจ้งสื่อและสาธารณชนตามความเหมาะสม — ระวังว่าสื่ออาจรู้จากช่องทางอื่นก่อน</td>
+        </tr>
+        <tr>
+          <td><strong>Human resources</strong></td>
+          <td>คัดกรองก่อนจ้าง · onboarding/offboarding · เปลี่ยนตำแหน่ง · ร่วมมือเมื่อพนักงานต้องสงสัยว่าเจตนาก่อเหตุ</td>
+        </tr>
+        <tr>
+          <td><strong>Physical security &amp; facilities</strong></td>
+          <td>เหตุอาจมาจากการบุกรุกทางกายภาพ — ทีมอาจต้องเข้าพื้นที่ระหว่างจัดการ (เช่น เข้าเครื่องที่ถูก compromise ในห้องล็อก)</td>
+        </tr>
+        <tr>
+          <td><strong>Asset owners</strong></td>
+          <td>เจ้าของระบบ/ข้อมูล/กระบวนการ ให้ข้อมูลเชิงลึกเรื่องลำดับความสำคัญในการกู้คืน และต้องได้รับอัปเดตสถานะสม่ำเสมอ</td>
+        </tr>
+      </table>
+
+      <h2>7. กฎหมายและกรอบมาตรฐานไซเบอร์ของไทย (โดย MDES / กมช. / กกม.)</h2>
+      <p><strong>ประกาศที่เกี่ยวข้อง (ต้องรู้):</strong></p>
+      <ul>
+        <li>
+          <strong>ประกาศคณะกรรมการกำกับดูแลด้านความมั่นคงปลอดภัยไซเบอร์</strong> เรื่อง
+          ประมวลแนวทางปฏิบัติและกรอบมาตรฐานด้านการรักษาความมั่นคงปลอดภัยไซเบอร์ สำหรับหน่วยงานของรัฐ
+          และหน่วยงานโครงสร้างพื้นฐานสำคัญทางสารสนเทศ พ.ศ. ๒๕๖๔
+        </li>
+        <li>
+          <strong>ประกาศ กมช.</strong> เรื่อง ลักษณะภัยคุกคามทางไซเบอร์ มาตรการป้องกัน รับมือ ประเมิน
+          ปราบปราม และระงับภัยคุกคามทางไซเบอร์แต่ละระดับ พ.ศ. ๒๕๖๔
+        </li>
+        <li>
+          <strong>ประกาศ กกม.</strong> เรื่อง หลักเกณฑ์และวิธีการรายงานภัยคุกคามทางไซเบอร์ พ.ศ. ๒๕๖๖
+        </li>
+      </ul>
+      <p>
+        <strong>วัตถุประสงค์:</strong> ให้การดำเนินงานด้านไซเบอร์เป็นไปอย่างรวดเร็ว มีประสิทธิภาพ
+        และเป็นหนึ่งเดียว · สอดคล้องมาตรฐานสากล · <strong>ขอบเขต:</strong>
+        หน่วยงานของรัฐ หน่วยงานกำกับดูแล และหน่วยงานโครงสร้างพื้นฐานสำคัญทางสารสนเทศ (CII)
+      </p>
+      <table>
+        <tr>
+          <th>Component</th>
+          <th>ข้อกำหนด</th>
+        </tr>
+        <tr>
+          <td><strong>1. Cybersecurity Audit Plan</strong></td>
+          <td>
+            ตรวจสอบอย่างน้อย<strong>ปีละครั้ง</strong> โดย Internal หรือ External Independent
+            Auditor · ขอบเขต: กระบวนการ BIA (Business Impact Analysis) และผลลัพธ์ +
+            บริการสำคัญของหน่วยงานรัฐและ CII · การรายงาน: CII ต้องส่งสรุปผลตรวจสอบต่อ
+            <strong>NCSA ภายใน 30 วัน</strong>หลังเสร็จ
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. Cybersecurity Risk Assessment</strong></td>
+          <td>
+            ประเมินอย่างน้อย<strong>ปีละครั้ง</strong>:<br />
+            (a) <em>Risk Identification</em> — ระบุความเสี่ยง ภัยคุกคาม ช่องโหว่ จากกระบวนการ ระบบ บุคลากร หรือปัจจัยภายนอก<br />
+            (b) <em>Risk Analysis</em> — วิเคราะห์เพื่อกำหนดแนวทางบรรเทาที่เหมาะสม<br />
+            (c) <em>Risk Evaluation</em> — ประเมินโอกาสและผลกระทบต่อการดำเนินงาน + นิยาม Risk Appetite<br />
+            <em>Risk Treatment:</em> ใช้มาตรการควบคุมตามผลประเมิน คง residual risk ให้อยู่ในระดับที่ยอมรับได้
+            สมดุลต้นทุนกับประโยชน์ และกำหนด <strong>KRIs (Key Risk Indicators)</strong><br />
+            <em>Monitoring &amp; Review</em> และ <em>Risk Reporting</em> อย่างมีโครงสร้าง
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. Incident Response Plan (IRP)</strong></td>
+          <td>
+            ต้องมีอย่างน้อย: โครงสร้างและบทบาท CIRT + ข้อมูลติดต่อ · โครงสร้างการรายงานเหตุการณ์
+            ให้สอดคล้องกฎหมาย/อนุบัญญัติ/ข้อกำหนด CII · เกณฑ์การเปิดใช้ (activation criteria) ·
+            Containment · Recovery · Investigation (สาเหตุรากและผลกระทบ) ·
+            <strong>Evidence Preservation</strong> (เก็บหลักฐานและ chain-of-custody ก่อนกู้คืน) ·
+            การประสานบุคคลที่สาม ( vendor forensics/recovery + เจ้าหน้าที่) ·
+            After-Action Review + <strong>ปรับปรุงแผนอย่างน้อยปีละครั้ง</strong>
+          </td>
+        </tr>
+      </table>
+
+      <h3>7.1 กรอบ Cybersecurity Framework (ภาคปฏิบัติ 5 ด้าน)</h3>
+      <table>
+        <tr>
+          <th>ด้าน</th>
+          <th>องค์ประกอบ</th>
+        </tr>
+        <tr>
+          <td><strong>Risk Identification</strong></td>
+          <td>Asset Management · Risk Assessment &amp; Risk Management Strategy · <strong>VAPT</strong> (Vulnerability Assessment &amp; Penetration Testing) · Third-Party Risk Management</td>
+        </tr>
+        <tr>
+          <td><strong>Protect</strong></td>
+          <td>Access Control (auth + สิทธิ์) · System Hardening · Remote Access · Removable Media · Cybersecurity Awareness · Information Sharing (threat intelligence)</td>
+        </tr>
+        <tr>
+          <td><strong>Detect</strong></td>
+          <td>Cyber Threat Detection &amp; Monitoring</td>
+        </tr>
+        <tr>
+          <td><strong>Respond</strong></td>
+          <td>IRP · Crisis Communication Plan · Cybersecurity Exercise (ซ้อมเป็นประจำ)</td>
+        </tr>
+        <tr>
+          <td><strong>Recover</strong></td>
+          <td>Cybersecurity Resilience &amp; Recovery (ฟื้นฟูความเสียหายและระบบ)</td>
+        </tr>
+      </table>
+
+      <h3>7.2 ระดับภัยคุกคามทางไซเบอร์ และมาตรการรับมือ</h3>
+      <p>
+        <strong>4 ปัจจัยประเมินภัยคุกคามแต่ละระดับ</strong> (ต้องพิจารณาให้ครบทั้ง 4):
+        (๑) ผลกระทบต่ออุปกรณ์หรือระบบงาน · (๒) ผลกระทบต่อข้อมูลในระบบ ·
+        (๓) แนวโน้มในการกู้คืนระบบ · (๔) ผลกระทบต่อลูกค้าหรือผู้ใช้บริการ
+      </p>
+      <ul>
+        <li><strong>ระดับภัยคุกคาม:</strong> ไม่ร้ายแรง · ร้ายแรง · วิกฤติ กรณี (ก) · วิกฤติ กรณี (ข)</li>
+        <li>
+          <strong>มาตรการ 4 ระยะ</strong> (เรียงตาม life cycle): การเตรียมการและป้องกัน
+          (preparation) → การตรวจจับและวิเคราะห์ (detection and analysis) → การระงับ ปราบปราม
+          และฟื้นฟูระบบ (containment, eradication, and recovery) → กิจกรรมภายหลัง
+          (post-incident activity)
+        </li>
+      </ul>
+      <table>
+        <tr>
+          <th>เอกสาร/นิยามที่เกี่ยวข้อง</th>
+          <th>รายละเอียด</th>
+        </tr>
+        <tr>
+          <td><strong>พ.ร.บ. การรักษาความมั่นคงปลอดภัยไซเบอร์ พ.ศ. ๒๕๖๒</strong></td>
+          <td>
+            มาตรา ๔๙ (ระบบสารสนเทศที่เป็นโครงสร้างพื้นฐานสำคัญ) และมาตรา ๖๐ (ลักษณะภัยคุกคาม) —
+            "เหตุภัยคุกคามทางไซเบอร์เกิดขึ้นอย่างมีนัยสำคัญ" หมายถึงเหตุที่ปรากฏต่อระบบสารสนเทศ
+            ที่เป็น CII ตามที่คณะกรรมการกำหนด
+          </td>
+        </tr>
+        <tr>
+          <td><strong>เอกสาร ก๑</strong></td>
+          <td>ข้อมูลที่ต้องแจ้ง</td>
+        </tr>
+        <tr>
+          <td><strong>เอกสาร ก๒</strong></td>
+          <td>แบบรายงานภัยคุกคามทางไซเบอร์</td>
+        </tr>
+        <tr>
+          <td><strong>หมวด ง</strong></td>
+          <td>รายละเอียดภัยคุกคาม</td>
+        </tr>
+      </table>
+
+      <hr />
+
+      <h2>8. สรุปประเด็นสำคัญ (Key Takeaways)</h2>
+      <ul>
+        <li>
+          <strong>Risk Management (proactive)</strong> กันก่อนเกิด: Identify → Assess →
+          Mitigate → Monitor · <strong>Incident Response (reactive)</strong> รับมือหลังเกิด:
+          Preparation → Detection &amp; Analysis → Containment/Eradication/Recovery →
+          Post-Incident
+        </li>
+        <li>
+          <strong>IR Life Cycle ใหม่</strong> อิง CSF 2.0 (SP 800-61r3) — มี continuous
+          improvement เป็นแกนกลาง และ CSF 2.0 มี 6 Functions: GV · ID · PR · DE · RS · RC
+        </li>
+        <li>
+          <strong>IR Plan ต้องมี:</strong> key contacts (≥2 ช่องทาง), escalation criteria,
+          flowchart ครบวงจร, conference number, แนวทางกฎหมาย — และทบทวนบทเรียนหลังเหตุการณ์เสมอ
+        </li>
+        <li>
+          <strong>Roles:</strong> incident handlers · leadership · technology · legal · PR ·
+          HR · physical security · asset owners (ทุกฝ่ายต้องร่วมมือกัน)
+        </li>
+        <li>
+          <strong>ฝั่งไทย:</strong> ประมวลแนวทางปฏิบัติ ๒๕๖๔ (audit ปีละครั้ง + ส่ง NCSA ใน 30 วัน,
+          risk assessment ปีละครั้ง, IRP + CIRT) · ประกาศ กมช. ระดับภัยคุกคาม ๒๕๖๔ (4 ปัจจัย) ·
+          ประกาศ กกม. การรายงานภัยคุกคาม ๒๕๖๖
+        </li>
+        <li>
+          <strong>เชื่อมกับวิชาทั้งหมด:</strong> VAPT ที่เราเรียน (บท 1–10) ถูกบรรจุเป็นองค์ประกอบหนึ่ง
+          ของกรอบไซเบอร์ไทย (Risk Identification) — งานของ pentester ป้อนข้อมูลให้ทั้ง Risk
+          Management และ Incident Response
+        </li>
+      </ul>
+      <div class="note">
+        <strong>คำถามที่ควรตอบได้:</strong> ต่างระหว่าง Risk Management กับ Incident Response? ·
+        IR Life Cycle มีกี่เฟส อะไรบ้าง? · CSF 2.0 มี 6 Functions อะไร? · IR Plan ขั้นต่ำต้องมีอะไร? ·
+        หน่วยงาน CII ต้องทำ audit/risk assessment บ่อยแค่ไหน และรายงานใครภายในกี่วัน?
+      </div>
+    </main>
+
+    <div class="footer">
+      สรุปเนื้อหา Lecture 11 &mdash; Penetration Testing and Protection &copy; 2026
+    </div>
+  </body>
+</html>
